@@ -49,5 +49,5 @@ extern systemf1_task_arg *systemf1_task_add_arg(systemf1_task *task, char *text,
 extern void systemf1_task_add_redirects(systemf1_task *task, systemf1_redirect *redirect);
 extern void systemf1_task_set_run_if (systemf1_task *task, systemf1_run_if run_if);
 extern void systemf1_task_free(systemf1_task *task);
-
+extern char *systemf1_stream_name(systemf1_stream);
 #endif /* __task_h__ */

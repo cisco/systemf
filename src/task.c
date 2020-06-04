@@ -86,12 +86,26 @@ systemf1_task_arg *systemf1_task_add_arg (systemf1_task *task, char *text, char 
 }
 
 /*
+ * Maps a stream to a character string representation.
+ */
+char *systemf1_stream_name(systemf1_stream stream) {
+    switch (stream) {
+        case SYSTEMF1_STDIN: return "stdin"; break;
+        case SYSTEMF1_STDOUT: return "stdout"; break;
+        case SYSTEMF1_SHARE: return "shared"; break;
+        case SYSTEMF1_STDERR: return "stderr"; break;
+        case SYSTEMF1_PIPE: return "pipe"; break;
+        case SYSTEMF1_FILE: return "file"; break;
+        default: assert(__func__ == "invalid_argument");
+    }
+}
+
+/*
  * Walks all of the redirects and verifies that they are entered in a sane way.
  * Returns 0 if not and 1 if good.
  */
 static int redirects_are_sane(systemf1_task *tasks)
 {
-    DBG("begin");
     for (systemf1_task *t = tasks; t; t = t->next) {
         int in = 0;
         int out = 0;
@@ -112,12 +126,10 @@ static int redirects_are_sane(systemf1_task *tasks)
                 count = err = err + 1;
                 break;
             default:
-                DBG("");
-                // Only STDIN, STDOUT, and STDERR
-                return 0;
+                assert(__func__ == "invalid_argument");
             }
             if (count > 1) {
-                // There should only be at most 1 STDIN, STDOUT, and STDERR
+                fprintf(stderr, "ERROR: There should only be one %s per command.", systemf1_stream_name(r->stream));
                 return 0;
             }
             if ((r->target == SYSTEMF1_FILE) && !(r->text)) {
@@ -126,7 +138,6 @@ static int redirects_are_sane(systemf1_task *tasks)
             }
         }
     }
-    DBG("end");
     return 1;
 }
 
