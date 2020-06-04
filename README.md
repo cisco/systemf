@@ -96,15 +96,18 @@ To build, run `./configure && make build`.
 This uses gnu AutoTools to generate a configure and makefile.
 To remove that dependency and allow building directly from a
 git pull, the files generated from these are checked into this
-repository.  This is also true for the generated Antlr files.
+repository.
 
-The steps to create the generated files are:
+#### OSX installation from Scratch
 ```
+brew update
+brew install autoconf automake
 autoreconf -i
-tbd for the antlr files
+./configure && make
+make checks
 ```
 
-### Ubuntu Cheat Sheet
+#### Ubuntu Installation from Scratch
 
 On a fresh ubuntu install you'll likely want to do this:
 ```

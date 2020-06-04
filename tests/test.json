@@ -21,7 +21,7 @@
         "return_code": ["==", 0]
     },
     {
-        "description": "Test 'ls' without absolute path (Check PATH functionality)",
+        "description": "Test 'ls' without absolute path (Check PATH functionality) # TODO",
         "command": [ "ls" ],
         "stdout": null,
         "stderr": null,
@@ -60,128 +60,59 @@
         "return_code": ["==", -1]
     },
     {
-        "description": "Test Bad Redirects #1",
-        "command": [ "cat </dev/null </tmp" ],
+        "description": "Test Bad Redirects #1 (multiple stdin)",
+        "command": [ "/bin/cat </dev/null </tmp" ],
         "stdout": null,
         "stderr": null,
         "return_code": ["==", -1]
     },
     {
-        "description": "Test Bad Redirects #2",
-        "command": [ "cat 2>&1 2>/dev/null" ],
+        "description": "Test Bad Redirects #2 (multiple stderr)",
+        "command": [ "/bin/cat 2>&1 2>/dev/null" ],
         "stdout": null,
         "stderr": null,
         "return_code": ["==", -1]
     },
     {
-        "description": "Test Bad Redirects #3",
-        "command": [ "cat 2>/dev/null 2>/tmp" ],
+        "description": "Test Bad Redirects #3 (multiple stderr)",
+        "command": [ "/bin/cat 2>/dev/null 2>/tmp" ],
         "stdout": null,
         "stderr": null,
         "return_code": ["==", -1]
     },
     {
-        "description": "Test Bad Redirects #4",
-        "command": [ "cat &>>/dev/null >/tmp" ],
+        "description": "Test Bad Redirects #4 (stderr + stdin append + stdin)",
+        "command": [ "/bin/cat &>>/dev/null >/tmp" ],
         "stdout": null,
         "stderr": null,
         "return_code": ["==", -1]
     },
     {
-        "description": "Test Bad Redirects #5",
-        "command": [ "cat &>/dev/null >/tmp" ],
+        "description": "Test Bad Redirects #5 (stderr + 2 stdin",
+        "command": [ "/bin/cat &>/dev/null >/tmp" ],
         "stdout": null,
         "stderr": null,
         "return_code": ["==", -1]
     },
     {
-        "description": "Test Bad Redirects #6",
-        "command": [ "cat >>/dev/null >/tmp" ],
+        "description": "Test Bad Redirects #6 (stdin append + stdin)",
+        "command": [ "/bin/cat >>/dev/null >/tmp" ],
         "stdout": null,
         "stderr": null,
         "return_code": ["==", -1]
     },
     {
-        "description": "Test Bad Redirects #7",
-        "command": [ "cat 2>/dev/null 2>/tmp" ],
+        "description": "Test Bad Redirects #7 (multiple stderr)",
+        "command": [ "/bin/cat 2>/dev/null 2>/tmp" ],
         "stdout": null,
         "stderr": null,
         "return_code": ["==", -1]
     },
     {
-        "description": "Test Bad Redirects #8",
-        "command": [ "cat 2>/dev/null 2>/tmp" ],
-        "stdout": null,
+        "description": "Test Redirects #1 # TODO fix infinite loop if x is changed to <",
+        "command": [ "/bin/cat x AUTHORS" ],
+        "stdout": ["contains", "Eklund"],
         "stderr": null,
-        "return_code": ["==", -1]
-    },
-    {
-        "description": "Test Bad Redirects #9",
-        "command": [ "cat 2>/dev/null 2>/tmp" ],
-        "stdout": null,
-        "stderr": null,
-        "return_code": ["==", -1]
-    },
-    {
-        "description": "Test Redirects #1",
-        "command": [ "/bin/echo delete-this-%p.txt", ["#"] ],
-        "stdout": null,
-        "stderr": null,
-        "return_code": ["==", -1],
-        "ignored": [
-    {
-        "description": "Test Redirects #2",
-        "command": [ "cat 2>&1 2>/dev/null" ],
-        "stdout": null,
-        "stderr": null,
-        "return_code": ["==", -1]
-    },
-    {
-        "description": "Test Redirects #3",
-        "command": [ "cat 2>/dev/null 2>/tmp" ],
-        "stdout": null,
-        "stderr": null,
-        "return_code": ["==", -1]
-    },
-    {
-        "description": "Test Redirects #4",
-        "command": [ "cat &>>/dev/null >/tmp" ],
-        "stdout": null,
-        "stderr": null,
-        "return_code": ["==", -1]
-    },
-    {
-        "description": "Test Redirects #5",
-        "command": [ "cat &>/dev/null >/tmp" ],
-        "stdout": null,
-        "stderr": null,
-        "return_code": ["==", -1]
-    },
-    {
-        "description": "Test Redirects #6",
-        "command": [ "cat >>/dev/null >/tmp" ],
-        "stdout": null,
-        "stderr": null,
-        "return_code": ["==", -1]
-    },
-    {
-        "description": "Test Redirects #7",
-        "command": [ "cat 2>/dev/null 2>/tmp" ],
-        "stdout": null,
-        "stderr": null,
-        "return_code": ["==", -1]
-    },
-    {
-        "description": "Test Redirects #8",
-        "command": [ "cat 2>/dev/null 2>/tmp" ],
-        "stdout": null,
-        "stderr": null,
-        "return_code": ["==", -1]
-    },
-    {
-        "description": "Test Redirects #9",
-        "command": [ "cat 2>/dev/null 2>/tmp" ],
-        "stdout": null,
-        "stderr": null,
-        "return_code": ["==", -1]
-    }]}]
+        "return_code": ["==", 0]
+    }
+]

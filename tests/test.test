@@ -227,7 +227,7 @@ for i in range(len(tests)):
 
     result = run_command(command)
     if result == None:
-        print('# Command caused a crash!')
+        return_code = "<Command caused a crash!>"
         result = 'not ok'
     else:
         return_code = result[0]
@@ -246,6 +246,8 @@ for i in range(len(tests)):
             result = 'not ok'
 
     if result == 'not ok':
+        print('#')
+        print(f'# return_code = {return_code}')
         for io in (("STDOUT", stdout), ("STDERR", stderr)):
             print('#')
             print(f'# {io[0]}:')
