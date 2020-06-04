@@ -18,7 +18,7 @@ jobs:
     - name: configure
       run: ./configure
     - name: make lex and yacc
-      run: make -c src
+      run: make -C src
     - name: make
       run: make
     - name: make check
