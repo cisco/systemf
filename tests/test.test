@@ -1,0 +1,257 @@
+#!/usr/bin/env python3
+import ctypes
+import json
+import os
+import select
+import sys
+
+from multiprocessing import Process, SimpleQueue
+
+####################################################
+#
+# Debug Flags
+#
+####################################################
+
+# Set this to True to get extra parser debug information
+SHOULD_YYDEBUG = False
+
+# Whether the test harness should fork to invoke systemf with ctypes
+# If True, will fork and therefore not crash on segfault/sigabrt/etc
+# If False, will run in a single process which makes GDB easier
+# Default to True
+SHOULD_FORK = True
+
+# Should we capture stdout / stderr when running systemf1()
+# This is required for proper testing, but it can interfere with debugging
+SHOULD_CAPTURE_STDOUT_STDERR = True
+
+####################################################
+#
+# End Debug Flags
+#
+####################################################
+
+# Convenience variable for current working directory
+current_dir = os.path.dirname(sys.argv[0])
+# Path to systemf shared library
+LIBSYSTEMF_SO = os.path.join(current_dir, '../.libs/libsystemf.so')
+LIBSYSTEMF_DYLIB = os.path.join(current_dir, '../.libs/libsystemf.dylib')
+# Path to test.json
+TEST_JSON = os.path.join(current_dir, 'test.json')
+
+# Required to get data from a subprocess
+# Declare it in larger script scope or else there can be broken pipe failures
+resultQueue = SimpleQueue()
+
+# Import the systemf shared library
+try:
+    libsystemf = ctypes.CDLL(LIBSYSTEMF_SO)
+except:
+    # If importing fails, try the dylib in case we're on OSX
+    libsystemf = ctypes.CDLL(LIBSYSTEMF_DYLIB)
+
+# Indicate the return type is 'int'
+libsystemf.restypes = ctypes.c_int
+
+# Utility function to get all data from a pipe
+# Used to gather stdout/stderr after invoking systemf
+def get_pipe_contents(pipe):
+    out = b''
+    r, _, _ = select.select([pipe], [], [], 0)
+    while bool(r):
+        # As long as select indicates there is data, keep reading
+        out += os.read(pipe, 1024)
+        r, _, _ = select.select([pipe], [], [], 0)
+    return out
+
+# Run systemf using ctypes
+def exec_systemf(command, resultQueue):
+    # Set up argtypes correctly based on command type
+    argtypes = []
+    # Ensure types are proper (string -> bytes, etc)
+    command_to_run = []
+    for arg in command:
+        if type(arg) is str:
+            argtypes.append(ctypes.c_char_p)
+            command_to_run.append(str.encode(arg))
+        elif type(arg) is bytes:
+            argtypes.append(ctypes.c_char_p)
+            command_to_run.append(arg)
+        elif type(arg) is int:
+            argtypes.append(ctypes.c_int)
+            command_to_run.append(arg)
+        else:
+            print(f'# Unknown arg type, aborting: {arg}')
+    libsystemf.argtypes = argtypes
+
+    if SHOULD_YYDEBUG:
+        libsystemf.systemf1_yydebug = 1
+
+    # Set up stdout and stderr capture
+    # KLUDGE: Need to write to stdout/stderr or this fails - will delete from pipe
+    # TODO: Not sure this is a real issue, commenting out seems fine?
+    #sys.stdout.write(f'# Trying {command_to_run}')
+    #sys.stderr.write('#\n')
+    # Save descriptors
+    orig_stdout = os.dup(1)
+    orig_stderr = os.dup(2)
+    if SHOULD_CAPTURE_STDOUT_STDERR:
+        # Create write pipes
+        out_stdout_pipe, in_stdout_pipe = os.pipe()
+        out_stderr_pipe, in_stderr_pipe = os.pipe()
+
+        # Replace stdout and stderr with pipes
+        os.dup2(in_stdout_pipe, 1)
+        os.dup2(in_stderr_pipe, 2)
+
+    # Run systemf
+    # Thought we could use *args with ctypes, but apparently _not_
+    # KLUDGE: If we find a cleaner way to do this, please change!!
+    if len(command_to_run) == 1:
+        return_code = libsystemf.systemf1(command_to_run[0])
+    elif len(command_to_run) == 2:
+        return_code = libsystemf.systemf1(command_to_run[0], command_to_run[1])
+    elif len(command_to_run) == 3:
+        return_code = libsystemf.systemf1(command_to_run[0], command_to_run[1], command_to_run[2])
+    elif len(command_to_run) == 4:
+        return_code = libsystemf.systemf1(command_to_run[0], command_to_run[1], command_to_run[2], command_to_run[3])
+    elif len(command_to_run) == 5:
+        return_code = libsystemf.systemf1(command_to_run[0], command_to_run[1], command_to_run[2], command_to_run[3], command_to_run[4])
+    elif len(command_to_run) == 6:
+        return_code = libsystemf.systemf1(command_to_run[0], command_to_run[1], command_to_run[2], command_to_run[3], command_to_run[4], command_to_run[5])
+    elif len(command_to_run) == 7:
+        return_code = libsystemf.systemf1(command_to_run[0], command_to_run[1], command_to_run[2], command_to_run[3], command_to_run[4], command_to_run[5], command_to_run[6])
+    elif len(command_to_run) == 8:
+        return_code = libsystemf.systemf1(command_to_run[0], command_to_run[1], command_to_run[2], command_to_run[3], command_to_run[4], command_to_run[5], command_to_run[6], command_to_run[7])
+    elif len(command_to_run) == 9:
+        return_code = libsystemf.systemf1(command_to_run[0], command_to_run[1], command_to_run[2], command_to_run[3], command_to_run[4], command_to_run[5], command_to_run[6], command_to_run[7], command_to_run[8])
+    elif len(command_to_run) == 10:
+        return_code = libsystemf.systemf1(command_to_run[0], command_to_run[1], command_to_run[2], command_to_run[3], command_to_run[4], command_to_run[5], command_to_run[6], command_to_run[7], command_to_run[8], command_to_run[9])
+    elif len(command_to_run) == 11:
+        return_code = libsystemf.systemf1(command_to_run[0], command_to_run[1], command_to_run[2], command_to_run[3], command_to_run[4], command_to_run[5], command_to_run[6], command_to_run[7], command_to_run[8], command_to_run[9], command_to_run[10])
+    elif len(command_to_run) == 12:
+        return_code = libsystemf.systemf1(command_to_run[0], command_to_run[1], command_to_run[2], command_to_run[3], command_to_run[4], command_to_run[5], command_to_run[6], command_to_run[7], command_to_run[8], command_to_run[9], command_to_run[10], command_to_run[11])
+    else:
+        print(f'# ERROR: Adjust script to handle {len(command_to_run)} arguments!!!!')
+        return_code = -1
+
+    if SHOULD_CAPTURE_STDOUT_STDERR:
+        # Restore stdout/stderr
+        os.dup2(orig_stdout, 1)
+        os.dup2(orig_stderr, 2)
+
+        # Get pipe data
+        stdout_data = get_pipe_contents(out_stdout_pipe)
+        stderr_data = get_pipe_contents(out_stderr_pipe)
+    else:
+        stdout_data = ''
+        stderr_data = ''
+
+    # Put results in a Queue
+    # Required if in a separate process, works fine if not
+    resultQueue.put(return_code)
+    resultQueue.put(stdout_data)
+    resultQueue.put(stderr_data)
+
+# Run a command in a separate process
+# This way if it crashes, the test harness doesn't bomb out
+def run_command(command):
+    if SHOULD_FORK:
+        p = Process(target=exec_systemf, args=(command, resultQueue))
+        p.start()
+        p.join()
+    else:
+        exec_systemf(command, resultQueue)
+
+    # Parse result
+    if resultQueue.empty():
+        # Special return value if the subprocess crashed
+        return None
+    else:
+        return_code = resultQueue.get()
+        stdout = resultQueue.get()
+        stderr = resultQueue.get()
+        return return_code, stdout, stderr
+
+# Run a comparison operation on return_code, stdout, or stderr
+def do_comparison(operator, real_value, compare_value):
+    # Everything we get from systemf() will be bytes
+    if type(compare_value) is str:
+        compare_value = str.encode(compare_value)
+
+    if operator == '==':
+        return real_value == compare_value
+    elif operator == '!=':
+        return real_value != compare_value
+    elif operator == '>':
+        return real_value > compare_value
+    elif operator == '<':
+        return real_value < compare_value
+    elif operator == 'contains':
+        return compare_value in real_value
+
+# Pull in the JSON test data
+# See readme for test data json specification
+tests = []
+with open(TEST_JSON, 'r') as json_file:
+    try:
+        tests = json.load(json_file)
+    except Exception as e:
+        print(f'# Error loading json: {str(e)}')
+        sys.exit(-1)
+
+# Tell the test framework how many tests we'll have
+print(f'1..{len(tests)}')
+
+# Go through each test
+for i in range(len(tests)):
+    test = tests[i]
+    # Test description
+    errlogs = ''
+    description = test['description']
+
+    print()
+    print(f'# Running test {i+1} - {description}')
+
+    # Command to run (array)
+    command = test['command']
+    # Either 'null' or ['operator', 'value']
+    test_return_code = test['return_code']
+    # Either 'null' or ['operator', 'value']
+    test_stdout = test['stdout']
+    # Either 'null' or ['operator', 'value']
+    test_stderr = test['stderr']
+    # Replace ['#'] arguments with the string representation of this test number.
+    command = [str(i) if arg == ['#'] else arg for arg in command]
+
+    result = run_command(command)
+    if result == None:
+        print('# Command caused a crash!')
+        result = 'not ok'
+    else:
+        return_code = result[0]
+        stdout = result[1]
+        stderr = result[2]
+        result = 'ok'
+
+        if test_return_code != None and not do_comparison(test_return_code[0], return_code, test_return_code[1]):
+            print(f'# Failed: {{"return_code": {json.dumps(test_return_code)}}}')
+            result = 'not ok'
+        if test_stdout != None and not do_comparison(test_stdout[0], stdout, test_stdout[1]):
+            print(f'# Failed: {{"stdout": {json.dumps(test_stdout)}}}')
+            result = 'not ok'
+        if test_stderr != None and not do_comparison(test_stderr[0], stderr, test_stderr[1]):
+            print(f'# Failed: {{"stderr": {json.dumps(test_stderr)}}}')
+            result = 'not ok'
+
+    if result == 'not ok':
+        for io in (("STDOUT", stdout), ("STDERR", stderr)):
+            print('#')
+            print(f'# {io[0]}:')
+            for line in io[1].decode("ascii").split("\n"):
+                print(f'# {line}')
+
+    print(f'{result} {i+1} - {description}')
+
+print('exit status: 1')
