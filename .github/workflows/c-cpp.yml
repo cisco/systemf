@@ -24,5 +24,6 @@ jobs:
       run: make
     - name: make check
       run: make check
-    - name: show test log
+    - name: show test failure log
+      if: ${{ failure() }}
       run: cat tests/test.log
