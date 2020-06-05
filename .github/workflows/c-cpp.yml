@@ -8,8 +8,7 @@ on:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    container: meklund/systemf-gh-action
 
     steps:
     - uses: actions/checkout@v2
