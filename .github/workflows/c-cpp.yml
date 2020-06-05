@@ -8,10 +8,9 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
-    container: 
-        image: meklund/systemf-gh-action
+    container: meklund/systemf-gh-action
 
     steps:
     - uses: actions/checkout@v2
