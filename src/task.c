@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <assert.h>
 #include <signal.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #define DEBUG 1
 #define VA_ARGS(...) , ##__VA_ARGS__
