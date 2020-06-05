@@ -8,7 +8,8 @@ on:
 
 jobs:
   build:
-    container: meklund/systemf-gh-action
+    container: 
+        image: meklund/systemf-gh-action
 
     steps:
     - uses: actions/checkout@v2
