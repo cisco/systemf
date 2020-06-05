@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    container: meklund/systemf-gh-action
+    container: meklund/systemf-gh-action:2020-06-05
 
     steps:
     - uses: actions/checkout@v2
