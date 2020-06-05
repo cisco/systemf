@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  systemf-test:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: meklund/systemf-gh-action
+    volumes:
+      - type: bind
+        source: ../
+        target: /systemf

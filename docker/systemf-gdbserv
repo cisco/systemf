@@ -1,0 +1,8 @@
+#!/bin/sh
+cd /home/systemf/systemf
+
+export SHOULD_NOT_FORK=true
+export SHOULD_NOT_CAPTURE_STDOUT_STDERR=true
+
+target=${target tests/test.test}
+gdbserver python tests/test.test
