@@ -8,6 +8,8 @@ on:
 
 jobs:
   build:
+    runs-on: ubuntu-20.04
+
     container: 
         image: meklund/systemf-gh-action
 
