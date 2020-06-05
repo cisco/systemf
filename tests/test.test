@@ -17,14 +17,14 @@ from multiprocessing import Process, SimpleQueue
 SHOULD_YYDEBUG = False
 
 # Whether the test harness should fork to invoke systemf with ctypes
-# If True, will fork and therefore not crash on segfault/sigabrt/etc
-# If False, will run in a single process which makes GDB easier
-# Default to True
-SHOULD_FORK = True
+# If False, will fork and therefore not crash on segfault/sigabrt/etc
+# If True, will run in a single process which makes GDB easier
+# Default to False
+SHOULD_NOT_FORK = os.environ.get("SHOULD_NOT_FORK", False)
 
 # Should we capture stdout / stderr when running systemf1()
 # This is required for proper testing, but it can interfere with debugging
-SHOULD_CAPTURE_STDOUT_STDERR = True
+SHOULD_NOT_CAPTURE_STDOUT_STDERR = os.environ.get("SHOULD_NOT_CAPTURE_STDOUT_STDERR", False)
 
 ####################################################
 #
@@ -96,7 +96,7 @@ def exec_systemf(command, resultQueue):
     # Save descriptors
     orig_stdout = os.dup(1)
     orig_stderr = os.dup(2)
-    if SHOULD_CAPTURE_STDOUT_STDERR:
+    if not SHOULD_NOT_CAPTURE_STDOUT_STDERR:
         # Create write pipes
         out_stdout_pipe, in_stdout_pipe = os.pipe()
         out_stderr_pipe, in_stderr_pipe = os.pipe()
@@ -157,7 +157,7 @@ def exec_systemf(command, resultQueue):
 # Run a command in a separate process
 # This way if it crashes, the test harness doesn't bomb out
 def run_command(command):
-    if SHOULD_FORK:
+    if not SHOULD_NOT_FORK:
         p = Process(target=exec_systemf, args=(command, resultQueue))
         p.start()
         p.join()
@@ -228,6 +228,8 @@ for i in range(len(tests)):
     result = run_command(command)
     if result == None:
         return_code = "<Command caused a crash!>"
+        stdout = b""
+        stderr = b""
         result = 'not ok'
     else:
         return_code = result[0]
