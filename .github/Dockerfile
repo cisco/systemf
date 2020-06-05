@@ -2,4 +2,4 @@
 # docker push meklund/systemf-gh-action
 FROM ubuntu
 RUN apt-get update
-RUN apt-get install -y git build-essential autotools-dev automake libtool bison flex
+RUN apt-get install -y git build-essential autotools-dev automake libtool bison flex python3
