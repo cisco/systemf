@@ -1,4 +1,4 @@
-SUBDIRS = src
+SUBDIRS = src tests
 
 AM_CFLAGS = # CFLAGS applicable to all executables (products)
 AM_CPPFLAGS = -I$(top_srcdir)/src # so that tests also find header files
@@ -27,4 +27,3 @@ TEST_EXTENSIONS = .test
 TEST_LOG_COMPILE = $(PYTHON)
 TEST_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) $(top_srcdir)/build-aux/tap-driver.sh
 
-TESTS = tests/test.test

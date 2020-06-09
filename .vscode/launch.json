@@ -1,29 +1,50 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "C++ Launch",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceRoot}/myprogram",
-            "miDebuggerServerAddress": "localhost:2345",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceRoot}",
-            "environment": [],
-            "externalConsole": true,
-            "linux": {
-              "MIMode": "gdb"
-            },
-            "osx": {
-              "MIMode": "gdb"
-            },
-            "windows": {
-              "MIMode": "gdb"
-            }
-        }
-    ]
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "(lldb) test-runner",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/tests/.libs/test-runner",
+      "args": ["16"],
+      "environment": [
+        {"name": "DYLD_LIBRARY_PATH", "value": "${workspaceFolder}/src/.libs:${env:DYLD_LIBRARY_PATH}"}],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "externalConsole": false,
+      "MIMode": "lldb"
+    },
+
+    {
+      "name": "Python: Current File",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "C++ Launch",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceRoot}/myprogram",
+      "miDebuggerServerAddress": "localhost:2345",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceRoot}",
+      "environment": [],
+      "externalConsole": true,
+      "linux": {
+        "MIMode": "gdb"
+      },
+      "osx": {
+        "MIMode": "gdb"
+      },
+      "windows": {
+        "MIMode": "gdb"
+      }
+    }
+  ]
 }

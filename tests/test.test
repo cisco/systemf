@@ -4,8 +4,10 @@ import json
 import os
 import select
 import sys
+import argparse
 
 from multiprocessing import Process, SimpleQueue
+
 
 ####################################################
 #
@@ -25,12 +27,6 @@ SHOULD_NOT_FORK = os.environ.get("SHOULD_NOT_FORK", False)
 # Should we capture stdout / stderr when running systemf1()
 # This is required for proper testing, but it can interfere with debugging
 SHOULD_NOT_CAPTURE_STDOUT_STDERR = os.environ.get("SHOULD_NOT_CAPTURE_STDOUT_STDERR", False)
-
-####################################################
-#
-# End Debug Flags
-#
-####################################################
 
 # Convenience variable for current working directory
 current_dir = os.path.dirname(sys.argv[0])
@@ -136,7 +132,7 @@ def exec_systemf(command, resultQueue):
         print(f'# ERROR: Adjust script to handle {len(command_to_run)} arguments!!!!')
         return_code = -1
 
-    if SHOULD_CAPTURE_STDOUT_STDERR:
+    if not SHOULD_NOT_CAPTURE_STDOUT_STDERR:
         # Restore stdout/stderr
         os.dup2(orig_stdout, 1)
         os.dup2(orig_stderr, 2)
