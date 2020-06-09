@@ -55,8 +55,8 @@
         "description": "Test failed glob param '%*p', '/etc/passw?thisdoesnnotexist'",
         "fixme": "remove the /bin to be compatible with more systems.",
         "command": [ "/bin/echo %*p", "/etc/passw?thisdoesnnotexist" ],
-        "stdout": null,
-        "stderr": null,
+        "stdout": ["==", ""],
+        "stderr": ["==", "systemf: no matches found: /etc/passw?thisdoesnnotexist\n"],
         "return_code": ["==", -1]
     },
     {

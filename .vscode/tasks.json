@@ -10,8 +10,25 @@
 				"cwd": "${workspaceFolder}",
 				"environment": [{
 					"name": "CFLAGS",
-					"value": "-g"
+					"value": "-gO0"
 				}],
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"type": "shell",
+			"label": "Docker check",
+			"command": "/usr/local/bin/docker-compose",
+			"args": ["up", "--build"],
+			"options": {
+				"cwd": "${workspaceFolder}/docker",
+				"env": {"COMMAND": "/usr/bin/systemf-check"},
 			},
 			"problemMatcher": [
 				"$gcc"

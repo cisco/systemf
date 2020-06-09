@@ -4,4 +4,5 @@ FROM ubuntu
 RUN apt-get update
 RUN apt-get install -y git build-essential autotools-dev automake libtool bison flex python3
 RUN apt-get install -y gdbserver
-COPY systemf-build systemf-gdbserv /usr/bin/
+COPY systemf-build systemf-gdbserv systemf-check /usr/bin/
+

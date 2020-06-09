@@ -9,7 +9,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/tests/.libs/test-runner",
-      "args": ["16"],
+      "args": ["8"],
       "environment": [
         {"name": "DYLD_LIBRARY_PATH", "value": "${workspaceFolder}/src/.libs:${env:DYLD_LIBRARY_PATH}"}],
       "stopAtEntry": false,

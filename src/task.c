@@ -158,10 +158,13 @@ static int extract_globs(systemf1_task *tasks)
                 // FIXME: do a bounds check.
                 switch (ret) {
                 case GLOB_NOSPACE:
+                    fprintf(stderr, "systemf: glob out of memory extracting: %s\n", a->text);
                     return ENOMEM;
                 case GLOB_ABORTED:
+                    fprintf(stderr, "systemf: glob aborted during extraction: %s\n", a->text);
                     return EBADF;
                 case GLOB_NOMATCH:
+                    fprintf(stderr, "systemf: no matches found: %s\n", a->text);
                     return EINVAL;
                 }
             }
@@ -203,7 +206,7 @@ int systemf1_tasks_run(systemf1_task *tasks) {
     int stat;
     char **argv;
     systemf1_task_arg *arg;
-    size_t argc = 1;
+    size_t argc = 1; // 1 for terminating NULL
     glob_list *globs = NULL;
     glob_list **next_glob_pp = &globs;
     int ret;
@@ -226,7 +229,7 @@ int systemf1_tasks_run(systemf1_task *tasks) {
         // Count the arguments.
         for (arg = task->args; arg != NULL; arg = arg->next) {
             if (arg->is_glob) {
-                argc = arg->glob.gl_pathc;
+                argc += arg->glob.gl_pathc;
             } else {
                 argc += 1;
             }
@@ -246,7 +249,7 @@ int systemf1_tasks_run(systemf1_task *tasks) {
             }
         }
         *argv = NULL;
-        printf("_____________________ err exi exs sig tsig\n");
+        DBG("_____________________ err exi exs sig tsig\n");
 
         // If we don't flush, both forks will send the buffered data and it will be seen twice.
         fflush(stdout);
@@ -260,7 +263,7 @@ int systemf1_tasks_run(systemf1_task *tasks) {
         if (pid == 0) {
             DBG("Running %s", task->argv[0]);
             stat = execv(*task->argv, task->argv);
-            printf("Execv   returned with %3d %3d %3d %3d %3d\n", errno,
+            DBG("Execv   returned with %3d %3d %3d %3d %3d\n", errno,
                 WIFEXITED(stat), WEXITSTATUS(stat), WIFSIGNALED(stat), WTERMSIG(stat));
 
             // If execv exits, we don't have an easy way to send the results back other
@@ -275,7 +278,7 @@ int systemf1_tasks_run(systemf1_task *tasks) {
             newerrno = EINTR;
         }
 
-        printf("waitpid returned with %3d %3d %3d %3d %3d\n", errno,
+        DBG("waitpid returned with %3d %3d %3d %3d %3d\n", errno,
             WIFEXITED(stat), WEXITSTATUS(stat), WIFSIGNALED(stat), WTERMSIG(stat));
 
 

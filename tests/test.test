@@ -19,9 +19,24 @@ def get_tests() -> list:
 def run_command(index):
     return run(['./test-runner', str(index + 1)], stdout=PIPE, stderr=PIPE)
 
+def fixup_compare_value(compare_value):
+    """Convert systemf() int return value to process return value
+    
+    systemf() returns an int, but the harness can only return a uchar.
+    This converts the expected int to the uchar returned.  This may
+    be platform-specific and will be enhanced when differences are discovered.
+    """
+    if compare_value < 0:
+        return 256 + compare_value
+    else:
+        return compare_value
+
 # Run a comparison operation on return_code, stdout, or stderr
 def do_comparison(operator, real_value, compare_value):
     # Everything we get from systemf() will be bytes
+
+    if type(compare_value) is int:
+        compare_value = fixup_compare_value(compare_value)
 
     if type(compare_value) is str:
         compare_value = str.encode(compare_value)

@@ -18,4 +18,4 @@ services:
       - seccomp=unconfined
     ports:
       - "${GDBSERVER_LOCAL_PORT:-2345}:${GDBSERVER_PORT:-2345}"
-    command: ["/usr/bin/systemf-gdbserv"]
+    command: ["${COMMAND:-/usr/bin/systemf-gdbserv}"]

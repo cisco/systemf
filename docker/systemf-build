@@ -2,6 +2,6 @@
 cd /systemf
 
 autoreconf -i
-./configure
-make -C src
+./configure CFLAGS="-g -O0"
 make
+
