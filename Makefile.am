@@ -1,37 +1,8 @@
+SUBDIRS = src
+
 AM_CFLAGS = # CFLAGS applicable to all executables (products)
 AM_CPPFLAGS = -I$(top_srcdir)/src # so that tests also find header files
 AM_YFLAGS = -d
-
-# The test executable
-bin_PROGRAMS = myexecutable # make all will generate ./my_executable
-
-lib_LTLIBRARIES = libsystemf.la
-libsystemf_la_SOURCES = \
-   src/derived-lexer.c \
-   src/derived-lexer.h \
-   src/derived-parser.h \
-   src/derived-parser.c \
-   src/systemf.c \
-   src/systemf.h \
-   src/systemf-internal.h \
-   src/systemf_debug.c \
-   src/task.c \
-   src/task.h
-libsystemf_la_LDFLAGS = -avoid-version -shared
-
-# Yacc's derived parser.h
-# For now, just use src/Makefile to create these build files.
-# BUILT_SOURCES = src/parser.h src/lexer.h
-
-#include .c and .h in SOURCES so that both appear in dist
-myexecutable_SOURCES = src/main.c
-myexecutable_LDADD = libsystemf.la
-
-myexecutable_CFLAGS = $(AM_CFLAGS) $(CODE_COVERAGE_CFLAGS) #--std=c11 # CFLAGS applicable to myexecutable_SOURCES
-myexecutable_LDFLAGS = $(CODE_COVERAGE_LDFLAGS)
-# myexecutable_CFLAGS = $(CODE_COVERAGE_CFLAGS)
-
-lexer:
 
 
 # Tests

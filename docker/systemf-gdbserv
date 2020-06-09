@@ -1,8 +1,11 @@
 #!/bin/sh
-cd /home/systemf/systemf
+cd /systemf
+/usr/bin/systemf-build
 
 export SHOULD_NOT_FORK=true
 export SHOULD_NOT_CAPTURE_STDOUT_STDERR=true
 
-target=${target tests/test.test}
-gdbserver python tests/test.test
+GDBSERVER_TARGET=${GDBSERVER_TARGET:-python3 tests/test.test}
+GDBSERVER_PORT=${GDBSERVER_PORT:-2345}
+
+gdbserver :$GDBSERVER_PORT $GDBSERVER_TARGET

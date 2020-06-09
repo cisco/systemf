@@ -116,15 +116,12 @@ static int redirects_are_sane(systemf1_task *tasks)
             int count;
             switch (r->stream) {
             case SYSTEMF1_STDIN:
-                DBG("");
                 count = in = in + 1;
                 break;
             case SYSTEMF1_STDOUT:
-                DBG("");
                 count = out = out + 1;
                 break;
             case SYSTEMF1_STDERR:
-                DBG("");
                 count = err = err + 1;
                 break;
             default:

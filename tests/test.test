@@ -35,8 +35,8 @@ SHOULD_NOT_CAPTURE_STDOUT_STDERR = os.environ.get("SHOULD_NOT_CAPTURE_STDOUT_STD
 # Convenience variable for current working directory
 current_dir = os.path.dirname(sys.argv[0])
 # Path to systemf shared library
-LIBSYSTEMF_SO = os.path.join(current_dir, '../.libs/libsystemf.so')
-LIBSYSTEMF_DYLIB = os.path.join(current_dir, '../.libs/libsystemf.dylib')
+LIBSYSTEMF_SO = os.path.join(current_dir, '../src/.libs/libsystemf.so')
+LIBSYSTEMF_DYLIB = os.path.join(current_dir, '../src/.libs/libsystemf.dylib')
 # Path to test.json
 TEST_JSON = os.path.join(current_dir, 'test.json')
 

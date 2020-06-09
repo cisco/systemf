@@ -1,9 +1,7 @@
 #!/bin/sh
-cd /home/systemf/systemf
+cd /systemf
 
 autoreconf -i
 ./configure
 make -C src
 make
-target=${target check}
-make check

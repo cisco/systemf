@@ -1,5 +1,38 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
+#
+# From https://www.gnu.org/savannah-checkouts/gnu/autoconf/manual/autoconf-2.69/autoconf.html:
+#
+# Files used in preparing a software package for distribution, when using just Autoconf:
+#
+#      your source files --> [autoscan*] --> [configure.scan] --> configure.ac
+#    
+#      configure.ac --.
+#                     |   .------> autoconf* -----> configure
+#      [aclocal.m4] --+---+
+#                     |   `-----> [autoheader*] --> [config.h.in]
+#      [acsite.m4] ---'
+#     
+#      Makefile.in
+# Additionally, if you use Automake, the following additional productions come into play:
+#
+#      [acinclude.m4] --.
+#                       |
+#      [local macros] --+--> aclocal* --> aclocal.m4
+#                       |
+#      configure.ac ----'
+#     
+#      configure.ac --.
+#                     +--> automake* --> Makefile.in
+#      Makefile.am ---'
+# Files used in configuring a software package:
+#
+#                             .-------------> [config.cache]
+#      configure* ------------+-------------> config.log
+#                             |
+#      [config.h.in] -.       v            .-> [config.h] -.
+#                     +--> config.status* -+               +--> make*
+#      Makefile.in ---'                    `-> Makefile ---'
 
 AC_PREREQ([2.69])
 AC_INIT([FULL-PACKAGE-NAME], [VERSION], [BUG-REPORT-ADDRESS])
@@ -85,7 +118,10 @@ Are you sure that you want to have myfeature disabled? You will lose this and th
                ])
 fi
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([
+ Makefile
+ src/Makefile
+])
 AC_REQUIRE_AUX_FILE([tap-driver.sh])
 AX_VALGRIND_CHECK # http://www.gnu.org/software/autoconf-archive/ax_valgrind_check.html - make check-valgrind
 AX_CODE_COVERAGE # http://www.gnu.org/software/autoconf-archive/ax_code_coverage.html#ax_code_coverage - make check-code-coverage generates coverage report

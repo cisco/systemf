@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.4.1.  */
+/* A Bison parser, made by GNU Bison 3.6.3.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2019 Free Software Foundation,
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -31,8 +31,9 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* Undocumented macros, especially those whose name start with YY_,
-   are private implementation details.  Do not rely on them.  */
+/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+   especially those whose name start with YY_ or yy_.  They are
+   private implementation details that can be changed or removed.  */
 
 #ifndef YY_SYSTEMF1_YY_DERIVED_PARSER_H_INCLUDED
 # define YY_SYSTEMF1_YY_DERIVED_PARSER_H_INCLUDED
@@ -63,52 +64,50 @@ extern int systemf1_yydebug;
     #include "systemf-internal.h"
 
 
-#line 67 "derived-parser.h"
+#line 68 "derived-parser.h"
 
-/* Token type.  */
+/* Token kinds.  */
 #ifndef SYSTEMF1_YYTOKENTYPE
 # define SYSTEMF1_YYTOKENTYPE
   enum systemf1_yytokentype
   {
-    SYLLABLE = 258,
-    SPACE = 259,
-    QUOTE = 260,
-    LESSER = 261,
-    TWO_GREATER_AND_ONE = 262,
-    TWO_GREATER = 263,
-    AND_GREATER = 264,
-    GREATER = 265,
-    TWO_GREATER_GREATER = 266,
-    AND_GREATER_GREATER = 267,
-    GREATER_GREATER = 268,
-    GREATER_AND_TWO = 269,
-    AND_AND = 270,
-    OR_OR = 271,
-    SEMICOLON = 272,
-    OR = 273
+    SYSTEMF1_YYEMPTY = -2,
+    SYSTEMF1_YYEOF = 0,            /* "end of file"  */
+    SYSTEMF1_YYerror = 256,        /* error  */
+    SYSTEMF1_YYUNDEF = 257,        /* "invalid token"  */
+    SYLLABLE = 258,                /* SYLLABLE  */
+    SPACE = 259,                   /* SPACE  */
+    QUOTE = 260,                   /* QUOTE  */
+    LESSER = 261,                  /* LESSER  */
+    TWO_GREATER_AND_ONE = 262,     /* TWO_GREATER_AND_ONE  */
+    TWO_GREATER = 263,             /* TWO_GREATER  */
+    AND_GREATER = 264,             /* AND_GREATER  */
+    GREATER = 265,                 /* GREATER  */
+    TWO_GREATER_GREATER = 266,     /* TWO_GREATER_GREATER  */
+    AND_GREATER_GREATER = 267,     /* AND_GREATER_GREATER  */
+    GREATER_GREATER = 268,         /* GREATER_GREATER  */
+    GREATER_AND_TWO = 269,         /* GREATER_AND_TWO  */
+    AND_AND = 270,                 /* AND_AND  */
+    OR_OR = 271,                   /* OR_OR  */
+    SEMICOLON = 272,               /* SEMICOLON  */
+    OR = 273                       /* OR  */
   };
+  typedef enum systemf1_yytokentype systemf1_yytoken_kind_t;
 #endif
 
 /* Value type.  */
 #if ! defined SYSTEMF1_YYSTYPE && ! defined SYSTEMF1_YYSTYPE_IS_DECLARED
 union SYSTEMF1_YYSTYPE
 {
+  syllable * SYLLABLE;                     /* SYLLABLE  */
+  syllable * syllables;                    /* syllables  */
+  systemf1_redirect * redirects;           /* redirects  */
+  systemf1_redirect * redirect;            /* redirect  */
+  systemf1_task * cmds;                    /* cmds  */
+  systemf1_task * cmd;                     /* cmd  */
+  systemf1_task * words;                   /* words  */
 
-  /* SYLLABLE  */
-  syllable * SYLLABLE;
-  /* syllables  */
-  syllable * syllables;
-  /* redirects  */
-  systemf1_redirect * redirects;
-  /* redirect  */
-  systemf1_redirect * redirect;
-  /* cmds  */
-  systemf1_task * cmds;
-  /* cmd  */
-  systemf1_task * cmd;
-  /* words  */
-  systemf1_task * words;
-#line 112 "derived-parser.h"
+#line 111 "derived-parser.h"
 
 };
 typedef union SYSTEMF1_YYSTYPE SYSTEMF1_YYSTYPE;
@@ -143,6 +142,6 @@ int systemf1_yyparse (yyscan_t scanner, systemf1_parse_args *results);
 
     int systemf1_yyerror(SYSTEMF1_YYLTYPE *locp, yyscan_t scanner, systemf1_parse_args *results, const char *msg);
 
-#line 147 "derived-parser.h"
+#line 146 "derived-parser.h"
 
 #endif /* !YY_SYSTEMF1_YY_DERIVED_PARSER_H_INCLUDED  */

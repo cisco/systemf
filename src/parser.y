@@ -37,6 +37,7 @@
      * don't expose the statics to the world.
      */
     #include "parser-inc.c"
+    #include "systemf-internal.h"
 }
 
 %token <syllable *> SYLLABLE

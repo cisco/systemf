@@ -16,6 +16,7 @@ libtool
 myexecutable
 src/.deps/
 src/.dirstamp
+src/derived-parser.output
 stamp-h1
 test-suite.log
 tests/test.log
