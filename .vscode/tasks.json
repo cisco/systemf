@@ -1,0 +1,25 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "Make check",
+			"command": "/usr/bin/make",
+			"args": ["check"],
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"environment": [{
+					"name": "CFLAGS",
+					"value": "-g"
+				}],
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}

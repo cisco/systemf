@@ -3,6 +3,7 @@
 *.la
 *.m4
 build-aux/
+*~
 
 *.swp
 .libs/
@@ -14,10 +15,12 @@ config.status
 configure
 libtool
 myexecutable
-src/.deps/
-src/.dirstamp
+.deps/
+.dirstamp
 src/derived-parser.output
 stamp-h1
 test-suite.log
 tests/test.log
 tests/test.trs
+tests/test-runner
+tests/test-runner.c
