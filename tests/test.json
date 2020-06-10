@@ -109,8 +109,8 @@
         "return_code": ["==", -1]
     },
     {
-        "description": "Test Redirects #1 # TODO fix infinite loop if x is changed to <",
-        "command": [ "/bin/cat x AUTHORS" ],
+        "description": "Test Redirects #1",
+        "command": [ "/bin/cat < AUTHORS" ],
         "stdout": ["contains", "Eklund"],
         "stderr": null,
         "return_code": ["==", 0]

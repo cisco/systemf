@@ -30,6 +30,7 @@ static syllable *syl (systemf1_parse_args *results, char *text, int flags) {
     syl->flags = flags;
     memcpy(syl->text, text, bufsize);
     syl->next = NULL;
+    syl->next_word = NULL;
     return syl;
 }
 static syllable *syl_s (systemf1_parse_args *results) {

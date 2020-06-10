@@ -103,7 +103,7 @@ for i in range(len(tests)):
         for io in (("STDOUT", stdout), ("STDERR", stderr)):
             print('#')
             print(f'# {io[0]}:')
-            for line in io[1].decode("ascii").split("\n"):
+            for line in io[1].decode(errors="replace").split("\n"):
                 print(f'# {line}')
 
     print(f'{result} {i+1} - {description}')

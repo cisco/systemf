@@ -90,7 +90,7 @@ def generate_test_func(index: int, test: dict) -> str:
     return test_func_template.format(test_name=test_name, test_args=test_args)
 
 def generate_test_funcs(tests: list) -> str:
-    return "".join([generate_test_func(i + 1, f) for i, f in enumerate(tests)])
+    return "".join([generate_test_func(i, f) for i, f in enumerate(tests)])
 
 def generate_usage_tests(tests: list) -> str:
     result = ""
@@ -104,8 +104,9 @@ int (*(test_func_table[]))(void) = {{
 {test_functions}
 }};
 """
+
 def generate_test_func_table(tests: list) -> str:
-    test_functions = "\n".join([f'    {str2func(i+1, t["description"])},' for i, t in enumerate(tests)])
+    test_functions = "\n".join([f'    {str2func(i, t["description"])},' for i, t in enumerate(tests)])
     return(test_func_table_template.format(test_functions=test_functions))
 
 def generate_kwargs(tests: list) -> str:

@@ -145,7 +145,7 @@ static void merge_and_free_syllables(syllable *syl, char **text_pp, char **path_
     for (syllable *s = syl; s != NULL;)
     {
         int syl_is_glob = s->flags & SYL_IS_GLOB;
-        int syl_escape_glob = s->flags & syl_escape_glob;
+        int syl_escape_glob = s->flags & SYL_ESCAPE_GLOB;
         syllable *save_next;
 
         for (int i = 0; sandbox_index < sandbox_len; i+=1, sandbox_index +=1) {
@@ -185,22 +185,6 @@ static void merge_and_free_syllables(syllable *syl, char **text_pp, char **path_
     return;
 }
 
-static systemf1_task *add_argument(systemf1_task *task, syllable *syl) {
-    int is_glob;
-    char *text;
-    char *path;
-
-    if (!task) {
-        task = systemf1_task_create();
-        // FIXME: Handle NULL return value.
-    }
-
-    merge_and_free_syllables(syl, &text, &path, &is_glob);
-
-    systemf1_task_add_arg(task, text, path, is_glob, 1);
-
-    return task;
-}
 
 systemf1_redirect *merge_redirects(systemf1_redirect *left, systemf1_redirect *right) {
     systemf1_redirect *cursor;
@@ -211,13 +195,12 @@ systemf1_redirect *merge_redirects(systemf1_redirect *left, systemf1_redirect *r
 
 systemf1_redirect *create_redirect(systemf1_stream stream, systemf1_stream target, int append, syllable *file_syllables)
 {
-    systemf1_redirect * redirect = calloc(1, sizeof(redirect));
+    systemf1_redirect *redirect = calloc(1, sizeof(*redirect));
     // FIXME: Handle malloc error
     redirect->stream = stream;
     redirect->target = target;
     redirect->append = append;
     DBG("begin: stream %d, target %d, append %d, file %p", stream, target, append, file_syllables);
-
     if (file_syllables) {
         int is_glob;
 
@@ -227,5 +210,27 @@ systemf1_redirect *create_redirect(systemf1_stream stream, systemf1_stream targe
         assert(!is_glob);
     }
     DBG("end");
+
     return redirect;
+}
+
+systemf1_task *_sf1_create_cmd(syllable *syllables, systemf1_redirect *redirects) {
+    int is_glob;
+    char *text;
+    char *path;
+    syllable *next;
+    systemf1_task *task;
+
+    task = systemf1_task_create();
+
+    while (syllables) {
+        next = syllables->next_word;
+        merge_and_free_syllables(syllables, &text, &path, &is_glob);
+        _sf1_task_add_arg(task, text, path, is_glob);
+        syllables = next;
+    }
+
+    systemf1_task_add_redirects(task, redirects);
+
+    return task;
 }

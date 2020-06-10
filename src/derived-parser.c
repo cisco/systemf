@@ -162,12 +162,12 @@ extern int systemf1_yydebug;
 union SYSTEMF1_YYSTYPE
 {
   syllable * SYLLABLE;                     /* SYLLABLE  */
+  syllable * words;                        /* words  */
   syllable * syllables;                    /* syllables  */
   systemf1_redirect * redirects;           /* redirects  */
   systemf1_redirect * redirect;            /* redirect  */
   systemf1_task * cmds;                    /* cmds  */
   systemf1_task * cmd;                     /* cmd  */
-  systemf1_task * words;                   /* words  */
 
 #line 173 "derived-parser.c"
 
@@ -1336,7 +1336,7 @@ yyreduce:
     {
   case 2:
 #line 53 "parser.y"
-                       { results->tasks = (yyvsp[0].cmd); }
+                               { results->tasks = (yyvsp[0].cmd); }
 #line 1341 "derived-parser.c"
     break;
 
@@ -1360,7 +1360,7 @@ yyreduce:
 
   case 6:
 #line 60 "parser.y"
-                         { systemf1_task_add_redirects((yyvsp[-1].words), (yyvsp[0].redirects)); (yyval.cmd) = (yyvsp[-1].words); }
+                         { (yyval.cmd) = _sf1_create_cmd((yyvsp[-1].words), (yyvsp[0].redirects)); }
 #line 1365 "derived-parser.c"
     break;
 
@@ -1440,13 +1440,13 @@ yyreduce:
 
   case 19:
 #line 81 "parser.y"
-                         { (yyval.words) = add_argument(NULL, (yyvsp[0].syllables)); }
+                         { (yyval.words) = (yyvsp[0].syllables); }
 #line 1445 "derived-parser.c"
     break;
 
   case 20:
 #line 82 "parser.y"
-                         { (yyval.words) = add_argument((yyvsp[0].words), (yyvsp[-2].syllables)); }
+                         { (yyvsp[-2].syllables)->next_word = (yyvsp[0].words); (yyval.words) = (yyvsp[-2].syllables); }
 #line 1451 "derived-parser.c"
     break;
 
@@ -1458,7 +1458,7 @@ yyreduce:
 
   case 22:
 #line 86 "parser.y"
-                         { (yyval.syllables) = (yyvsp[0].SYLLABLE); }
+                             { (yyval.syllables) = (yyvsp[0].SYLLABLE); }
 #line 1463 "derived-parser.c"
     break;
 

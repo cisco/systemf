@@ -43,11 +43,19 @@ typedef struct systemf1_task_ {
     struct systemf1_task_ *next;
 } systemf1_task;
 
+typedef struct systemf1_task_files_ {
+    int in;
+    int out;
+    int err;
+    int out_rd_pipe;
+} systemf1_task_files;
+
 extern systemf1_task *systemf1_task_create();
 extern int systemf1_tasks_run(systemf1_task *task);
-extern systemf1_task_arg *systemf1_task_add_arg(systemf1_task *task, char *text, char *path, int is_glob, int to_front);
+extern systemf1_task_arg *_sf1_task_add_arg(systemf1_task *task, char *text, char *path, int is_glob);
 extern void systemf1_task_add_redirects(systemf1_task *task, systemf1_redirect *redirect);
 extern void systemf1_task_set_run_if (systemf1_task *task, systemf1_run_if run_if);
 extern void systemf1_task_free(systemf1_task *task);
 extern char *systemf1_stream_name(systemf1_stream);
+extern void _sf1_close_upper_fd(void);
 #endif /* __task_h__ */

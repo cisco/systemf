@@ -19,6 +19,7 @@ typedef enum {
 
 typedef struct syllable_ {
     struct syllable_ *next;
+    struct syllable_ *next_word;
     syl_flags flags;
     char text[];
 } syllable;

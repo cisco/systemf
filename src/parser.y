@@ -43,21 +43,21 @@
 %token <syllable *> SYLLABLE
 %token SPACE QUOTE LESSER TWO_GREATER_AND_ONE TWO_GREATER AND_GREATER GREATER TWO_GREATER_GREATER AND_GREATER_GREATER
 %token GREATER_GREATER GREATER_AND_TWO AND_AND OR_OR SEMICOLON OR
-%type <syllable *> syllables
-%type <systemf1_task *> words cmd cmds
+%type <syllable *> syllables words
+%type <systemf1_task *> cmd cmds
 %type <systemf1_redirect *> redirect redirects
 
 %%
 
 cmds:
-  cmd		       { results->tasks = $1; }
+  cmd		               { results->tasks = $1; }
 | cmd SEMICOLON cmds   { results->tasks = $1; $1->next = $3; $3->run_if = SYSTEMF1_RUN_ALWAYS; }
 | cmd OR_OR cmds       { results->tasks = $1; $1->next = $3; $3->run_if = SYSTEMF1_RUN_IF_PREV_FAILED; }
 | cmd AND_AND cmds     { results->tasks = $1; $1->next = $3; $3->run_if = SYSTEMF1_RUN_IF_PREV_SUCCEEDED;  }
-/* | cmd OR cmds          { results->tasks = $1; $1->next = $3; $3->run_if = SYSTEMF1_RUN_ALWAYS;  }*/
+/* | cmd OR cmds          { results->tasks = $1; $1->next = $3; $3->run_if = SYSTEMF1_RUN_ALWAYS;  }  SYSTEMF1_PIPE comes in here*/
 
 cmd:
-  words redirects        { systemf1_task_add_redirects($1, $2); $$ = $1; }
+  words redirects        { $$ = _sf1_create_cmd($1, $2); }
 
 redirects:
   redirect redirects     { $$ = merge_redirects($1, $2); }
@@ -78,12 +78,12 @@ redirect:
                                 $$->next = create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_FILE,  1, $2); }
 
 words:
-  syllables              { $$ = add_argument(NULL, $1); }
-| syllables SPACE words  { $$ = add_argument($3, $1); }
+  syllables              { $$ = $1; }
+| syllables SPACE words  { $1->next_word = $3; $$ = $1; }
 | error                  { YYABORT; }
 
 syllables:
-  SYLLABLE	         { $$ = $1; }
+  SYLLABLE	             { $$ = $1; }
 | SYLLABLE syllables     { $1->next = $2; $$ = $1; }
 
 

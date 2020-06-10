@@ -100,12 +100,12 @@ extern int systemf1_yydebug;
 union SYSTEMF1_YYSTYPE
 {
   syllable * SYLLABLE;                     /* SYLLABLE  */
+  syllable * words;                        /* words  */
   syllable * syllables;                    /* syllables  */
   systemf1_redirect * redirects;           /* redirects  */
   systemf1_redirect * redirect;            /* redirect  */
   systemf1_task * cmds;                    /* cmds  */
   systemf1_task * cmd;                     /* cmd  */
-  systemf1_task * words;                   /* words  */
 
 #line 111 "derived-parser.h"
 

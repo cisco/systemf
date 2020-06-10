@@ -703,6 +703,7 @@ static syllable *syl (systemf1_parse_args *results, char *text, int flags) {
     syl->flags = flags;
     memcpy(syl->text, text, bufsize);
     syl->next = NULL;
+    syl->next_word = NULL;
     return syl;
 }
 static syllable *syl_s (systemf1_parse_args *results) {
@@ -724,8 +725,8 @@ static syllable *syl_d (systemf1_parse_args *results) {
     return syl(results, text, 0);
 }
 
-#line 727 "derived-lexer.c"
 #line 728 "derived-lexer.c"
+#line 729 "derived-lexer.c"
 
 #define INITIAL 0
 
@@ -997,10 +998,10 @@ YY_DECL
 		}
 
 	{
-#line 57 "lexer.l"
+#line 58 "lexer.l"
 
 
-#line 1003 "derived-lexer.c"
+#line 1004 "derived-lexer.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1059,126 +1060,126 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 59 "lexer.l"
+#line 60 "lexer.l"
 { yylval->SYLLABLE = syl(results, yytext, SYL_IS_TRUSTED); return SYLLABLE; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 60 "lexer.l"
+#line 61 "lexer.l"
 { yylval->SYLLABLE = syl(results, yytext, SYL_IS_FILE|SYL_IS_GLOB|SYL_IS_TRUSTED); return SYLLABLE; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 61 "lexer.l"
+#line 62 "lexer.l"
 { yylval->SYLLABLE = syl(results, yytext, SYL_IS_FILE|SYL_IS_GLOB|SYL_IS_TRUSTED); return SYLLABLE; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 62 "lexer.l"
+#line 63 "lexer.l"
 { yylval->SYLLABLE = syl_s(results); return SYLLABLE; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 63 "lexer.l"
+#line 64 "lexer.l"
 { yylval->SYLLABLE = syl_file(results); return SYLLABLE; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 64 "lexer.l"
+#line 65 "lexer.l"
 { yylval->SYLLABLE = syl_trusted_file(results); return SYLLABLE; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 65 "lexer.l"
+#line 66 "lexer.l"
 { yylval->SYLLABLE = syl_glob(results); return SYLLABLE; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 66 "lexer.l"
+#line 67 "lexer.l"
 { yylval->SYLLABLE = syl_d(results); return SYLLABLE; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 67 "lexer.l"
+#line 68 "lexer.l"
 { return SPACE;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 68 "lexer.l"
+#line 69 "lexer.l"
 { return LESSER; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 69 "lexer.l"
+#line 70 "lexer.l"
 { return TWO_GREATER_AND_ONE; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 70 "lexer.l"
+#line 71 "lexer.l"
 { return TWO_GREATER; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 71 "lexer.l"
+#line 72 "lexer.l"
 { return AND_GREATER; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 72 "lexer.l"
+#line 73 "lexer.l"
 { return GREATER; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 73 "lexer.l"
+#line 74 "lexer.l"
 { return GREATER_AND_TWO; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 74 "lexer.l"
+#line 75 "lexer.l"
 { return TWO_GREATER_GREATER; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 75 "lexer.l"
+#line 76 "lexer.l"
 { return AND_GREATER_GREATER; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 76 "lexer.l"
+#line 77 "lexer.l"
 { return GREATER_GREATER; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 77 "lexer.l"
+#line 78 "lexer.l"
 { return AND_AND; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 78 "lexer.l"
+#line 79 "lexer.l"
 { return OR; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 79 "lexer.l"
+#line 80 "lexer.l"
 { return OR_OR; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 80 "lexer.l"
+#line 81 "lexer.l"
 { return SEMICOLON; }
 	YY_BREAK
 case 23:
 /* rule 23 can match eol */
 YY_RULE_SETUP
-#line 81 "lexer.l"
+#line 82 "lexer.l"
 { return yytext[0]; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 83 "lexer.l"
+#line 84 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 1181 "derived-lexer.c"
+#line 1182 "derived-lexer.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2321,7 +2322,7 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 83 "lexer.l"
+#line 84 "lexer.l"
 
 
 

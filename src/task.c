@@ -9,6 +9,8 @@
 #include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #define DEBUG 1
 #define VA_ARGS(...) , ##__VA_ARGS__
@@ -56,11 +58,10 @@ void systemf1_task_set_run_if (systemf1_task *task, systemf1_run_if run_if) {
  * text - The text of the argument.  Must be malloced.
  * path - If path verification is to be done this is the pre-realpath path.  Either NULL or malloced.
  * is_glob - This is a glob expression that glob expansion will be needed for.
- * to_front - specifies the command should be added to the front of the argument list.
  *
  * Note that all malloced memory passed in will be freed with systemf1_task_free()
  */
-systemf1_task_arg *systemf1_task_add_arg (systemf1_task *task, char *text, char *path, int is_glob, int to_front)
+systemf1_task_arg *_sf1_task_add_arg (systemf1_task *task, char *text, char *path, int is_glob)
 {
     systemf1_task_arg *arg;
 
@@ -74,16 +75,12 @@ systemf1_task_arg *systemf1_task_add_arg (systemf1_task *task, char *text, char 
     arg->is_glob = is_glob;
 
     // Find the last item and append pp
-    if (to_front) {
-        arg->next = task->args;
-        task->args = arg;
-    } else {
-        systemf1_task_arg **next_pp = &(task->args);
-        while (*next_pp) {
-            next_pp = &((*next_pp)->next);
-        }
-        *next_pp = arg;
+    systemf1_task_arg **next_pp = &(task->args);
+    while (*next_pp) {
+        next_pp = &((*next_pp)->next);
     }
+    *next_pp = arg;
+
     return arg;
 }
 
@@ -201,6 +198,61 @@ void systemf1_task_free(systemf1_task *task)
     return;
 }
 
+/*
+ * Fills in the files for the tasks.
+ * 
+ * Returns -1 on failure and 0 on success.
+ */
+static int populate_task_files(systemf1_task *task, systemf1_task_files *files) {
+    int pipefd[2];
+    systemf1_redirect *redirect;
+    files->in = 0;
+    files->out = 1;
+    files->err = 2;
+
+    for (redirect = task->redirects; redirect; redirect = redirect->next) {
+        if (redirect->stream == SYSTEMF1_STDIN)  {
+            if (redirect->target == SYSTEMF1_FILE) {
+                files->in = open(redirect->text, O_RDONLY);
+                if (files->in < 0) {
+                    fprintf(stderr, "systemf: %s for %s\n", strerror(errno), redirect->text);
+                    return -1;
+                }
+            } else { // SYSTEMF1_PIPE
+                files->in = files->out_rd_pipe;
+            }
+        } else if (redirect->stream == SYSTEMF1_STDOUT) {
+            if (redirect->target == SYSTEMF1_FILE) {
+                files->out = open(redirect->text, O_WRONLY | redirect->append ? O_APPEND : 0);
+                if (files->out < 0) {
+                    fprintf(stderr, "systemf: %s for %s\n", strerror(errno), redirect->text);
+                    return -1;
+                }
+            } else if (redirect->target == SYSTEMF1_SHARE) {
+                files->out = files->err;
+            } else { // SYSTEMF1_PIPE
+                if (pipe(pipefd)) {
+                    fprintf(stderr, "systemf: %s opening a pipe\n", strerror(errno));
+                    return -1;
+                }
+                files->out = pipefd[0];
+                files->out_rd_pipe = pipefd[1];
+            }
+        } else { // SYSTEMF1_STDERR
+            if (redirect->target == SYSTEMF1_FILE) {
+                files->err = open(redirect->text, O_WRONLY | redirect->append ? O_APPEND : 0);
+                if (files->err < 0) {
+                    fprintf(stderr, "systemf: received %s when trying to access %s\n", strerror(errno), redirect->text);
+                    return -1;
+                }
+            } else if (redirect->target == SYSTEMF1_SHARE) {
+                files->err = files->out;
+            }
+        }
+    }
+    return 0;
+}
+
 int systemf1_tasks_run(systemf1_task *tasks) {
     pid_t pid;
     int stat;
@@ -211,6 +263,7 @@ int systemf1_tasks_run(systemf1_task *tasks) {
     glob_list **next_glob_pp = &globs;
     int ret;
     int newerrno = 0;
+    systemf1_task_files files;
 
     if (!redirects_are_sane(tasks)) {
         return -1;
@@ -251,6 +304,10 @@ int systemf1_tasks_run(systemf1_task *tasks) {
         *argv = NULL;
         DBG("_____________________ err exi exs sig tsig\n");
 
+        if (populate_task_files(task, &files)) {
+            return -1;
+        }
+
         // If we don't flush, both forks will send the buffered data and it will be seen twice.
         fflush(stdout);
         fflush(stderr);
@@ -261,6 +318,11 @@ int systemf1_tasks_run(systemf1_task *tasks) {
         newerrno = 0;
         pid = fork();
         if (pid == 0) {
+            dup2(files.in, 0);
+            dup2(files.out, 1);
+            dup2(files.err, 2);
+            // _sf1_close_upper_fd();
+
             DBG("Running %s", task->argv[0]);
             stat = execv(*task->argv, task->argv);
             DBG("Execv   returned with %3d %3d %3d %3d %3d\n", errno,
@@ -272,6 +334,17 @@ int systemf1_tasks_run(systemf1_task *tasks) {
             kill(getpid(), SIGKILL);
         }
 
+        // Close the child in out and error if they aren't shared with the parent.
+        if (files.in > 2) {
+            close(files.in);
+        }
+        if (files.out > 2) {
+            close(files.out);
+        }
+        if (files.err > 2) {
+            close(files.err);
+        }
+
         waitpid(pid, &stat, 0);
 
         if (WIFSIGNALED(stat)) {
@@ -280,7 +353,6 @@ int systemf1_tasks_run(systemf1_task *tasks) {
 
         DBG("waitpid returned with %3d %3d %3d %3d %3d\n", errno,
             WIFEXITED(stat), WEXITSTATUS(stat), WIFSIGNALED(stat), WTERMSIG(stat));
-
 
         if (WIFSIGNALED(stat) || (WIFEXITED(stat) && WEXITSTATUS(stat))) {
             if (task->next && (task->next->run_if == SYSTEMF1_RUN_IF_PREV_SUCCEEDED)) {
