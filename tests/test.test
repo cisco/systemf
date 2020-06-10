@@ -17,7 +17,14 @@ def get_tests() -> list:
             sys.exit(-1)
 
 def run_command(index):
-    return run(['./test-runner', str(index + 1)], stdout=PIPE, stderr=PIPE)
+    # Hack to run the test runner from the source root.
+    cwd = os.getcwd()
+    print("Hello", cwd)
+    if cwd.endswith("tests"):
+        os.chdir("..")
+    result = run(['tests/test-runner', str(index + 1)], stdout=PIPE, stderr=PIPE)
+    os.chdir(cwd)
+    return result
 
 def fixup_compare_value(compare_value):
     """Convert systemf() int return value to process return value

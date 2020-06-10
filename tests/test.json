@@ -110,7 +110,7 @@
     },
     {
         "description": "Test Redirects #1",
-        "command": [ "/bin/cat < AUTHORS" ],
+        "command": [ "/bin/pwd && /bin/cat < AUTHORS" ],
         "stdout": ["contains", "Eklund"],
         "stderr": null,
         "return_code": ["==", 0]

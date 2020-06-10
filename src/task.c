@@ -12,7 +12,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#define DEBUG 1
+#define DEBUG 0
 #define VA_ARGS(...) , ##__VA_ARGS__
 #define DBG(fmt, ...) if (DEBUG) { printf("%s:%-3d:%24s: " fmt "\n", __FILE__, __LINE__, __FUNCTION__ VA_ARGS(__VA_ARGS__)); }
 
@@ -215,7 +215,7 @@ static int populate_task_files(systemf1_task *task, systemf1_task_files *files) 
             if (redirect->target == SYSTEMF1_FILE) {
                 files->in = open(redirect->text, O_RDONLY);
                 if (files->in < 0) {
-                    fprintf(stderr, "systemf: %s for %s\n", strerror(errno), redirect->text);
+                    fprintf(stderr, "systemf: %s: %s\n", strerror(errno), redirect->text);
                     return -1;
                 }
             } else { // SYSTEMF1_PIPE
@@ -225,7 +225,7 @@ static int populate_task_files(systemf1_task *task, systemf1_task_files *files) 
             if (redirect->target == SYSTEMF1_FILE) {
                 files->out = open(redirect->text, O_WRONLY | redirect->append ? O_APPEND : 0);
                 if (files->out < 0) {
-                    fprintf(stderr, "systemf: %s for %s\n", strerror(errno), redirect->text);
+                    fprintf(stderr, "systemf: %s: %s\n", strerror(errno), redirect->text);
                     return -1;
                 }
             } else if (redirect->target == SYSTEMF1_SHARE) {
@@ -242,7 +242,7 @@ static int populate_task_files(systemf1_task *task, systemf1_task_files *files) 
             if (redirect->target == SYSTEMF1_FILE) {
                 files->err = open(redirect->text, O_WRONLY | redirect->append ? O_APPEND : 0);
                 if (files->err < 0) {
-                    fprintf(stderr, "systemf: received %s when trying to access %s\n", strerror(errno), redirect->text);
+                    fprintf(stderr, "systemf: %s: %s\n\n", strerror(errno), redirect->text);
                     return -1;
                 }
             } else if (redirect->target == SYSTEMF1_SHARE) {
