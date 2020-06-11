@@ -87,7 +87,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-check_PROGRAMS = test-runner$(EXEEXT)
+check_PROGRAMS = test-runner$(EXEEXT) cmd$(EXEEXT)
 subdir = tests
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_code_coverage.m4 \
@@ -102,13 +102,16 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am_test_runner_OBJECTS = test_runner-test-runner.$(OBJEXT)
-test_runner_OBJECTS = $(am_test_runner_OBJECTS)
-test_runner_DEPENDENCIES = ../src/libsystemf.la
+am_cmd_OBJECTS = cmd.$(OBJEXT)
+cmd_OBJECTS = $(am_cmd_OBJECTS)
+cmd_LDADD = $(LDADD)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+am_test_runner_OBJECTS = test_runner-test-runner.$(OBJEXT)
+test_runner_OBJECTS = $(am_test_runner_OBJECTS)
+test_runner_DEPENDENCIES = ../src/libsystemf.la
 test_runner_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(test_runner_CFLAGS) \
 	$(CFLAGS) $(test_runner_LDFLAGS) $(LDFLAGS) -o $@
@@ -127,7 +130,8 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/test_runner-test-runner.Po
+am__depfiles_remade = ./$(DEPDIR)/cmd.Po \
+	./$(DEPDIR)/test_runner-test-runner.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -147,8 +151,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(test_runner_SOURCES)
-DIST_SOURCES = $(test_runner_SOURCES)
+SOURCES = $(cmd_SOURCES) $(test_runner_SOURCES)
+DIST_SOURCES = $(cmd_SOURCES) $(test_runner_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -505,6 +509,7 @@ test_runner_SOURCES = test-runner.c
 test_runner_LDADD = ../src/libsystemf.la
 test_runner_CFLAGS = $(AM_CFLAGS) $(CODE_COVERAGE_CFLAGS)
 test_runner_LDFLAGS = $(CODE_COVERAGE_LDFLAGS)
+cmd_SOURCES = cmd.c
 TESTS = test.test
 TESTS_ENVIRONMENT = 
 TEST_EXTENSIONS = .test
@@ -553,6 +558,10 @@ clean-checkPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
+cmd$(EXEEXT): $(cmd_OBJECTS) $(cmd_DEPENDENCIES) $(EXTRA_cmd_DEPENDENCIES) 
+	@rm -f cmd$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(cmd_OBJECTS) $(cmd_LDADD) $(LIBS)
+
 test-runner$(EXEEXT): $(test_runner_OBJECTS) $(test_runner_DEPENDENCIES) $(EXTRA_test_runner_DEPENDENCIES) 
 	@rm -f test-runner$(EXEEXT)
 	$(AM_V_CCLD)$(test_runner_LINK) $(test_runner_OBJECTS) $(test_runner_LDADD) $(LIBS)
@@ -563,6 +572,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cmd.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_runner-test-runner.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
@@ -901,7 +911,8 @@ clean-am: clean-checkPROGRAMS clean-generic clean-libtool \
 	mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ./$(DEPDIR)/test_runner-test-runner.Po
+		-rm -f ./$(DEPDIR)/cmd.Po
+	-rm -f ./$(DEPDIR)/test_runner-test-runner.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -947,7 +958,8 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ./$(DEPDIR)/test_runner-test-runner.Po
+		-rm -f ./$(DEPDIR)/cmd.Po
+	-rm -f ./$(DEPDIR)/test_runner-test-runner.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

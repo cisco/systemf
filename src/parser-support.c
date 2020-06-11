@@ -25,7 +25,7 @@ static void merge_and_free_syllables (_sf1_syllable *syl, char **text_pp, char *
     size_t sandbox_index;
     int doing_sandbox_detection = 1;
     const char glob_chars[] = "?*[]"; // Globs supported by glob()
-    char *text, *cursor, *text_end, *path;
+    char *text, *cursor, *path;
 
     DBG("begin")
     for (_sf1_syllable *s = syl; s != NULL; s = s->next)
@@ -105,7 +105,6 @@ static void merge_and_free_syllables (_sf1_syllable *syl, char **text_pp, char *
         path = NULL;
     }
     text = malloc(slen + 1);
-    text_end = text + slen;
     cursor = text;
 
     for (_sf1_syllable *s = syl; s != NULL;)

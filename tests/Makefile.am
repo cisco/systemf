@@ -1,8 +1,12 @@
-check_PROGRAMS = test-runner
+check_PROGRAMS = test-runner cmd
 
 test_runner_SOURCES = test-runner.c
 test_runner_LDADD = ../src/libsystemf.la
 
+test_runner_CFLAGS = $(AM_CFLAGS) $(CODE_COVERAGE_CFLAGS)
+test_runner_LDFLAGS = $(CODE_COVERAGE_LDFLAGS)
+
+cmd_SOURCES = cmd.c
 test_runner_CFLAGS = $(AM_CFLAGS) $(CODE_COVERAGE_CFLAGS)
 test_runner_LDFLAGS = $(CODE_COVERAGE_LDFLAGS)
 
