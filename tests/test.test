@@ -19,7 +19,6 @@ def get_tests() -> list:
 def run_command(index):
     # Hack to run the test runner from the source root.
     cwd = os.getcwd()
-    print("Hello", cwd)
     if cwd.endswith("tests"):
         os.chdir("..")
     result = run(['tests/test-runner', str(index + 1)], stdout=PIPE, stderr=PIPE)

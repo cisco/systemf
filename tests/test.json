@@ -1,10 +1,10 @@
 [
     {
-        "description": "Test '/bin/ls'",
-        "command": [ "/bin/ls" ],
-        "stdout": null,
-        "stderr": null,
-        "return_code": ["==", 0]
+        "description": "Test simple command # TODO: The return 20 is causing an SEGV",
+        "command": [ "/Users/markeklund/work/systemf/tests/cmd stderr stdout return 20" ],
+        "stdout": ["==", "1"],
+        "stderr": ["==", "2"],
+        "return_code": ["==", 20]
     },
     {
         "description": "Test a non-existant binary",
