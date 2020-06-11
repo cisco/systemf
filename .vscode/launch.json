@@ -10,7 +10,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/tests/.libs/test-runner",
-      "args": ["5"],
+      "args": ["16"],
       "environment": [
         {"name": "DYLD_LIBRARY_PATH", "value": "${workspaceFolder}/src/.libs:${env:DYLD_LIBRARY_PATH}"}],
       "stopAtEntry": false,
@@ -27,7 +27,7 @@
       "console": "integratedTerminal"
     },
     {
-      "name": "C++ Launch",
+      "name": "Docker gdb",
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceRoot}/myprogram",

@@ -95,7 +95,7 @@ char *_sf1_stream_name(_sf1_stream stream) {
         case _SF1_STDERR: return "stderr"; break;
         case _SF1_PIPE: return "pipe"; break;
         case _SF1_FILE: return "file"; break;
-        default: assert(__func__ == "invalid_argument");
+        default: assert(0);
     }
 }
 
@@ -122,7 +122,7 @@ static int redirects_are_sane(_sf1_task *tasks)
                 count = err = err + 1;
                 break;
             default:
-                assert(__func__ == "invalid_argument");
+                assert(0);
             }
             if (count > 1) {
                 fprintf(stderr, "ERROR: There should only be one %s per command.", _sf1_stream_name(r->stream));
@@ -235,8 +235,8 @@ static int populate_task_files(_sf1_task *task, _sf1_task_files *files) {
                     fprintf(stderr, "systemf: %s opening a pipe\n", strerror(errno));
                     return -1;
                 }
-                files->out = pipefd[0];
-                files->out_rd_pipe = pipefd[1];
+                files->out_rd_pipe = pipefd[0];
+                files->out = pipefd[1];
             }
         } else { // _SF1_STDERR
             if (redirect->target == _SF1_FILE) {
@@ -259,8 +259,6 @@ int _sf1_tasks_run(_sf1_task *tasks) {
     char **argv;
     _sf1_task_arg *arg;
     size_t argc = 1; // 1 for terminating NULL
-    glob_list *globs = NULL;
-    glob_list **next_glob_pp = &globs;
     int ret;
     int newerrno = 0;
     _sf1_task_files files;

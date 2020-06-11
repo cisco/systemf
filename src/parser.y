@@ -53,7 +53,8 @@ cmds:
 | cmd SEMICOLON cmds   { results->tasks = $1; $1->next = $3; $3->run_if = _SF1_RUN_ALWAYS; }
 | cmd OR_OR cmds       { results->tasks = $1; $1->next = $3; $3->run_if = _SF1_RUN_IF_PREV_FAILED; }
 | cmd AND_AND cmds     { results->tasks = $1; $1->next = $3; $3->run_if = _SF1_RUN_IF_PREV_SUCCEEDED;  }
-/* | cmd OR cmds          { results->tasks = $1; $1->next = $3; $3->run_if = _SF1_RUN_ALWAYS;  }  _SF1_PIPE comes in here*/
+| cmd OR cmds          { results->tasks = $1; $1->next = $3; $3->run_if = _SF1_RUN_ALWAYS; 
+                         _sf1_create_redirect_pipe($1, $3); }
 
 cmd:
   words redirects        { $$ = _sf1_create_cmd($1, $2); }

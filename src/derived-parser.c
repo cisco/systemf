@@ -559,16 +559,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  8
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   29
+#define YYLAST   32
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  19
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  7
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  23
+#define YYNRULES  24
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  36
+#define YYNSTATES  38
 
 #define YYMAXUTOK   273
 
@@ -618,9 +618,9 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    52,    52,    53,    54,    55,    59,    62,    63,    64,
-      67,    68,    69,    70,    71,    72,    73,    74,    76,    80,
-      81,    82,    85,    86
+       0,    52,    52,    53,    54,    55,    56,    60,    63,    64,
+      65,    68,    69,    70,    71,    72,    73,    74,    75,    77,
+      81,    82,    83,    86,    87
 };
 #endif
 
@@ -675,10 +675,10 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      23,    -6,     8,    25,     3,    -5,    24,    -6,    -6,    23,
-      23,    23,     8,    -6,     8,     8,     8,     8,     8,     8,
-      -6,    -6,    -5,    23,    -6,    -6,    -6,    -6,    -6,    -6,
-      -6,    -6,    -6,    -6,    -6,    -6
+       9,    -6,    24,    28,     4,    -5,    25,    -6,    -6,     9,
+       9,     9,     9,    24,    -6,    24,    24,    24,    24,    24,
+      24,    -6,    -6,    -5,     9,    -6,    -6,    -6,    -6,    -6,
+      -6,    -6,    -6,    -6,    -6,    -6,    -6,    -6
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -686,22 +686,22 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,    21,    22,     0,     2,     9,    19,    23,     1,     0,
-       0,     0,     0,    14,     0,     0,     0,     0,     0,     0,
-      13,     6,     8,     0,     5,     4,     3,    10,    15,    17,
-      11,    16,    18,    12,     7,    20
+       0,    22,    23,     0,     2,    10,    20,    24,     1,     0,
+       0,     0,     0,     0,    15,     0,     0,     0,     0,     0,
+       0,    14,     7,     9,     0,     5,     4,     3,     6,    11,
+      16,    18,    12,    17,    19,    13,     8,    21
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -6,    12,    -6,     5,    -6,     6,    -2
+      -6,    14,    -6,     7,    -6,     8,    -2
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     3,     4,    21,    22,     5,     6
+      -1,     3,     4,    22,    23,     5,     6
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -709,16 +709,18 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       7,    12,    13,    14,    15,    16,    17,    18,    19,    20,
-      27,     2,    28,    29,    30,    31,    32,    33,     9,    10,
-      11,    24,    25,    26,     1,     8,     2,    34,    23,    35
+       7,    13,    14,    15,    16,    17,    18,    19,    20,    21,
+       1,    29,     2,    30,    31,    32,    33,    34,    35,     9,
+      10,    11,    12,    25,    26,    27,    28,     2,     8,    24,
+      36,     0,    37
 };
 
 static const yytype_int8 yycheck[] =
 {
        2,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      12,     3,    14,    15,    16,    17,    18,    19,    15,    16,
-      17,     9,    10,    11,     1,     0,     3,    22,     4,    23
+       1,    13,     3,    15,    16,    17,    18,    19,    20,    15,
+      16,    17,    18,     9,    10,    11,    12,     3,     0,     4,
+      23,    -1,    24
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -726,25 +728,25 @@ static const yytype_int8 yycheck[] =
 static const yytype_int8 yystos[] =
 {
        0,     1,     3,    20,    21,    24,    25,    25,     0,    15,
-      16,    17,     6,     7,     8,     9,    10,    11,    12,    13,
-      14,    22,    23,     4,    20,    20,    20,    25,    25,    25,
-      25,    25,    25,    25,    22,    24
+      16,    17,    18,     6,     7,     8,     9,    10,    11,    12,
+      13,    14,    22,    23,     4,    20,    20,    20,    20,    25,
+      25,    25,    25,    25,    25,    25,    22,    24
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    19,    20,    20,    20,    20,    21,    22,    22,    22,
-      23,    23,    23,    23,    23,    23,    23,    23,    23,    24,
-      24,    24,    25,    25
+       0,    19,    20,    20,    20,    20,    20,    21,    22,    22,
+      22,    23,    23,    23,    23,    23,    23,    23,    23,    23,
+      24,    24,    24,    25,    25
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     3,     3,     3,     2,     2,     1,     0,
-       2,     2,     2,     1,     1,     2,     2,     2,     2,     1,
-       3,     1,     1,     2
+       0,     2,     1,     3,     3,     3,     3,     2,     2,     1,
+       0,     2,     2,     2,     1,     1,     2,     2,     2,     2,
+       1,     3,     1,     1,     2
 };
 
 
@@ -1336,139 +1338,146 @@ yyreduce:
   case 2:
 #line 52 "parser.y"
                                { results->tasks = (yyvsp[0].cmd); }
-#line 1340 "derived-parser.c"
+#line 1342 "derived-parser.c"
     break;
 
   case 3:
 #line 53 "parser.y"
                        { results->tasks = (yyvsp[-2].cmd); (yyvsp[-2].cmd)->next = (yyvsp[0].cmds); (yyvsp[0].cmds)->run_if = _SF1_RUN_ALWAYS; }
-#line 1346 "derived-parser.c"
+#line 1348 "derived-parser.c"
     break;
 
   case 4:
 #line 54 "parser.y"
                        { results->tasks = (yyvsp[-2].cmd); (yyvsp[-2].cmd)->next = (yyvsp[0].cmds); (yyvsp[0].cmds)->run_if = _SF1_RUN_IF_PREV_FAILED; }
-#line 1352 "derived-parser.c"
+#line 1354 "derived-parser.c"
     break;
 
   case 5:
 #line 55 "parser.y"
                        { results->tasks = (yyvsp[-2].cmd); (yyvsp[-2].cmd)->next = (yyvsp[0].cmds); (yyvsp[0].cmds)->run_if = _SF1_RUN_IF_PREV_SUCCEEDED;  }
-#line 1358 "derived-parser.c"
+#line 1360 "derived-parser.c"
     break;
 
   case 6:
-#line 59 "parser.y"
-                         { (yyval.cmd) = _sf1_create_cmd((yyvsp[-1].words), (yyvsp[0].redirects)); }
-#line 1364 "derived-parser.c"
+#line 56 "parser.y"
+                       { results->tasks = (yyvsp[-2].cmd); (yyvsp[-2].cmd)->next = (yyvsp[0].cmds); (yyvsp[0].cmds)->run_if = _SF1_RUN_ALWAYS; 
+                         _sf1_create_redirect_pipe((yyvsp[-2].cmd), (yyvsp[0].cmds)); }
+#line 1367 "derived-parser.c"
     break;
 
   case 7:
-#line 62 "parser.y"
-                         { (yyval.redirects) = _sf1_merge_redirects((yyvsp[-1].redirect), (yyvsp[0].redirects)); }
-#line 1370 "derived-parser.c"
+#line 60 "parser.y"
+                         { (yyval.cmd) = _sf1_create_cmd((yyvsp[-1].words), (yyvsp[0].redirects)); }
+#line 1373 "derived-parser.c"
     break;
 
   case 8:
 #line 63 "parser.y"
-                         { (yyval.redirects) = (yyvsp[0].redirect); }
-#line 1376 "derived-parser.c"
+                         { (yyval.redirects) = _sf1_merge_redirects((yyvsp[-1].redirect), (yyvsp[0].redirects)); }
+#line 1379 "derived-parser.c"
     break;
 
   case 9:
 #line 64 "parser.y"
-                         { (yyval.redirects) = NULL; }
-#line 1382 "derived-parser.c"
+                         { (yyval.redirects) = (yyvsp[0].redirect); }
+#line 1385 "derived-parser.c"
     break;
 
   case 10:
-#line 67 "parser.y"
-                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDIN,  _SF1_FILE,  0, (yyvsp[0].syllables)); }
-#line 1388 "derived-parser.c"
+#line 65 "parser.y"
+                         { (yyval.redirects) = NULL; }
+#line 1391 "derived-parser.c"
     break;
 
   case 11:
 #line 68 "parser.y"
-                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDOUT, _SF1_FILE,  0, (yyvsp[0].syllables)); }
-#line 1394 "derived-parser.c"
+                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDIN,  _SF1_FILE,  0, (yyvsp[0].syllables)); }
+#line 1397 "derived-parser.c"
     break;
 
   case 12:
 #line 69 "parser.y"
-                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDOUT, _SF1_FILE,  1, (yyvsp[0].syllables)); }
-#line 1400 "derived-parser.c"
+                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDOUT, _SF1_FILE,  0, (yyvsp[0].syllables)); }
+#line 1403 "derived-parser.c"
     break;
 
   case 13:
 #line 70 "parser.y"
-                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDOUT, _SF1_SHARE, 0, NULL); }
-#line 1406 "derived-parser.c"
+                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDOUT, _SF1_FILE,  1, (yyvsp[0].syllables)); }
+#line 1409 "derived-parser.c"
     break;
 
   case 14:
 #line 71 "parser.y"
-                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDERR, _SF1_SHARE, 0, NULL); }
-#line 1412 "derived-parser.c"
+                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDOUT, _SF1_SHARE, 0, NULL); }
+#line 1415 "derived-parser.c"
     break;
 
   case 15:
 #line 72 "parser.y"
-                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDERR, _SF1_FILE,  0, (yyvsp[0].syllables)); }
-#line 1418 "derived-parser.c"
+                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDERR, _SF1_SHARE, 0, NULL); }
+#line 1421 "derived-parser.c"
     break;
 
   case 16:
 #line 73 "parser.y"
-                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDERR, _SF1_FILE,  1, (yyvsp[0].syllables)); }
-#line 1424 "derived-parser.c"
+                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDERR, _SF1_FILE,  0, (yyvsp[0].syllables)); }
+#line 1427 "derived-parser.c"
     break;
 
   case 17:
 #line 74 "parser.y"
-                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDERR, _SF1_SHARE, 0, NULL);
-                                (yyval.redirect)->next = _sf1_create_redirect(_SF1_STDOUT, _SF1_FILE,  0, (yyvsp[0].syllables)); }
-#line 1431 "derived-parser.c"
+                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDERR, _SF1_FILE,  1, (yyvsp[0].syllables)); }
+#line 1433 "derived-parser.c"
     break;
 
   case 18:
-#line 76 "parser.y"
-                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDERR, _SF1_SHARE, 1, NULL);
-                                (yyval.redirect)->next = _sf1_create_redirect(_SF1_STDOUT, _SF1_FILE,  1, (yyvsp[0].syllables)); }
-#line 1438 "derived-parser.c"
+#line 75 "parser.y"
+                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDERR, _SF1_SHARE, 0, NULL);
+                                (yyval.redirect)->next = _sf1_create_redirect(_SF1_STDOUT, _SF1_FILE,  0, (yyvsp[0].syllables)); }
+#line 1440 "derived-parser.c"
     break;
 
   case 19:
-#line 80 "parser.y"
-                         { (yyval.words) = (yyvsp[0].syllables); }
-#line 1444 "derived-parser.c"
+#line 77 "parser.y"
+                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDERR, _SF1_SHARE, 1, NULL);
+                                (yyval.redirect)->next = _sf1_create_redirect(_SF1_STDOUT, _SF1_FILE,  1, (yyvsp[0].syllables)); }
+#line 1447 "derived-parser.c"
     break;
 
   case 20:
 #line 81 "parser.y"
-                         { (yyvsp[-2].syllables)->next_word = (yyvsp[0].words); (yyval.words) = (yyvsp[-2].syllables); }
-#line 1450 "derived-parser.c"
+                         { (yyval.words) = (yyvsp[0].syllables); }
+#line 1453 "derived-parser.c"
     break;
 
   case 21:
 #line 82 "parser.y"
-                         { YYABORT; }
-#line 1456 "derived-parser.c"
+                         { (yyvsp[-2].syllables)->next_word = (yyvsp[0].words); (yyval.words) = (yyvsp[-2].syllables); }
+#line 1459 "derived-parser.c"
     break;
 
   case 22:
-#line 85 "parser.y"
-                             { (yyval.syllables) = (yyvsp[0].SYLLABLE); }
-#line 1462 "derived-parser.c"
+#line 83 "parser.y"
+                         { YYABORT; }
+#line 1465 "derived-parser.c"
     break;
 
   case 23:
 #line 86 "parser.y"
+                             { (yyval.syllables) = (yyvsp[0].SYLLABLE); }
+#line 1471 "derived-parser.c"
+    break;
+
+  case 24:
+#line 87 "parser.y"
                          { (yyvsp[-1].SYLLABLE)->next = (yyvsp[0].syllables); (yyval.syllables) = (yyvsp[-1].SYLLABLE); }
-#line 1468 "derived-parser.c"
+#line 1477 "derived-parser.c"
     break;
 
 
-#line 1472 "derived-parser.c"
+#line 1481 "derived-parser.c"
 
       default: break;
     }
@@ -1667,6 +1676,6 @@ yyreturn:
   return yyresult;
 }
 
-#line 89 "parser.y"
+#line 90 "parser.y"
 
 

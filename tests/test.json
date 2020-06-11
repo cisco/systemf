@@ -60,58 +60,58 @@
         "return_code": ["==", -1]
     },
     {
-        "description": "Test Bad Redirects #1 (multiple stdin)",
+        "description": "Bad Redirects - (multiple stdin)",
         "command": [ "/bin/cat </dev/null </tmp" ],
         "stdout": null,
         "stderr": ["contains", "ERROR: There should only be one stdin per command."],
         "return_code": ["==", -1]
     },
     {
-        "description": "Test Bad Redirects #2 (multiple stderr)",
+        "description": "Bad Redirects - (multiple stderr)",
         "command": [ "/bin/cat 2>&1 2>/dev/null" ],
         "stdout": null,
         "stderr": ["contains", "ERROR: There should only be one stderr per command."],
         "return_code": ["==", -1]
     },
     {
-        "description": "Test Bad Redirects #3 (multiple stderr)",
+        "description": "Bad Redirects - (multiple stderr 2)",
         "command": [ "/bin/cat 2>/dev/null 2>/tmp" ],
         "stdout": null,
         "stderr": ["contains", "ERROR: There should only be one stderr per command."],
         "return_code": ["==", -1]
     },
     {
-        "description": "Test Bad Redirects #4 (stderr + stdout append + stdout)",
+        "description": "Bad Redirects - (stderr + stdout append + stdout)",
         "command": [ "/bin/cat &>>/dev/null >/tmp" ],
         "stdout": null,
         "stderr": ["contains", "ERROR: There should only be one stdout per command."],
         "return_code": ["==", -1]
     },
     {
-        "description": "Test Bad Redirects #5 (stderr + 2 stdout",
+        "description": "Bad Redirects - (stderr + 2 stdout",
         "command": [ "/bin/cat &>/dev/null >/tmp" ],
         "stdout": null,
         "stderr": ["contains", "ERROR: There should only be one stdout per command."],
         "return_code": ["==", -1]
     },
     {
-        "description": "Test Bad Redirects #6 (stdout append + stdout)",
+        "description": "Bad Redirects - (stdout append + stdout)",
         "command": [ "/bin/cat >>/dev/null >/tmp" ],
         "stdout": null,
         "stderr": ["contains", "ERROR: There should only be one stdout per command."],
         "return_code": ["==", -1]
     },
     {
-        "description": "Test Bad Redirects #7 (multiple stderr)",
-        "command": [ "/bin/cat 2>/dev/null 2>/tmp" ],
-        "stdout": null,
-        "stderr": ["contains", "ERROR: There should only be one stderr per command."],
-        "return_code": ["==", -1]
+        "description": "stdin from file",
+        "command": [ "/bin/cat < AUTHORS" ],
+        "stdout": ["contains", "Eklund"],
+        "stderr": null,
+        "return_code": ["==", 0]
     },
     {
-        "description": "Test Redirects #1",
-        "command": [ "/bin/pwd && /bin/cat < AUTHORS" ],
-        "stdout": ["contains", "Eklund"],
+        "description": "stdout into stdin",
+        "command": [ "/bin/echo hello | /usr/bin/tr h y" ],
+        "stdout": ["contains", "yello"],
         "stderr": null,
         "return_code": ["==", 0]
     }

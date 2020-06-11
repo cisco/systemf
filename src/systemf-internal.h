@@ -30,8 +30,9 @@ typedef struct _sf1_syllable_ {
     typedef void* yyscan_t;
 #endif
 
-_sf1_redirect *_sf1_merge_redirects(_sf1_redirect *left, _sf1_redirect *right);
-_sf1_redirect *_sf1_create_redirect(_sf1_stream stream, _sf1_stream target, int append, _sf1_syllable *file_syllables);
-_sf1_task *_sf1_create_cmd(_sf1_syllable *syllables, _sf1_redirect *redirects);
+extern _sf1_redirect *_sf1_merge_redirects(_sf1_redirect *left, _sf1_redirect *right);
+extern _sf1_redirect *_sf1_create_redirect(_sf1_stream stream, _sf1_stream target, int append, _sf1_syllable *file_syllables);
+extern _sf1_task *_sf1_create_cmd(_sf1_syllable *syllables, _sf1_redirect *redirects);
+extern void _sf1_create_redirect_pipe (_sf1_task *left, _sf1_task *right);
 
 #endif /* __systemf_internal_h__ */

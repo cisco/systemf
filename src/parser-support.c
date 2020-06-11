@@ -14,7 +14,7 @@
 #define VA_ARGS(...) , ##__VA_ARGS__
 #define DBG(fmt, ...) if (DEBUG) { printf("%s:%-3d:%24s: " fmt "\n", __FILE__, __LINE__, __FUNCTION__ VA_ARGS(__VA_ARGS__)); }
 
-static void merge_and_free_syllables(_sf1_syllable *syl, char **text_pp, char **path_pp, int *is_glob_p) {
+static void merge_and_free_syllables (_sf1_syllable *syl, char **text_pp, char **path_pp, int *is_glob_p) {
     int is_glob = 0;
     int is_file = 0;
     int is_trusted = 1;
@@ -110,7 +110,6 @@ static void merge_and_free_syllables(_sf1_syllable *syl, char **text_pp, char **
 
     for (_sf1_syllable *s = syl; s != NULL;)
     {
-        int syl_is_glob = s->flags & SYL_IS_GLOB;
         int syl_escape_glob = s->flags & SYL_ESCAPE_GLOB;
         _sf1_syllable *save_next;
 
@@ -152,7 +151,7 @@ static void merge_and_free_syllables(_sf1_syllable *syl, char **text_pp, char **
 }
 
 
-_sf1_redirect *_sf1_merge_redirects(_sf1_redirect *left, _sf1_redirect *right) {
+_sf1_redirect *_sf1_merge_redirects (_sf1_redirect *left, _sf1_redirect *right) {
     _sf1_redirect *cursor;
     for (cursor = left; cursor->next; cursor = cursor->next);
     cursor->next = right;
@@ -180,7 +179,20 @@ _sf1_redirect *_sf1_create_redirect(_sf1_stream stream, _sf1_stream target, int 
     return redirect;
 }
 
-_sf1_task *_sf1_create_cmd(_sf1_syllable *syllables, _sf1_redirect *redirects) {
+static void append_redirect(_sf1_task *task, _sf1_redirect *redirect) {
+    _sf1_redirect **next_pp = &(task->redirects);
+    while (*next_pp) {
+        next_pp = &((*next_pp)->next);
+    }
+    *next_pp = redirect;
+}
+
+void _sf1_create_redirect_pipe (_sf1_task *left, _sf1_task *right) {
+    append_redirect(left, _sf1_create_redirect(_SF1_STDOUT, _SF1_PIPE, 0, NULL));
+    append_redirect(right, _sf1_create_redirect(_SF1_STDIN, _SF1_PIPE, 0, NULL));
+}
+
+_sf1_task *_sf1_create_cmd (_sf1_syllable *syllables, _sf1_redirect *redirects) {
     int is_glob;
     char *text;
     char *path;
