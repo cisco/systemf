@@ -45,7 +45,7 @@ AM_INIT_AUTOMAKE([foreign subdir-objects]) # Does not require NEWS, COPYING, AUT
 AM_SILENT_RULES([yes]) # less verbose make output 
 # AM_SILENT_RULES() # use make -s to get silent output
 
-AC_CONFIG_SRCDIR([src/main.c])
+AC_CONFIG_SRCDIR([src/systemf.c])
 AC_CONFIG_HEADERS([config.h]) # use config.h instead of passing -D in the command line
 AC_CONFIG_MACRO_DIR([m4])
 
