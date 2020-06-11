@@ -24,28 +24,28 @@ static void yy_user_action(_SF1_YYLTYPE *yylloc, const char *my_yytext)
 
 #define YY_USER_ACTION yy_user_action(yylloc, yytext);
 
-static syllable *syl (systemf1_parse_args *results, char *text, int flags) {
+static _sf1_syllable *syl (_sf1_parse_args *results, char *text, int flags) {
     size_t bufsize = strlen(text) + 1;
-    syllable *syl = malloc(sizeof(*syl) + bufsize);
+    _sf1_syllable *syl = malloc(sizeof(*syl) + bufsize);
     syl->flags = flags;
     memcpy(syl->text, text, bufsize);
     syl->next = NULL;
     syl->next_word = NULL;
     return syl;
 }
-static syllable *syl_s (systemf1_parse_args *results) {
+static _sf1_syllable *syl_s (_sf1_parse_args *results) {
     return syl(results, va_arg(*results->argpp, char *), SYL_ESCAPE_GLOB);
 }
-static syllable *syl_file (systemf1_parse_args *results) {
+static _sf1_syllable *syl_file (_sf1_parse_args *results) {
     return syl(results, va_arg(*results->argpp, char *), SYL_IS_FILE|SYL_ESCAPE_GLOB);
 }
-static syllable *syl_glob (systemf1_parse_args *results) {
+static _sf1_syllable *syl_glob (_sf1_parse_args *results) {
     return syl(results, va_arg(*results->argpp, char *), SYL_IS_FILE|SYL_IS_GLOB);
 }
-static syllable *syl_trusted_file (systemf1_parse_args *results) {
+static _sf1_syllable *syl_trusted_file (_sf1_parse_args *results) {
     return syl(results, va_arg(*results->argpp, char *), SYL_IS_FILE|SYL_IS_TRUSTED|SYL_ESCAPE_GLOB);
 }
-static syllable *syl_d (systemf1_parse_args *results) {
+static _sf1_syllable *syl_d (_sf1_parse_args *results) {
     char text[20];
     int val = va_arg(*results->argpp, int);
     snprintf(text, sizeof(text), "%d", val);

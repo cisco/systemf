@@ -99,13 +99,13 @@ extern int _sf1_yydebug;
 #if ! defined _SF1_YYSTYPE && ! defined _SF1_YYSTYPE_IS_DECLARED
 union _SF1_YYSTYPE
 {
-  syllable * SYLLABLE;                     /* SYLLABLE  */
-  syllable * words;                        /* words  */
-  syllable * syllables;                    /* syllables  */
-  systemf1_redirect * redirects;           /* redirects  */
-  systemf1_redirect * redirect;            /* redirect  */
-  systemf1_task * cmds;                    /* cmds  */
-  systemf1_task * cmd;                     /* cmd  */
+  _sf1_redirect * redirects;               /* redirects  */
+  _sf1_redirect * redirect;                /* redirect  */
+  _sf1_syllable * SYLLABLE;                /* SYLLABLE  */
+  _sf1_syllable * words;                   /* words  */
+  _sf1_syllable * syllables;               /* syllables  */
+  _sf1_task * cmds;                        /* cmds  */
+  _sf1_task * cmd;                         /* cmd  */
 
 #line 111 "derived-parser.h"
 
@@ -131,16 +131,16 @@ struct _SF1_YYLTYPE
 
 
 
-int _sf1_yyparse (yyscan_t scanner, systemf1_parse_args *results);
+int _sf1_yyparse (yyscan_t scanner, _sf1_parse_args *results);
 /* "%code provides" blocks.  */
 #line 25 "parser.y"
 
     #define YYSTYPE _SF1_YYSTYPE
     #define YYLTYPE _SF1_YYLTYPE
-    #define YY_DECL int _sf1_yylex(YYSTYPE * yylval_param , YYLTYPE *yylloc, yyscan_t yyscanner, systemf1_parse_args *results)
+    #define YY_DECL int _sf1_yylex(YYSTYPE * yylval_param , YYLTYPE *yylloc, yyscan_t yyscanner, _sf1_parse_args *results)
     extern YY_DECL;
 
-    int _sf1_yyerror(_SF1_YYLTYPE *locp, yyscan_t scanner, systemf1_parse_args *results, const char *msg);
+    int _sf1_yyerror(_SF1_YYLTYPE *locp, yyscan_t scanner, _sf1_parse_args *results, const char *msg);
 
 #line 146 "derived-parser.h"
 

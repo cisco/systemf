@@ -21,24 +21,24 @@ typedef struct glob_list_ {
     glob_t glob;
 } glob_list;
 
-systemf1_task *systemf1_task_create() {
-    return calloc(1, sizeof(systemf1_task));
+_sf1_task *_sf1_task_create() {
+    return calloc(1, sizeof(_sf1_task));
 }
 
 /*
- * systemf1_task_add_redirects - Adds a linked of redirections.
+ * _sf1_task_add_redirects - Adds a linked of redirections.
  *
  * task - Destination Task - Current redirects must be NULL,
- * redirects - A linked list of systemf1_redirects where:
+ * redirects - A linked list of _sf1_redirects where:
  *   each redirect is malloced
  *   filename - Is NULL or the destination malloced filename (if appropriate)
  *   path - Is the malloced verification path for filename where NULL is current directory.
  *   append - Specifies if the redirect shoud append to the file.
  *
- * Note that all malloced memory passed in will be freed with systemf1_task_free().
+ * Note that all malloced memory passed in will be freed with _sf1_task_free().
  * Note that validation of parameters is delayed until that task start happens.
  */
-void systemf1_task_add_redirects (systemf1_task *task, systemf1_redirect *redirects)
+void _sf1_task_add_redirects (_sf1_task *task, _sf1_redirect *redirects)
 {
     assert(task->redirects == NULL);
     task->redirects = redirects;
@@ -47,25 +47,25 @@ void systemf1_task_add_redirects (systemf1_task *task, systemf1_redirect *redire
 /*
  * systermf1_task_set_run_if - Sets the condition that this task will run.
  */
-void systemf1_task_set_run_if (systemf1_task *task, systemf1_run_if run_if) {
+void _sf1_task_set_run_if (_sf1_task *task, _sf1_run_if run_if) {
     task->run_if = run_if;
 }
 
 /*
- * systemf1_task_add_arg - Adds the specified argument to the task.
+ * _sf1_task_add_arg - Adds the specified argument to the task.
  *
  * task - Destination Task
  * text - The text of the argument.  Must be malloced.
  * path - If path verification is to be done this is the pre-realpath path.  Either NULL or malloced.
  * is_glob - This is a glob expression that glob expansion will be needed for.
  *
- * Note that all malloced memory passed in will be freed with systemf1_task_free()
+ * Note that all malloced memory passed in will be freed with _sf1_task_free()
  */
-systemf1_task_arg *_sf1_task_add_arg (systemf1_task *task, char *text, char *path, int is_glob)
+_sf1_task_arg *_sf1_task_add_arg (_sf1_task *task, char *text, char *path, int is_glob)
 {
-    systemf1_task_arg *arg;
+    _sf1_task_arg *arg;
 
-    arg = malloc(sizeof(systemf1_task_arg));
+    arg = malloc(sizeof(_sf1_task_arg));
     if (arg == NULL) {
         return NULL;
     }
@@ -75,7 +75,7 @@ systemf1_task_arg *_sf1_task_add_arg (systemf1_task *task, char *text, char *pat
     arg->is_glob = is_glob;
 
     // Find the last item and append pp
-    systemf1_task_arg **next_pp = &(task->args);
+    _sf1_task_arg **next_pp = &(task->args);
     while (*next_pp) {
         next_pp = &((*next_pp)->next);
     }
@@ -87,14 +87,14 @@ systemf1_task_arg *_sf1_task_add_arg (systemf1_task *task, char *text, char *pat
 /*
  * Maps a stream to a character string representation.
  */
-char *systemf1_stream_name(systemf1_stream stream) {
+char *_sf1_stream_name(_sf1_stream stream) {
     switch (stream) {
-        case SYSTEMF1_STDIN: return "stdin"; break;
-        case SYSTEMF1_STDOUT: return "stdout"; break;
-        case SYSTEMF1_SHARE: return "shared"; break;
-        case SYSTEMF1_STDERR: return "stderr"; break;
-        case SYSTEMF1_PIPE: return "pipe"; break;
-        case SYSTEMF1_FILE: return "file"; break;
+        case _SF1_STDIN: return "stdin"; break;
+        case _SF1_STDOUT: return "stdout"; break;
+        case _SF1_SHARE: return "shared"; break;
+        case _SF1_STDERR: return "stderr"; break;
+        case _SF1_PIPE: return "pipe"; break;
+        case _SF1_FILE: return "file"; break;
         default: assert(__func__ == "invalid_argument");
     }
 }
@@ -103,32 +103,32 @@ char *systemf1_stream_name(systemf1_stream stream) {
  * Walks all of the redirects and verifies that they are entered in a sane way.
  * Returns 0 if not and 1 if good.
  */
-static int redirects_are_sane(systemf1_task *tasks)
+static int redirects_are_sane(_sf1_task *tasks)
 {
-    for (systemf1_task *t = tasks; t; t = t->next) {
+    for (_sf1_task *t = tasks; t; t = t->next) {
         int in = 0;
         int out = 0;
         int err = 0;
-        for (systemf1_redirect *r = t->redirects; r; r = r ->next) {
+        for (_sf1_redirect *r = t->redirects; r; r = r ->next) {
             int count;
             switch (r->stream) {
-            case SYSTEMF1_STDIN:
+            case _SF1_STDIN:
                 count = in = in + 1;
                 break;
-            case SYSTEMF1_STDOUT:
+            case _SF1_STDOUT:
                 count = out = out + 1;
                 break;
-            case SYSTEMF1_STDERR:
+            case _SF1_STDERR:
                 count = err = err + 1;
                 break;
             default:
                 assert(__func__ == "invalid_argument");
             }
             if (count > 1) {
-                fprintf(stderr, "ERROR: There should only be one %s per command.", systemf1_stream_name(r->stream));
+                fprintf(stderr, "ERROR: There should only be one %s per command.", _sf1_stream_name(r->stream));
                 return 0;
             }
-            if ((r->target == SYSTEMF1_FILE) && !(r->text)) {
+            if ((r->target == _SF1_FILE) && !(r->text)) {
                 // A filename must be supplied.
                 return 0;
             }
@@ -146,10 +146,10 @@ static int redirects_are_sane(systemf1_task *tasks)
  *   GLOB_ABORTED for a read error, and
  *   GLOB_NOMATCH for when the number of matches doesn't match the specified allowed match count.
  */
-static int extract_globs(systemf1_task *tasks)
+static int extract_globs(_sf1_task *tasks)
 {
-    for (systemf1_task *t = tasks; t != NULL; t = t->next) {
-        for (systemf1_task_arg *a = t->args; a != NULL; a = a->next) {
+    for (_sf1_task *t = tasks; t != NULL; t = t->next) {
+        for (_sf1_task_arg *a = t->args; a != NULL; a = a->next) {
             if (a->is_glob) {
                 int ret = glob(a->text, 0, NULL, &a->glob);
                 // FIXME: do a bounds check.
@@ -170,12 +170,12 @@ static int extract_globs(systemf1_task *tasks)
     return 0;
 }
 
-void systemf1_task_free(systemf1_task *task)
+void _sf1_task_free(_sf1_task *task)
 {
-    systemf1_task *next;
+    _sf1_task *next;
     for (; task != NULL; task = next) {
-        systemf1_task_arg *anext;
-        for (systemf1_task_arg *a = task->args; a != NULL; a = anext) {
+        _sf1_task_arg *anext;
+        for (_sf1_task_arg *a = task->args; a != NULL; a = anext) {
             globfree(&a->glob);
             free(a->text);
             free(a->path);
@@ -183,8 +183,8 @@ void systemf1_task_free(systemf1_task *task)
             free(a);
         }
 
-        systemf1_redirect *rnext;
-        for (systemf1_redirect *r = task->redirects; r != NULL; r = rnext) {
+        _sf1_redirect *rnext;
+        for (_sf1_redirect *r = task->redirects; r != NULL; r = rnext) {
             free(r->text);
             free(r->path);
             rnext = r->next;
@@ -203,34 +203,34 @@ void systemf1_task_free(systemf1_task *task)
  * 
  * Returns -1 on failure and 0 on success.
  */
-static int populate_task_files(systemf1_task *task, systemf1_task_files *files) {
+static int populate_task_files(_sf1_task *task, _sf1_task_files *files) {
     int pipefd[2];
-    systemf1_redirect *redirect;
+    _sf1_redirect *redirect;
     files->in = 0;
     files->out = 1;
     files->err = 2;
 
     for (redirect = task->redirects; redirect; redirect = redirect->next) {
-        if (redirect->stream == SYSTEMF1_STDIN)  {
-            if (redirect->target == SYSTEMF1_FILE) {
+        if (redirect->stream == _SF1_STDIN)  {
+            if (redirect->target == _SF1_FILE) {
                 files->in = open(redirect->text, O_RDONLY);
                 if (files->in < 0) {
                     fprintf(stderr, "systemf: %s: %s\n", strerror(errno), redirect->text);
                     return -1;
                 }
-            } else { // SYSTEMF1_PIPE
+            } else { // _SF1_PIPE
                 files->in = files->out_rd_pipe;
             }
-        } else if (redirect->stream == SYSTEMF1_STDOUT) {
-            if (redirect->target == SYSTEMF1_FILE) {
+        } else if (redirect->stream == _SF1_STDOUT) {
+            if (redirect->target == _SF1_FILE) {
                 files->out = open(redirect->text, O_WRONLY | redirect->append ? O_APPEND : 0);
                 if (files->out < 0) {
                     fprintf(stderr, "systemf: %s: %s\n", strerror(errno), redirect->text);
                     return -1;
                 }
-            } else if (redirect->target == SYSTEMF1_SHARE) {
+            } else if (redirect->target == _SF1_SHARE) {
                 files->out = files->err;
-            } else { // SYSTEMF1_PIPE
+            } else { // _SF1_PIPE
                 if (pipe(pipefd)) {
                     fprintf(stderr, "systemf: %s opening a pipe\n", strerror(errno));
                     return -1;
@@ -238,14 +238,14 @@ static int populate_task_files(systemf1_task *task, systemf1_task_files *files) 
                 files->out = pipefd[0];
                 files->out_rd_pipe = pipefd[1];
             }
-        } else { // SYSTEMF1_STDERR
-            if (redirect->target == SYSTEMF1_FILE) {
+        } else { // _SF1_STDERR
+            if (redirect->target == _SF1_FILE) {
                 files->err = open(redirect->text, O_WRONLY | redirect->append ? O_APPEND : 0);
                 if (files->err < 0) {
                     fprintf(stderr, "systemf: %s: %s\n\n", strerror(errno), redirect->text);
                     return -1;
                 }
-            } else if (redirect->target == SYSTEMF1_SHARE) {
+            } else if (redirect->target == _SF1_SHARE) {
                 files->err = files->out;
             }
         }
@@ -253,17 +253,17 @@ static int populate_task_files(systemf1_task *task, systemf1_task_files *files) 
     return 0;
 }
 
-int systemf1_tasks_run(systemf1_task *tasks) {
+int _sf1_tasks_run(_sf1_task *tasks) {
     pid_t pid;
     int stat;
     char **argv;
-    systemf1_task_arg *arg;
+    _sf1_task_arg *arg;
     size_t argc = 1; // 1 for terminating NULL
     glob_list *globs = NULL;
     glob_list **next_glob_pp = &globs;
     int ret;
     int newerrno = 0;
-    systemf1_task_files files;
+    _sf1_task_files files;
 
     if (!redirects_are_sane(tasks)) {
         return -1;
@@ -278,7 +278,7 @@ int systemf1_tasks_run(systemf1_task *tasks) {
     // We don't support tasks reuse, so argv MUST be null coming into this.
     assert(tasks->argv == NULL);
 
-    for (systemf1_task *task = tasks; task; task = task->next) {
+    for (_sf1_task *task = tasks; task; task = task->next) {
         // Count the arguments.
         for (arg = task->args; arg != NULL; arg = arg->next) {
             if (arg->is_glob) {
@@ -355,12 +355,12 @@ int systemf1_tasks_run(systemf1_task *tasks) {
             WIFEXITED(stat), WEXITSTATUS(stat), WIFSIGNALED(stat), WTERMSIG(stat));
 
         if (WIFSIGNALED(stat) || (WIFEXITED(stat) && WEXITSTATUS(stat))) {
-            if (task->next && (task->next->run_if == SYSTEMF1_RUN_IF_PREV_SUCCEEDED)) {
+            if (task->next && (task->next->run_if == _SF1_RUN_IF_PREV_SUCCEEDED)) {
                 DBG("exiting because previous failed");
                 break;
             }
         } else {
-            if (task->next && (task->next->run_if == SYSTEMF1_RUN_IF_PREV_FAILED)) {
+            if (task->next && (task->next->run_if == _SF1_RUN_IF_PREV_FAILED)) {
                 DBG("exiting because previous succeeded");
                 break;
             }

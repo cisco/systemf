@@ -7,31 +7,31 @@
 
 
 typedef struct {
-    systemf1_task *tasks;
+    _sf1_task *tasks;
     va_list *argpp;
-} systemf1_parse_args ;
+} _sf1_parse_args ;
 
 typedef enum {
     SYL_ESCAPE_GLOB=1,
     SYL_IS_GLOB=2,
     SYL_IS_FILE=4,
     SYL_IS_TRUSTED=8,
-} syl_flags;
+} _sf1_syl_flags;
 
-typedef struct syllable_ {
-    struct syllable_ *next;
-    struct syllable_ *next_word;
-    syl_flags flags;
+typedef struct _sf1_syllable_ {
+    struct _sf1_syllable_ *next;
+    struct _sf1_syllable_ *next_word;
+    _sf1_syl_flags flags;
     char text[];
-} syllable;
+} _sf1_syllable;
 
 #ifndef YY_TYPEDEF_YY_SCANNER_T
     #define YY_TYPEDEF_YY_SCANNER_T
     typedef void* yyscan_t;
 #endif
 
-systemf1_redirect *_sf1_merge_redirects(systemf1_redirect *left, systemf1_redirect *right);
-systemf1_redirect *_sf1_create_redirect(systemf1_stream stream, systemf1_stream target, int append, syllable *file_syllables);
-systemf1_task *_sf1_create_cmd(syllable *syllables, systemf1_redirect *redirects);
+_sf1_redirect *_sf1_merge_redirects(_sf1_redirect *left, _sf1_redirect *right);
+_sf1_redirect *_sf1_create_redirect(_sf1_stream stream, _sf1_stream target, int append, _sf1_syllable *file_syllables);
+_sf1_task *_sf1_create_cmd(_sf1_syllable *syllables, _sf1_redirect *redirects);
 
 #endif /* __systemf_internal_h__ */

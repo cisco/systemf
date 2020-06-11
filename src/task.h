@@ -4,58 +4,58 @@
 #include <glob.h>
 
 typedef enum {
-    SYSTEMF1_STDIN,
-    SYSTEMF1_STDOUT,
-    SYSTEMF1_SHARE, // If in use FD or out.  If out, use FD of in.
-    SYSTEMF1_STDERR,
-    SYSTEMF1_PIPE,
-    SYSTEMF1_FILE,
-} systemf1_stream;
+    _SF1_STDIN,
+    _SF1_STDOUT,
+    _SF1_SHARE, // If in use FD or out.  If out, use FD of in.
+    _SF1_STDERR,
+    _SF1_PIPE,
+    _SF1_FILE,
+} _sf1_stream;
 
 typedef enum {
-    SYSTEMF1_RUN_ALWAYS = 0,
-    SYSTEMF1_RUN_IF_PREV_FAILED = 1,
-    SYSTEMF1_RUN_IF_PREV_SUCCEEDED = 2,
-} systemf1_run_if;
+    _SF1_RUN_ALWAYS = 0,
+    _SF1_RUN_IF_PREV_FAILED = 1,
+    _SF1_RUN_IF_PREV_SUCCEEDED = 2,
+} _sf1_run_if;
 
-typedef struct _systemf1_task_arg {
-    struct _systemf1_task_arg *next;
+typedef struct _sf1_task_arg_ {
+    struct _sf1_task_arg_ *next;
     int is_glob;
     char *text;
     char *path;
     glob_t glob;
-} systemf1_task_arg;
+} _sf1_task_arg;
 
-typedef struct _systemf1_redirect {
-    struct _systemf1_redirect *next;
-    systemf1_stream stream; // May only be STDIN, STDOUT, or STDERR
-    systemf1_stream target;
+typedef struct _sf1_redirect_ {
+    struct _sf1_redirect_ *next;
+    _sf1_stream stream; // May only be STDIN, STDOUT, or STDERR
+    _sf1_stream target;
     char *text;
     char *path;
     int append;
-} systemf1_redirect;
+} _sf1_redirect;
 
-typedef struct systemf1_task_ {
+typedef struct _sf1_task_ {
     char **argv;
-    systemf1_run_if run_if;
-    systemf1_redirect *redirects;
-    systemf1_task_arg *args;
-    struct systemf1_task_ *next;
-} systemf1_task;
+    _sf1_run_if run_if;
+    _sf1_redirect *redirects;
+    _sf1_task_arg *args;
+    struct _sf1_task_ *next;
+} _sf1_task;
 
-typedef struct systemf1_task_files_ {
+typedef struct _sf1_task_files_ {
     int in;
     int out;
     int err;
     int out_rd_pipe;
-} systemf1_task_files;
+} _sf1_task_files;
 
-extern systemf1_task *systemf1_task_create();
-extern int systemf1_tasks_run(systemf1_task *task);
-extern systemf1_task_arg *_sf1_task_add_arg(systemf1_task *task, char *text, char *path, int is_glob);
-extern void systemf1_task_add_redirects(systemf1_task *task, systemf1_redirect *redirect);
-extern void systemf1_task_set_run_if (systemf1_task *task, systemf1_run_if run_if);
-extern void systemf1_task_free(systemf1_task *task);
-extern char *systemf1_stream_name(systemf1_stream);
+extern _sf1_task *_sf1_task_create();
+extern int _sf1_tasks_run(_sf1_task *task);
+extern _sf1_task_arg *_sf1_task_add_arg(_sf1_task *task, char *text, char *path, int is_glob);
+extern void _sf1_task_add_redirects(_sf1_task *task, _sf1_redirect *redirect);
+extern void _sf1_task_set_run_if (_sf1_task *task, _sf1_run_if run_if);
+extern void _sf1_task_free(_sf1_task *task);
+extern char *_sf1_stream_name(_sf1_stream);
 extern void _sf1_close_upper_fd(void);
 #endif /* __task_h__ */

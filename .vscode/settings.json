@@ -1,4 +1,10 @@
 {
     "editor.tabCompletion": "onlySnippets",
-    "editor.quickSuggestions": false
+    "editor.quickSuggestions": false,
+    "search.exclude": {
+        "src/derived-*": true
+    },
+    "files.exclude": {
+        "src/derived-*": true
+    }
 }

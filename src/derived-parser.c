@@ -161,13 +161,13 @@ extern int _sf1_yydebug;
 #if ! defined _SF1_YYSTYPE && ! defined _SF1_YYSTYPE_IS_DECLARED
 union _SF1_YYSTYPE
 {
-  syllable * SYLLABLE;                     /* SYLLABLE  */
-  syllable * words;                        /* words  */
-  syllable * syllables;                    /* syllables  */
-  systemf1_redirect * redirects;           /* redirects  */
-  systemf1_redirect * redirect;            /* redirect  */
-  systemf1_task * cmds;                    /* cmds  */
-  systemf1_task * cmd;                     /* cmd  */
+  _sf1_redirect * redirects;               /* redirects  */
+  _sf1_redirect * redirect;                /* redirect  */
+  _sf1_syllable * SYLLABLE;                /* SYLLABLE  */
+  _sf1_syllable * words;                   /* words  */
+  _sf1_syllable * syllables;               /* syllables  */
+  _sf1_task * cmds;                        /* cmds  */
+  _sf1_task * cmd;                         /* cmd  */
 
 #line 173 "derived-parser.c"
 
@@ -193,16 +193,16 @@ struct _SF1_YYLTYPE
 
 
 
-int _sf1_yyparse (yyscan_t scanner, systemf1_parse_args *results);
+int _sf1_yyparse (yyscan_t scanner, _sf1_parse_args *results);
 /* "%code provides" blocks.  */
 #line 25 "parser.y"
 
     #define YYSTYPE _SF1_YYSTYPE
     #define YYLTYPE _SF1_YYLTYPE
-    #define YY_DECL int _sf1_yylex(YYSTYPE * yylval_param , YYLTYPE *yylloc, yyscan_t yyscanner, systemf1_parse_args *results)
+    #define YY_DECL int _sf1_yylex(YYSTYPE * yylval_param , YYLTYPE *yylloc, yyscan_t yyscanner, _sf1_parse_args *results)
     extern YY_DECL;
 
-    int _sf1_yyerror(_SF1_YYLTYPE *locp, yyscan_t scanner, systemf1_parse_args *results, const char *msg);
+    int _sf1_yyerror(_SF1_YYLTYPE *locp, yyscan_t scanner, _sf1_parse_args *results, const char *msg);
 
 #line 208 "derived-parser.c"
 
@@ -885,7 +885,7 @@ do {                                                                      \
 
 static void
 yy_symbol_value_print (FILE *yyo,
-                       yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp, yyscan_t scanner, systemf1_parse_args *results)
+                       yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp, yyscan_t scanner, _sf1_parse_args *results)
 {
   FILE *yyoutput = yyo;
   YYUSE (yyoutput);
@@ -910,7 +910,7 @@ yy_symbol_value_print (FILE *yyo,
 
 static void
 yy_symbol_print (FILE *yyo,
-                 yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp, yyscan_t scanner, systemf1_parse_args *results)
+                 yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp, yyscan_t scanner, _sf1_parse_args *results)
 {
   YYFPRINTF (yyo, "%s %s (",
              yykind < YYNTOKENS ? "token" : "nterm", yysymbol_name (yykind));
@@ -951,7 +951,7 @@ do {                                                            \
 
 static void
 yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp, YYLTYPE *yylsp,
-                 int yyrule, yyscan_t scanner, systemf1_parse_args *results)
+                 int yyrule, yyscan_t scanner, _sf1_parse_args *results)
 {
   int yylno = yyrline[yyrule];
   int yynrhs = yyr2[yyrule];
@@ -1014,7 +1014,7 @@ int yydebug;
 
 static void
 yydestruct (const char *yymsg,
-            yysymbol_kind_t yykind, YYSTYPE *yyvaluep, YYLTYPE *yylocationp, yyscan_t scanner, systemf1_parse_args *results)
+            yysymbol_kind_t yykind, YYSTYPE *yyvaluep, YYLTYPE *yylocationp, yyscan_t scanner, _sf1_parse_args *results)
 {
   YYUSE (yyvaluep);
   YYUSE (yylocationp);
@@ -1039,7 +1039,7 @@ yydestruct (const char *yymsg,
 `----------*/
 
 int
-yyparse (yyscan_t scanner, systemf1_parse_args *results)
+yyparse (yyscan_t scanner, _sf1_parse_args *results)
 {
 /* The lookahead symbol.  */
 int yychar;
@@ -1341,19 +1341,19 @@ yyreduce:
 
   case 3:
 #line 53 "parser.y"
-                       { results->tasks = (yyvsp[-2].cmd); (yyvsp[-2].cmd)->next = (yyvsp[0].cmds); (yyvsp[0].cmds)->run_if = SYSTEMF1_RUN_ALWAYS; }
+                       { results->tasks = (yyvsp[-2].cmd); (yyvsp[-2].cmd)->next = (yyvsp[0].cmds); (yyvsp[0].cmds)->run_if = _SF1_RUN_ALWAYS; }
 #line 1346 "derived-parser.c"
     break;
 
   case 4:
 #line 54 "parser.y"
-                       { results->tasks = (yyvsp[-2].cmd); (yyvsp[-2].cmd)->next = (yyvsp[0].cmds); (yyvsp[0].cmds)->run_if = SYSTEMF1_RUN_IF_PREV_FAILED; }
+                       { results->tasks = (yyvsp[-2].cmd); (yyvsp[-2].cmd)->next = (yyvsp[0].cmds); (yyvsp[0].cmds)->run_if = _SF1_RUN_IF_PREV_FAILED; }
 #line 1352 "derived-parser.c"
     break;
 
   case 5:
 #line 55 "parser.y"
-                       { results->tasks = (yyvsp[-2].cmd); (yyvsp[-2].cmd)->next = (yyvsp[0].cmds); (yyvsp[0].cmds)->run_if = SYSTEMF1_RUN_IF_PREV_SUCCEEDED;  }
+                       { results->tasks = (yyvsp[-2].cmd); (yyvsp[-2].cmd)->next = (yyvsp[0].cmds); (yyvsp[0].cmds)->run_if = _SF1_RUN_IF_PREV_SUCCEEDED;  }
 #line 1358 "derived-parser.c"
     break;
 
@@ -1383,57 +1383,57 @@ yyreduce:
 
   case 10:
 #line 67 "parser.y"
-                                    { (yyval.redirect) = _sf1_create_redirect(SYSTEMF1_STDIN,  SYSTEMF1_FILE,  0, (yyvsp[0].syllables)); }
+                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDIN,  _SF1_FILE,  0, (yyvsp[0].syllables)); }
 #line 1388 "derived-parser.c"
     break;
 
   case 11:
 #line 68 "parser.y"
-                                    { (yyval.redirect) = _sf1_create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_FILE,  0, (yyvsp[0].syllables)); }
+                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDOUT, _SF1_FILE,  0, (yyvsp[0].syllables)); }
 #line 1394 "derived-parser.c"
     break;
 
   case 12:
 #line 69 "parser.y"
-                                    { (yyval.redirect) = _sf1_create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_FILE,  1, (yyvsp[0].syllables)); }
+                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDOUT, _SF1_FILE,  1, (yyvsp[0].syllables)); }
 #line 1400 "derived-parser.c"
     break;
 
   case 13:
 #line 70 "parser.y"
-                                    { (yyval.redirect) = _sf1_create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_SHARE, 0, NULL); }
+                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDOUT, _SF1_SHARE, 0, NULL); }
 #line 1406 "derived-parser.c"
     break;
 
   case 14:
 #line 71 "parser.y"
-                                    { (yyval.redirect) = _sf1_create_redirect(SYSTEMF1_STDERR, SYSTEMF1_SHARE, 0, NULL); }
+                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDERR, _SF1_SHARE, 0, NULL); }
 #line 1412 "derived-parser.c"
     break;
 
   case 15:
 #line 72 "parser.y"
-                                    { (yyval.redirect) = _sf1_create_redirect(SYSTEMF1_STDERR, SYSTEMF1_FILE,  0, (yyvsp[0].syllables)); }
+                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDERR, _SF1_FILE,  0, (yyvsp[0].syllables)); }
 #line 1418 "derived-parser.c"
     break;
 
   case 16:
 #line 73 "parser.y"
-                                    { (yyval.redirect) = _sf1_create_redirect(SYSTEMF1_STDERR, SYSTEMF1_FILE,  1, (yyvsp[0].syllables)); }
+                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDERR, _SF1_FILE,  1, (yyvsp[0].syllables)); }
 #line 1424 "derived-parser.c"
     break;
 
   case 17:
 #line 74 "parser.y"
-                                    { (yyval.redirect) = _sf1_create_redirect(SYSTEMF1_STDERR, SYSTEMF1_SHARE, 0, NULL);
-                                (yyval.redirect)->next = _sf1_create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_FILE,  0, (yyvsp[0].syllables)); }
+                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDERR, _SF1_SHARE, 0, NULL);
+                                (yyval.redirect)->next = _sf1_create_redirect(_SF1_STDOUT, _SF1_FILE,  0, (yyvsp[0].syllables)); }
 #line 1431 "derived-parser.c"
     break;
 
   case 18:
 #line 76 "parser.y"
-                                    { (yyval.redirect) = _sf1_create_redirect(SYSTEMF1_STDERR, SYSTEMF1_SHARE, 1, NULL);
-                                (yyval.redirect)->next = _sf1_create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_FILE,  1, (yyvsp[0].syllables)); }
+                                    { (yyval.redirect) = _sf1_create_redirect(_SF1_STDERR, _SF1_SHARE, 1, NULL);
+                                (yyval.redirect)->next = _sf1_create_redirect(_SF1_STDOUT, _SF1_FILE,  1, (yyvsp[0].syllables)); }
 #line 1438 "derived-parser.c"
     break;
 

@@ -14,7 +14,7 @@
 #define VA_ARGS(...) , ##__VA_ARGS__
 #define DBG(fmt, ...) if (DEBUG) { printf("%s:%-3d:%24s: " fmt "\n", __FILE__, __LINE__, __FUNCTION__ VA_ARGS(__VA_ARGS__)); }
 
-static void merge_and_free_syllables(syllable *syl, char **text_pp, char **path_pp, int *is_glob_p) {
+static void merge_and_free_syllables(_sf1_syllable *syl, char **text_pp, char **path_pp, int *is_glob_p) {
     int is_glob = 0;
     int is_file = 0;
     int is_trusted = 1;
@@ -28,7 +28,7 @@ static void merge_and_free_syllables(syllable *syl, char **text_pp, char **path_
     char *text, *cursor, *text_end, *path;
 
     DBG("begin")
-    for (syllable *s = syl; s != NULL; s = s->next)
+    for (_sf1_syllable *s = syl; s != NULL; s = s->next)
     {
         int syl_is_glob = s->flags & SYL_IS_GLOB;
         int syl_escape_glob = s->flags & SYL_ESCAPE_GLOB;
@@ -108,11 +108,11 @@ static void merge_and_free_syllables(syllable *syl, char **text_pp, char **path_
     text_end = text + slen;
     cursor = text;
 
-    for (syllable *s = syl; s != NULL;)
+    for (_sf1_syllable *s = syl; s != NULL;)
     {
         int syl_is_glob = s->flags & SYL_IS_GLOB;
         int syl_escape_glob = s->flags & SYL_ESCAPE_GLOB;
-        syllable *save_next;
+        _sf1_syllable *save_next;
 
         for (int i = 0; sandbox_index < sandbox_len; i+=1, sandbox_index +=1) {
             path[sandbox_index] = s->text[i];
@@ -152,16 +152,16 @@ static void merge_and_free_syllables(syllable *syl, char **text_pp, char **path_
 }
 
 
-systemf1_redirect *_sf1_merge_redirects(systemf1_redirect *left, systemf1_redirect *right) {
-    systemf1_redirect *cursor;
+_sf1_redirect *_sf1_merge_redirects(_sf1_redirect *left, _sf1_redirect *right) {
+    _sf1_redirect *cursor;
     for (cursor = left; cursor->next; cursor = cursor->next);
     cursor->next = right;
     return left;
 }
 
-systemf1_redirect *_sf1_create_redirect(systemf1_stream stream, systemf1_stream target, int append, syllable *file_syllables)
+_sf1_redirect *_sf1_create_redirect(_sf1_stream stream, _sf1_stream target, int append, _sf1_syllable *file_syllables)
 {
-    systemf1_redirect *redirect = calloc(1, sizeof(*redirect));
+    _sf1_redirect *redirect = calloc(1, sizeof(*redirect));
     // FIXME: Handle malloc error
     redirect->stream = stream;
     redirect->target = target;
@@ -180,14 +180,14 @@ systemf1_redirect *_sf1_create_redirect(systemf1_stream stream, systemf1_stream 
     return redirect;
 }
 
-systemf1_task *_sf1_create_cmd(syllable *syllables, systemf1_redirect *redirects) {
+_sf1_task *_sf1_create_cmd(_sf1_syllable *syllables, _sf1_redirect *redirects) {
     int is_glob;
     char *text;
     char *path;
-    syllable *next;
-    systemf1_task *task;
+    _sf1_syllable *next;
+    _sf1_task *task;
 
-    task = systemf1_task_create();
+    task = _sf1_task_create();
 
     while (syllables) {
         next = syllables->next_word;
@@ -196,7 +196,7 @@ systemf1_task *_sf1_create_cmd(syllable *syllables, systemf1_redirect *redirects
         syllables = next;
     }
 
-    systemf1_task_add_redirects(task, redirects);
+    _sf1_task_add_redirects(task, redirects);
 
     return task;
 }
