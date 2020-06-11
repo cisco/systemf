@@ -249,10 +249,9 @@ typedef enum yysymbol_kind_t yysymbol_kind_t;
      * Put the parser code in a file that IDE's better understand, but
      * don't expose the statics to the world.
      */
-    #include "parser-inc.c"
     #include "systemf-internal.h"
 
-#line 256 "derived-parser.c"
+#line 255 "derived-parser.c"
 
 #ifdef short
 # undef short
@@ -619,9 +618,9 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    53,    53,    54,    55,    56,    60,    63,    64,    65,
-      68,    69,    70,    71,    72,    73,    74,    75,    77,    81,
-      82,    83,    86,    87
+       0,    52,    52,    53,    54,    55,    59,    62,    63,    64,
+      67,    68,    69,    70,    71,    72,    73,    74,    76,    80,
+      81,    82,    85,    86
 };
 #endif
 
@@ -1335,141 +1334,141 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 53 "parser.y"
+#line 52 "parser.y"
                                { results->tasks = (yyvsp[0].cmd); }
-#line 1341 "derived-parser.c"
+#line 1340 "derived-parser.c"
     break;
 
   case 3:
-#line 54 "parser.y"
+#line 53 "parser.y"
                        { results->tasks = (yyvsp[-2].cmd); (yyvsp[-2].cmd)->next = (yyvsp[0].cmds); (yyvsp[0].cmds)->run_if = SYSTEMF1_RUN_ALWAYS; }
-#line 1347 "derived-parser.c"
+#line 1346 "derived-parser.c"
     break;
 
   case 4:
-#line 55 "parser.y"
+#line 54 "parser.y"
                        { results->tasks = (yyvsp[-2].cmd); (yyvsp[-2].cmd)->next = (yyvsp[0].cmds); (yyvsp[0].cmds)->run_if = SYSTEMF1_RUN_IF_PREV_FAILED; }
-#line 1353 "derived-parser.c"
+#line 1352 "derived-parser.c"
     break;
 
   case 5:
-#line 56 "parser.y"
+#line 55 "parser.y"
                        { results->tasks = (yyvsp[-2].cmd); (yyvsp[-2].cmd)->next = (yyvsp[0].cmds); (yyvsp[0].cmds)->run_if = SYSTEMF1_RUN_IF_PREV_SUCCEEDED;  }
-#line 1359 "derived-parser.c"
+#line 1358 "derived-parser.c"
     break;
 
   case 6:
-#line 60 "parser.y"
+#line 59 "parser.y"
                          { (yyval.cmd) = _sf1_create_cmd((yyvsp[-1].words), (yyvsp[0].redirects)); }
-#line 1365 "derived-parser.c"
+#line 1364 "derived-parser.c"
     break;
 
   case 7:
-#line 63 "parser.y"
-                         { (yyval.redirects) = merge_redirects((yyvsp[-1].redirect), (yyvsp[0].redirects)); }
-#line 1371 "derived-parser.c"
+#line 62 "parser.y"
+                         { (yyval.redirects) = _sf1_merge_redirects((yyvsp[-1].redirect), (yyvsp[0].redirects)); }
+#line 1370 "derived-parser.c"
     break;
 
   case 8:
-#line 64 "parser.y"
+#line 63 "parser.y"
                          { (yyval.redirects) = (yyvsp[0].redirect); }
-#line 1377 "derived-parser.c"
+#line 1376 "derived-parser.c"
     break;
 
   case 9:
-#line 65 "parser.y"
+#line 64 "parser.y"
                          { (yyval.redirects) = NULL; }
-#line 1383 "derived-parser.c"
+#line 1382 "derived-parser.c"
     break;
 
   case 10:
-#line 68 "parser.y"
-                                    { (yyval.redirect) = create_redirect(SYSTEMF1_STDIN,  SYSTEMF1_FILE,  0, (yyvsp[0].syllables)); }
-#line 1389 "derived-parser.c"
+#line 67 "parser.y"
+                                    { (yyval.redirect) = _sf1_create_redirect(SYSTEMF1_STDIN,  SYSTEMF1_FILE,  0, (yyvsp[0].syllables)); }
+#line 1388 "derived-parser.c"
     break;
 
   case 11:
-#line 69 "parser.y"
-                                    { (yyval.redirect) = create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_FILE,  0, (yyvsp[0].syllables)); }
-#line 1395 "derived-parser.c"
+#line 68 "parser.y"
+                                    { (yyval.redirect) = _sf1_create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_FILE,  0, (yyvsp[0].syllables)); }
+#line 1394 "derived-parser.c"
     break;
 
   case 12:
-#line 70 "parser.y"
-                                    { (yyval.redirect) = create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_FILE,  1, (yyvsp[0].syllables)); }
-#line 1401 "derived-parser.c"
+#line 69 "parser.y"
+                                    { (yyval.redirect) = _sf1_create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_FILE,  1, (yyvsp[0].syllables)); }
+#line 1400 "derived-parser.c"
     break;
 
   case 13:
-#line 71 "parser.y"
-                                    { (yyval.redirect) = create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_SHARE, 0, NULL); }
-#line 1407 "derived-parser.c"
+#line 70 "parser.y"
+                                    { (yyval.redirect) = _sf1_create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_SHARE, 0, NULL); }
+#line 1406 "derived-parser.c"
     break;
 
   case 14:
-#line 72 "parser.y"
-                                    { (yyval.redirect) = create_redirect(SYSTEMF1_STDERR, SYSTEMF1_SHARE, 0, NULL); }
-#line 1413 "derived-parser.c"
+#line 71 "parser.y"
+                                    { (yyval.redirect) = _sf1_create_redirect(SYSTEMF1_STDERR, SYSTEMF1_SHARE, 0, NULL); }
+#line 1412 "derived-parser.c"
     break;
 
   case 15:
-#line 73 "parser.y"
-                                    { (yyval.redirect) = create_redirect(SYSTEMF1_STDERR, SYSTEMF1_FILE,  0, (yyvsp[0].syllables)); }
-#line 1419 "derived-parser.c"
+#line 72 "parser.y"
+                                    { (yyval.redirect) = _sf1_create_redirect(SYSTEMF1_STDERR, SYSTEMF1_FILE,  0, (yyvsp[0].syllables)); }
+#line 1418 "derived-parser.c"
     break;
 
   case 16:
-#line 74 "parser.y"
-                                    { (yyval.redirect) = create_redirect(SYSTEMF1_STDERR, SYSTEMF1_FILE,  1, (yyvsp[0].syllables)); }
-#line 1425 "derived-parser.c"
+#line 73 "parser.y"
+                                    { (yyval.redirect) = _sf1_create_redirect(SYSTEMF1_STDERR, SYSTEMF1_FILE,  1, (yyvsp[0].syllables)); }
+#line 1424 "derived-parser.c"
     break;
 
   case 17:
-#line 75 "parser.y"
-                                    { (yyval.redirect) = create_redirect(SYSTEMF1_STDERR, SYSTEMF1_SHARE, 0, NULL);
-                                (yyval.redirect)->next = create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_FILE,  0, (yyvsp[0].syllables)); }
-#line 1432 "derived-parser.c"
+#line 74 "parser.y"
+                                    { (yyval.redirect) = _sf1_create_redirect(SYSTEMF1_STDERR, SYSTEMF1_SHARE, 0, NULL);
+                                (yyval.redirect)->next = _sf1_create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_FILE,  0, (yyvsp[0].syllables)); }
+#line 1431 "derived-parser.c"
     break;
 
   case 18:
-#line 77 "parser.y"
-                                    { (yyval.redirect) = create_redirect(SYSTEMF1_STDERR, SYSTEMF1_SHARE, 1, NULL);
-                                (yyval.redirect)->next = create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_FILE,  1, (yyvsp[0].syllables)); }
-#line 1439 "derived-parser.c"
+#line 76 "parser.y"
+                                    { (yyval.redirect) = _sf1_create_redirect(SYSTEMF1_STDERR, SYSTEMF1_SHARE, 1, NULL);
+                                (yyval.redirect)->next = _sf1_create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_FILE,  1, (yyvsp[0].syllables)); }
+#line 1438 "derived-parser.c"
     break;
 
   case 19:
-#line 81 "parser.y"
+#line 80 "parser.y"
                          { (yyval.words) = (yyvsp[0].syllables); }
-#line 1445 "derived-parser.c"
+#line 1444 "derived-parser.c"
     break;
 
   case 20:
-#line 82 "parser.y"
+#line 81 "parser.y"
                          { (yyvsp[-2].syllables)->next_word = (yyvsp[0].words); (yyval.words) = (yyvsp[-2].syllables); }
-#line 1451 "derived-parser.c"
+#line 1450 "derived-parser.c"
     break;
 
   case 21:
-#line 83 "parser.y"
+#line 82 "parser.y"
                          { YYABORT; }
-#line 1457 "derived-parser.c"
+#line 1456 "derived-parser.c"
     break;
 
   case 22:
-#line 86 "parser.y"
+#line 85 "parser.y"
                              { (yyval.syllables) = (yyvsp[0].SYLLABLE); }
-#line 1463 "derived-parser.c"
+#line 1462 "derived-parser.c"
     break;
 
   case 23:
-#line 87 "parser.y"
+#line 86 "parser.y"
                          { (yyvsp[-1].SYLLABLE)->next = (yyvsp[0].syllables); (yyval.syllables) = (yyvsp[-1].SYLLABLE); }
-#line 1469 "derived-parser.c"
+#line 1468 "derived-parser.c"
     break;
 
 
-#line 1473 "derived-parser.c"
+#line 1472 "derived-parser.c"
 
       default: break;
     }
@@ -1668,6 +1667,6 @@ yyreturn:
   return yyresult;
 }
 
-#line 90 "parser.y"
+#line 89 "parser.y"
 
 

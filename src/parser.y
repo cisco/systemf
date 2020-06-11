@@ -36,7 +36,6 @@
      * Put the parser code in a file that IDE's better understand, but
      * don't expose the statics to the world.
      */
-    #include "parser-inc.c"
     #include "systemf-internal.h"
 }
 
@@ -60,22 +59,22 @@ cmd:
   words redirects        { $$ = _sf1_create_cmd($1, $2); }
 
 redirects:
-  redirect redirects     { $$ = merge_redirects($1, $2); }
+  redirect redirects     { $$ = _sf1_merge_redirects($1, $2); }
 | redirect               { $$ = $1; }
 | /* empty */            { $$ = NULL; }
 
 redirect:
-  LESSER syllables                  { $$ = create_redirect(SYSTEMF1_STDIN,  SYSTEMF1_FILE,  0, $2); }
-| GREATER syllables                 { $$ = create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_FILE,  0, $2); }
-| GREATER_GREATER syllables         { $$ = create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_FILE,  1, $2); }
-| GREATER_AND_TWO                   { $$ = create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_SHARE, 0, NULL); }
-| TWO_GREATER_AND_ONE               { $$ = create_redirect(SYSTEMF1_STDERR, SYSTEMF1_SHARE, 0, NULL); }
-| TWO_GREATER syllables             { $$ = create_redirect(SYSTEMF1_STDERR, SYSTEMF1_FILE,  0, $2); }
-| TWO_GREATER_GREATER syllables     { $$ = create_redirect(SYSTEMF1_STDERR, SYSTEMF1_FILE,  1, $2); }
-| AND_GREATER syllables             { $$ = create_redirect(SYSTEMF1_STDERR, SYSTEMF1_SHARE, 0, NULL);
-                                $$->next = create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_FILE,  0, $2); }
-| AND_GREATER_GREATER syllables     { $$ = create_redirect(SYSTEMF1_STDERR, SYSTEMF1_SHARE, 1, NULL);
-                                $$->next = create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_FILE,  1, $2); }
+  LESSER syllables                  { $$ = _sf1_create_redirect(SYSTEMF1_STDIN,  SYSTEMF1_FILE,  0, $2); }
+| GREATER syllables                 { $$ = _sf1_create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_FILE,  0, $2); }
+| GREATER_GREATER syllables         { $$ = _sf1_create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_FILE,  1, $2); }
+| GREATER_AND_TWO                   { $$ = _sf1_create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_SHARE, 0, NULL); }
+| TWO_GREATER_AND_ONE               { $$ = _sf1_create_redirect(SYSTEMF1_STDERR, SYSTEMF1_SHARE, 0, NULL); }
+| TWO_GREATER syllables             { $$ = _sf1_create_redirect(SYSTEMF1_STDERR, SYSTEMF1_FILE,  0, $2); }
+| TWO_GREATER_GREATER syllables     { $$ = _sf1_create_redirect(SYSTEMF1_STDERR, SYSTEMF1_FILE,  1, $2); }
+| AND_GREATER syllables             { $$ = _sf1_create_redirect(SYSTEMF1_STDERR, SYSTEMF1_SHARE, 0, NULL);
+                                $$->next = _sf1_create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_FILE,  0, $2); }
+| AND_GREATER_GREATER syllables     { $$ = _sf1_create_redirect(SYSTEMF1_STDERR, SYSTEMF1_SHARE, 1, NULL);
+                                $$->next = _sf1_create_redirect(SYSTEMF1_STDOUT, SYSTEMF1_FILE,  1, $2); }
 
 words:
   syllables              { $$ = $1; }

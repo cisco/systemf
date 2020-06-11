@@ -1,6 +1,6 @@
 
 lib_LTLIBRARIES = libsystemf.la
-libsystemf_la_SOURCES := systemf.c systemf_debug.c task.c derived-lexer.c derived-parser.c
+libsystemf_la_SOURCES := close.c derived-lexer.c derived-parser.c parser-support.c systemf.c systemf_debug.c task.c
 nodist_include_HEADERS := derived-lexer.h derived-parser.h
 libsystemf_la_LDFLAGS = -avoid-version -shared
 libsystemf_la_CFLAGS := -D_FORTIFY_SOURCE=2

@@ -1,7 +1,3 @@
-/*
- * This is included by parser.y to allow IDE's better understand, but
- * don't expose the statics functions to the world.
- */
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -12,41 +8,11 @@
 #include <errno.h>
 #include <unistd.h>
 
+#include "systemf-internal.h"
+
 #define DEBUG 0
 #define VA_ARGS(...) , ##__VA_ARGS__
 #define DBG(fmt, ...) if (DEBUG) { printf("%s:%-3d:%24s: " fmt "\n", __FILE__, __LINE__, __FUNCTION__ VA_ARGS(__VA_ARGS__)); }
-
-
-//static char *getcwd_alloc() {
-//    /*
-//     * FIXME: Some implementations of getcwd will take NULL for the path and
-//     * alloc for us. Use that implementation instead if detected by automake.
-//     *
-//     * Returns an allocated buffer containing cwd or NULL on failure.
-//     */
-//    size_t size = 1024;
-//    char *buf;
-//    char *new_buf;
-//    char *ptr;
-//
-//    for (buf = ptr = NULL; ptr == NULL; size *= 2)
-//    {
-//        if ((new_buf = realloc(buf, size)) == NULL)
-//        {
-//            free(buf);
-//            return NULL;
-//        }
-//        buf = new_buf;
-//
-//        ptr = getcwd(buf, size);
-//        if (ptr == NULL && errno != ERANGE)
-//        {
-//            free(buf);
-//            return NULL;
-//        }
-//    }
-//    return buf;
-//}
 
 static void merge_and_free_syllables(syllable *syl, char **text_pp, char **path_pp, int *is_glob_p) {
     int is_glob = 0;
@@ -186,14 +152,14 @@ static void merge_and_free_syllables(syllable *syl, char **text_pp, char **path_
 }
 
 
-systemf1_redirect *merge_redirects(systemf1_redirect *left, systemf1_redirect *right) {
+systemf1_redirect *_sf1_merge_redirects(systemf1_redirect *left, systemf1_redirect *right) {
     systemf1_redirect *cursor;
     for (cursor = left; cursor->next; cursor = cursor->next);
     cursor->next = right;
     return left;
 }
 
-systemf1_redirect *create_redirect(systemf1_stream stream, systemf1_stream target, int append, syllable *file_syllables)
+systemf1_redirect *_sf1_create_redirect(systemf1_stream stream, systemf1_stream target, int append, syllable *file_syllables)
 {
     systemf1_redirect *redirect = calloc(1, sizeof(*redirect));
     // FIXME: Handle malloc error

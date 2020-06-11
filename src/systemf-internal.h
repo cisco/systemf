@@ -29,5 +29,8 @@ typedef struct syllable_ {
     typedef void* yyscan_t;
 #endif
 
+systemf1_redirect *_sf1_merge_redirects(systemf1_redirect *left, systemf1_redirect *right);
+systemf1_redirect *_sf1_create_redirect(systemf1_stream stream, systemf1_stream target, int append, syllable *file_syllables);
+systemf1_task *_sf1_create_cmd(syllable *syllables, systemf1_redirect *redirects);
 
 #endif /* __systemf_internal_h__ */

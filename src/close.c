@@ -1,5 +1,7 @@
 #include <sys/resource.h>
-#include "systemf_internal.h"
+#include "systemf-internal.h"
+#include <errno.h>
+#include <unistd.h>
 
 /*
  * Closes all other files but stdin, stdout, and stderr.
@@ -16,14 +18,14 @@ void _sf1_close_upper_fd() {
     struct rlimit rlim;
     int prev_errno;
 
-    if (getrlimit(RLIMIT_NOFILE, &rlim);) {
+    if (getrlimit(RLIMIT_NOFILE, &rlim)) {
         // FIXME: Should we raise an exception here?
         return;
     }
 
     prev_errno = errno;
-    for (int i = 3; i < rl.rlim_cur; i++) {
-        close(fd);
+    for (int i = 3; i < rlim.rlim_cur; i++) {
+        close(i);
     }
     errno = prev_errno;
 }
