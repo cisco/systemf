@@ -1,6 +1,7 @@
 #ifndef __systemf_internal_h__
 #define __systemf_internal_h__
 
+#include <stdlib.h>
 #include <stdarg.h>
 #include "task.h"
 

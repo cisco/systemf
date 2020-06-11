@@ -2,13 +2,13 @@
 %option reentrant
 %option bison-bridge
 %option noyywrap nounput noinput
-%option prefix="systemf1_yy"
+%option prefix="_sf1_yy"
 
 %{
 #include <stdarg.h>
 #include "derived-parser.h"
 
-static void yy_user_action(SYSTEMF1_YYLTYPE *yylloc, const char *my_yytext)
+static void yy_user_action(_SF1_YYLTYPE *yylloc, const char *my_yytext)
 {
     yylloc->first_line = yylloc->last_line;
     yylloc->first_column = yylloc->last_column;

@@ -64,14 +64,14 @@
 #define YYPULL 1
 
 /* Substitute the type names.  */
-#define YYSTYPE         SYSTEMF1_YYSTYPE
-#define YYLTYPE         SYSTEMF1_YYLTYPE
+#define YYSTYPE         _SF1_YYSTYPE
+#define YYLTYPE         _SF1_YYLTYPE
 /* Substitute the variable and function names.  */
-#define yyparse         systemf1_yyparse
-#define yylex           systemf1_yylex
-#define yyerror         systemf1_yyerror
-#define yydebug         systemf1_yydebug
-#define yynerrs         systemf1_yynerrs
+#define yyparse         _sf1_yyparse
+#define yylex           _sf1_yylex
+#define yyerror         _sf1_yyerror
+#define yydebug         _sf1_yydebug
+#define yynerrs         _sf1_yynerrs
 
 
 # ifndef YY_CAST
@@ -97,30 +97,30 @@
 
 /* Use api.header.include to #include this header
    instead of duplicating it here.  */
-#ifndef YY_SYSTEMF1_YY_DERIVED_PARSER_H_INCLUDED
-# define YY_SYSTEMF1_YY_DERIVED_PARSER_H_INCLUDED
+#ifndef YY__SF1_YY_DERIVED_PARSER_H_INCLUDED
+# define YY__SF1_YY_DERIVED_PARSER_H_INCLUDED
 /* Debug traces.  */
-#ifndef SYSTEMF1_YYDEBUG
+#ifndef _SF1_YYDEBUG
 # if defined YYDEBUG
 #if YYDEBUG
-#   define SYSTEMF1_YYDEBUG 1
+#   define _SF1_YYDEBUG 1
 #  else
-#   define SYSTEMF1_YYDEBUG 0
+#   define _SF1_YYDEBUG 0
 #  endif
 # else /* ! defined YYDEBUG */
-#  define SYSTEMF1_YYDEBUG 0
+#  define _SF1_YYDEBUG 0
 # endif /* ! defined YYDEBUG */
-#endif  /* ! defined SYSTEMF1_YYDEBUG */
-#if SYSTEMF1_YYDEBUG
-extern int systemf1_yydebug;
+#endif  /* ! defined _SF1_YYDEBUG */
+#if _SF1_YYDEBUG
+extern int _sf1_yydebug;
 #endif
 /* "%code requires" blocks.  */
 #line 13 "parser.y"
 
-    #if 1 // This compiles in debug code enabled by systemf1_yydebug;
+    #if 1 // This compiles in debug code enabled by _sf1_yydebug;
         #undef SYSTEMF1_YYDEBUG
         #define SYSTEMF1_YYDEBUG 1
-        extern int systemf1_yydebug;
+        extern int _sf1_yydebug;
     #endif
 
     #include "systemf-internal.h"
@@ -129,14 +129,14 @@ extern int systemf1_yydebug;
 #line 130 "derived-parser.c"
 
 /* Token kinds.  */
-#ifndef SYSTEMF1_YYTOKENTYPE
-# define SYSTEMF1_YYTOKENTYPE
-  enum systemf1_yytokentype
+#ifndef _SF1_YYTOKENTYPE
+# define _SF1_YYTOKENTYPE
+  enum _sf1_yytokentype
   {
-    SYSTEMF1_YYEMPTY = -2,
-    SYSTEMF1_YYEOF = 0,            /* "end of file"  */
-    SYSTEMF1_YYerror = 256,        /* error  */
-    SYSTEMF1_YYUNDEF = 257,        /* "invalid token"  */
+    _SF1_YYEMPTY = -2,
+    _SF1_YYEOF = 0,                /* "end of file"  */
+    _SF1_YYerror = 256,            /* error  */
+    _SF1_YYUNDEF = 257,            /* "invalid token"  */
     SYLLABLE = 258,                /* SYLLABLE  */
     SPACE = 259,                   /* SPACE  */
     QUOTE = 260,                   /* QUOTE  */
@@ -154,12 +154,12 @@ extern int systemf1_yydebug;
     SEMICOLON = 272,               /* SEMICOLON  */
     OR = 273                       /* OR  */
   };
-  typedef enum systemf1_yytokentype systemf1_yytoken_kind_t;
+  typedef enum _sf1_yytokentype _sf1_yytoken_kind_t;
 #endif
 
 /* Value type.  */
-#if ! defined SYSTEMF1_YYSTYPE && ! defined SYSTEMF1_YYSTYPE_IS_DECLARED
-union SYSTEMF1_YYSTYPE
+#if ! defined _SF1_YYSTYPE && ! defined _SF1_YYSTYPE_IS_DECLARED
+union _SF1_YYSTYPE
 {
   syllable * SYLLABLE;                     /* SYLLABLE  */
   syllable * words;                        /* words  */
@@ -172,41 +172,41 @@ union SYSTEMF1_YYSTYPE
 #line 173 "derived-parser.c"
 
 };
-typedef union SYSTEMF1_YYSTYPE SYSTEMF1_YYSTYPE;
-# define SYSTEMF1_YYSTYPE_IS_TRIVIAL 1
-# define SYSTEMF1_YYSTYPE_IS_DECLARED 1
+typedef union _SF1_YYSTYPE _SF1_YYSTYPE;
+# define _SF1_YYSTYPE_IS_TRIVIAL 1
+# define _SF1_YYSTYPE_IS_DECLARED 1
 #endif
 
 /* Location type.  */
-#if ! defined SYSTEMF1_YYLTYPE && ! defined SYSTEMF1_YYLTYPE_IS_DECLARED
-typedef struct SYSTEMF1_YYLTYPE SYSTEMF1_YYLTYPE;
-struct SYSTEMF1_YYLTYPE
+#if ! defined _SF1_YYLTYPE && ! defined _SF1_YYLTYPE_IS_DECLARED
+typedef struct _SF1_YYLTYPE _SF1_YYLTYPE;
+struct _SF1_YYLTYPE
 {
   int first_line;
   int first_column;
   int last_line;
   int last_column;
 };
-# define SYSTEMF1_YYLTYPE_IS_DECLARED 1
-# define SYSTEMF1_YYLTYPE_IS_TRIVIAL 1
+# define _SF1_YYLTYPE_IS_DECLARED 1
+# define _SF1_YYLTYPE_IS_TRIVIAL 1
 #endif
 
 
 
-int systemf1_yyparse (yyscan_t scanner, systemf1_parse_args *results);
+int _sf1_yyparse (yyscan_t scanner, systemf1_parse_args *results);
 /* "%code provides" blocks.  */
 #line 25 "parser.y"
 
-    #define YYSTYPE SYSTEMF1_YYSTYPE
-    #define YYLTYPE SYSTEMF1_YYLTYPE
-    #define YY_DECL int systemf1_yylex(YYSTYPE * yylval_param , YYLTYPE *yylloc, yyscan_t yyscanner, systemf1_parse_args *results)
+    #define YYSTYPE _SF1_YYSTYPE
+    #define YYLTYPE _SF1_YYLTYPE
+    #define YY_DECL int _sf1_yylex(YYSTYPE * yylval_param , YYLTYPE *yylloc, yyscan_t yyscanner, systemf1_parse_args *results)
     extern YY_DECL;
 
-    int systemf1_yyerror(SYSTEMF1_YYLTYPE *locp, yyscan_t scanner, systemf1_parse_args *results, const char *msg);
+    int _sf1_yyerror(_SF1_YYLTYPE *locp, yyscan_t scanner, systemf1_parse_args *results, const char *msg);
 
 #line 208 "derived-parser.c"
 
-#endif /* !YY_SYSTEMF1_YY_DERIVED_PARSER_H_INCLUDED  */
+#endif /* !YY__SF1_YY_DERIVED_PARSER_H_INCLUDED  */
 /* Symbol kind.  */
 enum yysymbol_kind_t
 {
@@ -495,8 +495,8 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
 
 #if (! defined yyoverflow \
      && (! defined __cplusplus \
-         || (defined SYSTEMF1_YYLTYPE_IS_TRIVIAL && SYSTEMF1_YYLTYPE_IS_TRIVIAL \
-             && defined SYSTEMF1_YYSTYPE_IS_TRIVIAL && SYSTEMF1_YYSTYPE_IS_TRIVIAL)))
+         || (defined _SF1_YYLTYPE_IS_TRIVIAL && _SF1_YYLTYPE_IS_TRIVIAL \
+             && defined _SF1_YYSTYPE_IS_TRIVIAL && _SF1_YYSTYPE_IS_TRIVIAL)))
 
 /* A type that is properly aligned for any stack member.  */
 union yyalloc
@@ -614,7 +614,7 @@ static const yytype_int8 yytranslate[] =
       15,    16,    17,    18
 };
 
-#if SYSTEMF1_YYDEBUG
+#if _SF1_YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
@@ -627,7 +627,7 @@ static const yytype_int8 yyrline[] =
 /** Accessing symbol of state STATE.  */
 #define YY_ACCESSING_SYMBOL(State) YY_CAST (yysymbol_kind_t, yystos[State])
 
-#if SYSTEMF1_YYDEBUG || 0
+#if _SF1_YYDEBUG || 0
 /* The user-facing name of the symbol whose (internal) number is
    YYSYMBOL.  No bounds checking.  */
 static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
@@ -751,7 +751,7 @@ static const yytype_int8 yyr2[] =
 enum { YYENOMEM = -2 };
 
 #define yyerrok         (yyerrstatus = 0)
-#define yyclearin       (yychar = SYSTEMF1_YYEMPTY)
+#define yyclearin       (yychar = _SF1_YYEMPTY)
 
 #define YYACCEPT        goto yyacceptlab
 #define YYABORT         goto yyabortlab
@@ -762,7 +762,7 @@ enum { YYENOMEM = -2 };
 
 #define YYBACKUP(Token, Value)                                    \
   do                                                              \
-    if (yychar == SYSTEMF1_YYEMPTY)                                        \
+    if (yychar == _SF1_YYEMPTY)                                        \
       {                                                           \
         yychar = (Token);                                         \
         yylval = (Value);                                         \
@@ -778,8 +778,8 @@ enum { YYENOMEM = -2 };
   while (0)
 
 /* Backward compatibility with an undocumented macro.
-   Use SYSTEMF1_YYerror or SYSTEMF1_YYUNDEF. */
-#define YYERRCODE SYSTEMF1_YYUNDEF
+   Use _SF1_YYerror or _SF1_YYUNDEF. */
+#define YYERRCODE _SF1_YYUNDEF
 
 /* YYLLOC_DEFAULT -- Set CURRENT to span from RHS[1] to RHS[N].
    If N is 0, then set CURRENT to the empty location which ends
@@ -809,7 +809,7 @@ enum { YYENOMEM = -2 };
 
 
 /* Enable debugging if requested.  */
-#if SYSTEMF1_YYDEBUG
+#if _SF1_YYDEBUG
 
 # ifndef YYFPRINTF
 #  include <stdio.h> /* INFRINGES ON USER NAME SPACE */
@@ -828,7 +828,7 @@ do {                                            \
    we won't break user code: when these are the locations we know.  */
 
 # ifndef YY_LOCATION_PRINT
-#  if defined SYSTEMF1_YYLTYPE_IS_TRIVIAL && SYSTEMF1_YYLTYPE_IS_TRIVIAL
+#  if defined _SF1_YYLTYPE_IS_TRIVIAL && _SF1_YYLTYPE_IS_TRIVIAL
 
 /* Print *YYLOCP on YYO.  Private, do not rely on its existence. */
 
@@ -979,12 +979,12 @@ do {                                    \
 /* Nonzero means print parse trace.  It is left uninitialized so that
    multiple parsers can coexist.  */
 int yydebug;
-#else /* !SYSTEMF1_YYDEBUG */
+#else /* !_SF1_YYDEBUG */
 # define YYDPRINTF(Args) ((void) 0)
 # define YY_SYMBOL_PRINT(Title, Kind, Value, Location)
 # define YY_STACK_PRINT(Bottom, Top)
 # define YY_REDUCE_PRINT(Rule)
-#endif /* !SYSTEMF1_YYDEBUG */
+#endif /* !_SF1_YYDEBUG */
 
 
 /* YYINITDEPTH -- initial size of the parser's stacks.  */
@@ -1053,7 +1053,7 @@ YYSTYPE yylval YY_INITIAL_VALUE (= yyval_default);
 
 /* Location data for the lookahead symbol.  */
 static YYLTYPE yyloc_default
-# if defined SYSTEMF1_YYLTYPE_IS_TRIVIAL && SYSTEMF1_YYLTYPE_IS_TRIVIAL
+# if defined _SF1_YYLTYPE_IS_TRIVIAL && _SF1_YYLTYPE_IS_TRIVIAL
   = { 1, 1, 1, 1 }
 # endif
 ;
@@ -1125,7 +1125,7 @@ YYLTYPE yylloc = yyloc_default;
 
   YYDPRINTF ((stderr, "Starting parse\n"));
 
-  yychar = SYSTEMF1_YYEMPTY; /* Cause a token to be read.  */
+  yychar = _SF1_YYEMPTY; /* Cause a token to be read.  */
   yylsp[0] = yylloc;
   goto yysetstate;
 
@@ -1239,25 +1239,25 @@ yybackup:
   /* Not known => get a lookahead token if don't already have one.  */
 
   /* YYCHAR is either empty, or end-of-input, or a valid lookahead.  */
-  if (yychar == SYSTEMF1_YYEMPTY)
+  if (yychar == _SF1_YYEMPTY)
     {
       YYDPRINTF ((stderr, "Reading a token\n"));
       yychar = yylex (&yylval, &yylloc, scanner, results);
     }
 
-  if (yychar <= SYSTEMF1_YYEOF)
+  if (yychar <= _SF1_YYEOF)
     {
-      yychar = SYSTEMF1_YYEOF;
+      yychar = _SF1_YYEOF;
       yytoken = YYSYMBOL_YYEOF;
       YYDPRINTF ((stderr, "Now at end of input.\n"));
     }
-  else if (yychar == SYSTEMF1_YYerror)
+  else if (yychar == _SF1_YYerror)
     {
       /* The scanner already issued an error message, process directly
          to error recovery.  But do not keep the error token as
          lookahead, it is too special and may lead us to an endless
          loop in error recovery. */
-      yychar = SYSTEMF1_YYUNDEF;
+      yychar = _SF1_YYUNDEF;
       yytoken = YYSYMBOL_YYerror;
       yyerror_range[1] = yylloc;
       goto yyerrlab1;
@@ -1296,7 +1296,7 @@ yybackup:
   *++yylsp = yylloc;
 
   /* Discard the shifted token.  */
-  yychar = SYSTEMF1_YYEMPTY;
+  yychar = _SF1_YYEMPTY;
   goto yynewstate;
 
 
@@ -1511,7 +1511,7 @@ yyreduce:
 yyerrlab:
   /* Make sure we have latest lookahead translation.  See comments at
      user semantic actions for why this is necessary.  */
-  yytoken = yychar == SYSTEMF1_YYEMPTY ? YYSYMBOL_YYEMPTY : YYTRANSLATE (yychar);
+  yytoken = yychar == _SF1_YYEMPTY ? YYSYMBOL_YYEMPTY : YYTRANSLATE (yychar);
   /* If not already recovering from an error, report this error.  */
   if (!yyerrstatus)
     {
@@ -1525,17 +1525,17 @@ yyerrlab:
       /* If just tried and failed to reuse lookahead token after an
          error, discard it.  */
 
-      if (yychar <= SYSTEMF1_YYEOF)
+      if (yychar <= _SF1_YYEOF)
         {
           /* Return failure if at end of input.  */
-          if (yychar == SYSTEMF1_YYEOF)
+          if (yychar == _SF1_YYEOF)
             YYABORT;
         }
       else
         {
           yydestruct ("Error: discarding",
                       yytoken, &yylval, &yylloc, scanner, results);
-          yychar = SYSTEMF1_YYEMPTY;
+          yychar = _SF1_YYEMPTY;
         }
     }
 
@@ -1641,7 +1641,7 @@ yyexhaustedlab:
 | yyreturn -- parsing is finished, return the result.  |
 `-----------------------------------------------------*/
 yyreturn:
-  if (yychar != SYSTEMF1_YYEMPTY)
+  if (yychar != _SF1_YYEMPTY)
     {
       /* Make sure we have latest lookahead translation.  See comments at
          user semantic actions for why this is necessary.  */

@@ -1,7 +1,7 @@
 %output  "derived-parser.c"
 %defines "derived-parser.h"
 %define api.pure full
-%define api.prefix {systemf1_yy}
+%define api.prefix {_sf1_yy}
 %define api.value.type union
 %locations
 %lex-param   { yyscan_t scanner }
@@ -11,10 +11,10 @@
 
 
 %code requires {
-    #if 1 // This compiles in debug code enabled by systemf1_yydebug;
+    #if 1 // This compiles in debug code enabled by _sf1_yydebug;
         #undef SYSTEMF1_YYDEBUG
         #define SYSTEMF1_YYDEBUG 1
-        extern int systemf1_yydebug;
+        extern int _sf1_yydebug;
     #endif
 
     #include "systemf-internal.h"
@@ -23,12 +23,12 @@
 
 %code provides
 {
-    #define YYSTYPE SYSTEMF1_YYSTYPE
-    #define YYLTYPE SYSTEMF1_YYLTYPE
-    #define YY_DECL int systemf1_yylex(YYSTYPE * yylval_param , YYLTYPE *yylloc, yyscan_t yyscanner, systemf1_parse_args *results)
+    #define YYSTYPE _SF1_YYSTYPE
+    #define YYLTYPE _SF1_YYLTYPE
+    #define YY_DECL int _sf1_yylex(YYSTYPE * yylval_param , YYLTYPE *yylloc, yyscan_t yyscanner, systemf1_parse_args *results)
     extern YY_DECL;
 
-    int systemf1_yyerror(SYSTEMF1_YYLTYPE *locp, yyscan_t scanner, systemf1_parse_args *results, const char *msg);
+    int _sf1_yyerror(_SF1_YYLTYPE *locp, yyscan_t scanner, systemf1_parse_args *results, const char *msg);
 }
 
 %code {

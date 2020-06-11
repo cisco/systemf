@@ -35,30 +35,30 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_SYSTEMF1_YY_DERIVED_PARSER_H_INCLUDED
-# define YY_SYSTEMF1_YY_DERIVED_PARSER_H_INCLUDED
+#ifndef YY__SF1_YY_DERIVED_PARSER_H_INCLUDED
+# define YY__SF1_YY_DERIVED_PARSER_H_INCLUDED
 /* Debug traces.  */
-#ifndef SYSTEMF1_YYDEBUG
+#ifndef _SF1_YYDEBUG
 # if defined YYDEBUG
 #if YYDEBUG
-#   define SYSTEMF1_YYDEBUG 1
+#   define _SF1_YYDEBUG 1
 #  else
-#   define SYSTEMF1_YYDEBUG 0
+#   define _SF1_YYDEBUG 0
 #  endif
 # else /* ! defined YYDEBUG */
-#  define SYSTEMF1_YYDEBUG 0
+#  define _SF1_YYDEBUG 0
 # endif /* ! defined YYDEBUG */
-#endif  /* ! defined SYSTEMF1_YYDEBUG */
-#if SYSTEMF1_YYDEBUG
-extern int systemf1_yydebug;
+#endif  /* ! defined _SF1_YYDEBUG */
+#if _SF1_YYDEBUG
+extern int _sf1_yydebug;
 #endif
 /* "%code requires" blocks.  */
 #line 13 "parser.y"
 
-    #if 1 // This compiles in debug code enabled by systemf1_yydebug;
+    #if 1 // This compiles in debug code enabled by _sf1_yydebug;
         #undef SYSTEMF1_YYDEBUG
         #define SYSTEMF1_YYDEBUG 1
-        extern int systemf1_yydebug;
+        extern int _sf1_yydebug;
     #endif
 
     #include "systemf-internal.h"
@@ -67,14 +67,14 @@ extern int systemf1_yydebug;
 #line 68 "derived-parser.h"
 
 /* Token kinds.  */
-#ifndef SYSTEMF1_YYTOKENTYPE
-# define SYSTEMF1_YYTOKENTYPE
-  enum systemf1_yytokentype
+#ifndef _SF1_YYTOKENTYPE
+# define _SF1_YYTOKENTYPE
+  enum _sf1_yytokentype
   {
-    SYSTEMF1_YYEMPTY = -2,
-    SYSTEMF1_YYEOF = 0,            /* "end of file"  */
-    SYSTEMF1_YYerror = 256,        /* error  */
-    SYSTEMF1_YYUNDEF = 257,        /* "invalid token"  */
+    _SF1_YYEMPTY = -2,
+    _SF1_YYEOF = 0,                /* "end of file"  */
+    _SF1_YYerror = 256,            /* error  */
+    _SF1_YYUNDEF = 257,            /* "invalid token"  */
     SYLLABLE = 258,                /* SYLLABLE  */
     SPACE = 259,                   /* SPACE  */
     QUOTE = 260,                   /* QUOTE  */
@@ -92,12 +92,12 @@ extern int systemf1_yydebug;
     SEMICOLON = 272,               /* SEMICOLON  */
     OR = 273                       /* OR  */
   };
-  typedef enum systemf1_yytokentype systemf1_yytoken_kind_t;
+  typedef enum _sf1_yytokentype _sf1_yytoken_kind_t;
 #endif
 
 /* Value type.  */
-#if ! defined SYSTEMF1_YYSTYPE && ! defined SYSTEMF1_YYSTYPE_IS_DECLARED
-union SYSTEMF1_YYSTYPE
+#if ! defined _SF1_YYSTYPE && ! defined _SF1_YYSTYPE_IS_DECLARED
+union _SF1_YYSTYPE
 {
   syllable * SYLLABLE;                     /* SYLLABLE  */
   syllable * words;                        /* words  */
@@ -110,38 +110,38 @@ union SYSTEMF1_YYSTYPE
 #line 111 "derived-parser.h"
 
 };
-typedef union SYSTEMF1_YYSTYPE SYSTEMF1_YYSTYPE;
-# define SYSTEMF1_YYSTYPE_IS_TRIVIAL 1
-# define SYSTEMF1_YYSTYPE_IS_DECLARED 1
+typedef union _SF1_YYSTYPE _SF1_YYSTYPE;
+# define _SF1_YYSTYPE_IS_TRIVIAL 1
+# define _SF1_YYSTYPE_IS_DECLARED 1
 #endif
 
 /* Location type.  */
-#if ! defined SYSTEMF1_YYLTYPE && ! defined SYSTEMF1_YYLTYPE_IS_DECLARED
-typedef struct SYSTEMF1_YYLTYPE SYSTEMF1_YYLTYPE;
-struct SYSTEMF1_YYLTYPE
+#if ! defined _SF1_YYLTYPE && ! defined _SF1_YYLTYPE_IS_DECLARED
+typedef struct _SF1_YYLTYPE _SF1_YYLTYPE;
+struct _SF1_YYLTYPE
 {
   int first_line;
   int first_column;
   int last_line;
   int last_column;
 };
-# define SYSTEMF1_YYLTYPE_IS_DECLARED 1
-# define SYSTEMF1_YYLTYPE_IS_TRIVIAL 1
+# define _SF1_YYLTYPE_IS_DECLARED 1
+# define _SF1_YYLTYPE_IS_TRIVIAL 1
 #endif
 
 
 
-int systemf1_yyparse (yyscan_t scanner, systemf1_parse_args *results);
+int _sf1_yyparse (yyscan_t scanner, systemf1_parse_args *results);
 /* "%code provides" blocks.  */
 #line 25 "parser.y"
 
-    #define YYSTYPE SYSTEMF1_YYSTYPE
-    #define YYLTYPE SYSTEMF1_YYLTYPE
-    #define YY_DECL int systemf1_yylex(YYSTYPE * yylval_param , YYLTYPE *yylloc, yyscan_t yyscanner, systemf1_parse_args *results)
+    #define YYSTYPE _SF1_YYSTYPE
+    #define YYLTYPE _SF1_YYLTYPE
+    #define YY_DECL int _sf1_yylex(YYSTYPE * yylval_param , YYLTYPE *yylloc, yyscan_t yyscanner, systemf1_parse_args *results)
     extern YY_DECL;
 
-    int systemf1_yyerror(SYSTEMF1_YYLTYPE *locp, yyscan_t scanner, systemf1_parse_args *results, const char *msg);
+    int _sf1_yyerror(_SF1_YYLTYPE *locp, yyscan_t scanner, systemf1_parse_args *results, const char *msg);
 
 #line 146 "derived-parser.h"
 
-#endif /* !YY_SYSTEMF1_YY_DERIVED_PARSER_H_INCLUDED  */
+#endif /* !YY__SF1_YY_DERIVED_PARSER_H_INCLUDED  */

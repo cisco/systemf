@@ -15,225 +15,225 @@
 #endif
 
 #ifdef yy_create_buffer
-#define systemf1_yy_create_buffer_ALREADY_DEFINED
+#define _sf1_yy_create_buffer_ALREADY_DEFINED
 #else
-#define yy_create_buffer systemf1_yy_create_buffer
+#define yy_create_buffer _sf1_yy_create_buffer
 #endif
 
 #ifdef yy_delete_buffer
-#define systemf1_yy_delete_buffer_ALREADY_DEFINED
+#define _sf1_yy_delete_buffer_ALREADY_DEFINED
 #else
-#define yy_delete_buffer systemf1_yy_delete_buffer
+#define yy_delete_buffer _sf1_yy_delete_buffer
 #endif
 
 #ifdef yy_scan_buffer
-#define systemf1_yy_scan_buffer_ALREADY_DEFINED
+#define _sf1_yy_scan_buffer_ALREADY_DEFINED
 #else
-#define yy_scan_buffer systemf1_yy_scan_buffer
+#define yy_scan_buffer _sf1_yy_scan_buffer
 #endif
 
 #ifdef yy_scan_string
-#define systemf1_yy_scan_string_ALREADY_DEFINED
+#define _sf1_yy_scan_string_ALREADY_DEFINED
 #else
-#define yy_scan_string systemf1_yy_scan_string
+#define yy_scan_string _sf1_yy_scan_string
 #endif
 
 #ifdef yy_scan_bytes
-#define systemf1_yy_scan_bytes_ALREADY_DEFINED
+#define _sf1_yy_scan_bytes_ALREADY_DEFINED
 #else
-#define yy_scan_bytes systemf1_yy_scan_bytes
+#define yy_scan_bytes _sf1_yy_scan_bytes
 #endif
 
 #ifdef yy_init_buffer
-#define systemf1_yy_init_buffer_ALREADY_DEFINED
+#define _sf1_yy_init_buffer_ALREADY_DEFINED
 #else
-#define yy_init_buffer systemf1_yy_init_buffer
+#define yy_init_buffer _sf1_yy_init_buffer
 #endif
 
 #ifdef yy_flush_buffer
-#define systemf1_yy_flush_buffer_ALREADY_DEFINED
+#define _sf1_yy_flush_buffer_ALREADY_DEFINED
 #else
-#define yy_flush_buffer systemf1_yy_flush_buffer
+#define yy_flush_buffer _sf1_yy_flush_buffer
 #endif
 
 #ifdef yy_load_buffer_state
-#define systemf1_yy_load_buffer_state_ALREADY_DEFINED
+#define _sf1_yy_load_buffer_state_ALREADY_DEFINED
 #else
-#define yy_load_buffer_state systemf1_yy_load_buffer_state
+#define yy_load_buffer_state _sf1_yy_load_buffer_state
 #endif
 
 #ifdef yy_switch_to_buffer
-#define systemf1_yy_switch_to_buffer_ALREADY_DEFINED
+#define _sf1_yy_switch_to_buffer_ALREADY_DEFINED
 #else
-#define yy_switch_to_buffer systemf1_yy_switch_to_buffer
+#define yy_switch_to_buffer _sf1_yy_switch_to_buffer
 #endif
 
 #ifdef yypush_buffer_state
-#define systemf1_yypush_buffer_state_ALREADY_DEFINED
+#define _sf1_yypush_buffer_state_ALREADY_DEFINED
 #else
-#define yypush_buffer_state systemf1_yypush_buffer_state
+#define yypush_buffer_state _sf1_yypush_buffer_state
 #endif
 
 #ifdef yypop_buffer_state
-#define systemf1_yypop_buffer_state_ALREADY_DEFINED
+#define _sf1_yypop_buffer_state_ALREADY_DEFINED
 #else
-#define yypop_buffer_state systemf1_yypop_buffer_state
+#define yypop_buffer_state _sf1_yypop_buffer_state
 #endif
 
 #ifdef yyensure_buffer_stack
-#define systemf1_yyensure_buffer_stack_ALREADY_DEFINED
+#define _sf1_yyensure_buffer_stack_ALREADY_DEFINED
 #else
-#define yyensure_buffer_stack systemf1_yyensure_buffer_stack
+#define yyensure_buffer_stack _sf1_yyensure_buffer_stack
 #endif
 
 #ifdef yylex
-#define systemf1_yylex_ALREADY_DEFINED
+#define _sf1_yylex_ALREADY_DEFINED
 #else
-#define yylex systemf1_yylex
+#define yylex _sf1_yylex
 #endif
 
 #ifdef yyrestart
-#define systemf1_yyrestart_ALREADY_DEFINED
+#define _sf1_yyrestart_ALREADY_DEFINED
 #else
-#define yyrestart systemf1_yyrestart
+#define yyrestart _sf1_yyrestart
 #endif
 
 #ifdef yylex_init
-#define systemf1_yylex_init_ALREADY_DEFINED
+#define _sf1_yylex_init_ALREADY_DEFINED
 #else
-#define yylex_init systemf1_yylex_init
+#define yylex_init _sf1_yylex_init
 #endif
 
 #ifdef yylex_init_extra
-#define systemf1_yylex_init_extra_ALREADY_DEFINED
+#define _sf1_yylex_init_extra_ALREADY_DEFINED
 #else
-#define yylex_init_extra systemf1_yylex_init_extra
+#define yylex_init_extra _sf1_yylex_init_extra
 #endif
 
 #ifdef yylex_destroy
-#define systemf1_yylex_destroy_ALREADY_DEFINED
+#define _sf1_yylex_destroy_ALREADY_DEFINED
 #else
-#define yylex_destroy systemf1_yylex_destroy
+#define yylex_destroy _sf1_yylex_destroy
 #endif
 
 #ifdef yyget_debug
-#define systemf1_yyget_debug_ALREADY_DEFINED
+#define _sf1_yyget_debug_ALREADY_DEFINED
 #else
-#define yyget_debug systemf1_yyget_debug
+#define yyget_debug _sf1_yyget_debug
 #endif
 
 #ifdef yyset_debug
-#define systemf1_yyset_debug_ALREADY_DEFINED
+#define _sf1_yyset_debug_ALREADY_DEFINED
 #else
-#define yyset_debug systemf1_yyset_debug
+#define yyset_debug _sf1_yyset_debug
 #endif
 
 #ifdef yyget_extra
-#define systemf1_yyget_extra_ALREADY_DEFINED
+#define _sf1_yyget_extra_ALREADY_DEFINED
 #else
-#define yyget_extra systemf1_yyget_extra
+#define yyget_extra _sf1_yyget_extra
 #endif
 
 #ifdef yyset_extra
-#define systemf1_yyset_extra_ALREADY_DEFINED
+#define _sf1_yyset_extra_ALREADY_DEFINED
 #else
-#define yyset_extra systemf1_yyset_extra
+#define yyset_extra _sf1_yyset_extra
 #endif
 
 #ifdef yyget_in
-#define systemf1_yyget_in_ALREADY_DEFINED
+#define _sf1_yyget_in_ALREADY_DEFINED
 #else
-#define yyget_in systemf1_yyget_in
+#define yyget_in _sf1_yyget_in
 #endif
 
 #ifdef yyset_in
-#define systemf1_yyset_in_ALREADY_DEFINED
+#define _sf1_yyset_in_ALREADY_DEFINED
 #else
-#define yyset_in systemf1_yyset_in
+#define yyset_in _sf1_yyset_in
 #endif
 
 #ifdef yyget_out
-#define systemf1_yyget_out_ALREADY_DEFINED
+#define _sf1_yyget_out_ALREADY_DEFINED
 #else
-#define yyget_out systemf1_yyget_out
+#define yyget_out _sf1_yyget_out
 #endif
 
 #ifdef yyset_out
-#define systemf1_yyset_out_ALREADY_DEFINED
+#define _sf1_yyset_out_ALREADY_DEFINED
 #else
-#define yyset_out systemf1_yyset_out
+#define yyset_out _sf1_yyset_out
 #endif
 
 #ifdef yyget_leng
-#define systemf1_yyget_leng_ALREADY_DEFINED
+#define _sf1_yyget_leng_ALREADY_DEFINED
 #else
-#define yyget_leng systemf1_yyget_leng
+#define yyget_leng _sf1_yyget_leng
 #endif
 
 #ifdef yyget_text
-#define systemf1_yyget_text_ALREADY_DEFINED
+#define _sf1_yyget_text_ALREADY_DEFINED
 #else
-#define yyget_text systemf1_yyget_text
+#define yyget_text _sf1_yyget_text
 #endif
 
 #ifdef yyget_lineno
-#define systemf1_yyget_lineno_ALREADY_DEFINED
+#define _sf1_yyget_lineno_ALREADY_DEFINED
 #else
-#define yyget_lineno systemf1_yyget_lineno
+#define yyget_lineno _sf1_yyget_lineno
 #endif
 
 #ifdef yyset_lineno
-#define systemf1_yyset_lineno_ALREADY_DEFINED
+#define _sf1_yyset_lineno_ALREADY_DEFINED
 #else
-#define yyset_lineno systemf1_yyset_lineno
+#define yyset_lineno _sf1_yyset_lineno
 #endif
 
 #ifdef yyget_column
-#define systemf1_yyget_column_ALREADY_DEFINED
+#define _sf1_yyget_column_ALREADY_DEFINED
 #else
-#define yyget_column systemf1_yyget_column
+#define yyget_column _sf1_yyget_column
 #endif
 
 #ifdef yyset_column
-#define systemf1_yyset_column_ALREADY_DEFINED
+#define _sf1_yyset_column_ALREADY_DEFINED
 #else
-#define yyset_column systemf1_yyset_column
+#define yyset_column _sf1_yyset_column
 #endif
 
 #ifdef yywrap
-#define systemf1_yywrap_ALREADY_DEFINED
+#define _sf1_yywrap_ALREADY_DEFINED
 #else
-#define yywrap systemf1_yywrap
+#define yywrap _sf1_yywrap
 #endif
 
 #ifdef yyget_lval
-#define systemf1_yyget_lval_ALREADY_DEFINED
+#define _sf1_yyget_lval_ALREADY_DEFINED
 #else
-#define yyget_lval systemf1_yyget_lval
+#define yyget_lval _sf1_yyget_lval
 #endif
 
 #ifdef yyset_lval
-#define systemf1_yyset_lval_ALREADY_DEFINED
+#define _sf1_yyset_lval_ALREADY_DEFINED
 #else
-#define yyset_lval systemf1_yyset_lval
+#define yyset_lval _sf1_yyset_lval
 #endif
 
 #ifdef yyalloc
-#define systemf1_yyalloc_ALREADY_DEFINED
+#define _sf1_yyalloc_ALREADY_DEFINED
 #else
-#define yyalloc systemf1_yyalloc
+#define yyalloc _sf1_yyalloc
 #endif
 
 #ifdef yyrealloc
-#define systemf1_yyrealloc_ALREADY_DEFINED
+#define _sf1_yyrealloc_ALREADY_DEFINED
 #else
-#define yyrealloc systemf1_yyrealloc
+#define yyrealloc _sf1_yyrealloc
 #endif
 
 #ifdef yyfree
-#define systemf1_yyfree_ALREADY_DEFINED
+#define _sf1_yyfree_ALREADY_DEFINED
 #else
-#define yyfree systemf1_yyfree
+#define yyfree _sf1_yyfree
 #endif
 
 /* First, we deal with  platform-specific or compiler-specific issues. */
@@ -539,7 +539,7 @@ void yyfree ( void * , yyscan_t yyscanner );
 
 /* Begin user sect3 */
 
-#define systemf1_yywrap(yyscanner) (/*CONSTCOND*/1)
+#define _sf1_yywrap(yyscanner) (/*CONSTCOND*/1)
 #define YY_SKIP_YYWRAP
 typedef flex_uint8_t YY_CHAR;
 
@@ -681,7 +681,7 @@ static const flex_int16_t yy_chk[99] =
 #include <stdarg.h>
 #include "derived-parser.h"
 
-static void yy_user_action(SYSTEMF1_YYLTYPE *yylloc, const char *my_yytext)
+static void yy_user_action(_SF1_YYLTYPE *yylloc, const char *my_yytext)
 {
     yylloc->first_line = yylloc->last_line;
     yylloc->first_column = yylloc->last_column;
