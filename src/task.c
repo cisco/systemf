@@ -261,7 +261,7 @@ int _sf1_tasks_run(_sf1_task *tasks) {
     size_t argc = 1; // 1 for terminating NULL
     int ret;
     int retval;
-    _sf1_task_files files;
+    _sf1_task_files files = {.in=0, .out=1, .err=2, .out_rd_pipe=0};
 
     if (!redirects_are_sane(tasks)) {
         return -1;
