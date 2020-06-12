@@ -3,7 +3,7 @@
 | Systemf() is at alpha version and should not yet be used in production.  It has been open source by Cisco in alpha state to allow collaborative development by the open-source community. |
 
 # systemf
-Prepared statement support for the system command.
+![C/C++ CI](https://github.com/yonhan3/systemf/workflows/C/C++%20CI/badge.svg) Prepared statement support for the system command.
 
 ## synopsis
 
