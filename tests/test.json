@@ -1,7 +1,7 @@
 [
     {
-        "description": "Test simple command # TODO: The return 20 is causing an SEGV",
-        "command": [ "/Users/markeklund/work/systemf/tests/cmd stderr stdout return 20" ],
+        "description": "Test simple command",
+        "command": [ "tests/cmd stdout stderr return 20" ],
         "stdout": ["==", "1"],
         "stderr": ["==", "2"],
         "return_code": ["==", 20]

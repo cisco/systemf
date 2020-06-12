@@ -65,7 +65,7 @@ _sf1_task_arg *_sf1_task_add_arg (_sf1_task *task, char *text, char *path, int i
 {
     _sf1_task_arg *arg;
 
-    arg = malloc(sizeof(_sf1_task_arg));
+    arg = calloc(1, sizeof(_sf1_task_arg));
     if (arg == NULL) {
         return NULL;
     }
@@ -260,7 +260,7 @@ int _sf1_tasks_run(_sf1_task *tasks) {
     _sf1_task_arg *arg;
     size_t argc = 1; // 1 for terminating NULL
     int ret;
-    int newerrno = 0;
+    int retval;
     _sf1_task_files files;
 
     if (!redirects_are_sane(tasks)) {
@@ -313,13 +313,12 @@ int _sf1_tasks_run(_sf1_task *tasks) {
         // FIXME: Determine if the file exists and it is executable before attempting
         // to fork which doesn't know how to handle results.
 
-        newerrno = 0;
         pid = fork();
         if (pid == 0) {
             dup2(files.in, 0);
             dup2(files.out, 1);
             dup2(files.err, 2);
-            // _sf1_close_upper_fd();
+            _sf1_close_upper_fd();
 
             DBG("Running %s", task->argv[0]);
             stat = execv(*task->argv, task->argv);
@@ -343,10 +342,15 @@ int _sf1_tasks_run(_sf1_task *tasks) {
             close(files.err);
         }
 
-        waitpid(pid, &stat, 0);
+        if (waitpid(pid, &stat, 0) != pid) {
+            // FIXME: Make sure this is the right return value and better recover from this.
+            fprintf(stderr, "waitpid unexpectedly returned %s", strerror(errno));
+            return -1;
+        }
+        retval = WEXITSTATUS(stat);
 
         if (WIFSIGNALED(stat)) {
-            newerrno = EINTR;
+            return -1;
         }
 
         DBG("waitpid returned with %3d %3d %3d %3d %3d\n", errno,
@@ -365,9 +369,6 @@ int _sf1_tasks_run(_sf1_task *tasks) {
         }
     }
 
-    if (newerrno) {
-        errno = newerrno;
-    }
-    return stat;
+    return retval;
 }
 

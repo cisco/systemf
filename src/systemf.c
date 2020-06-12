@@ -29,6 +29,8 @@ int systemf1(const char *fmt, ...)
     _sf1_yylex_destroy(scanner);
 
     int ret = _sf1_tasks_run(result->tasks);
+    _sf1_task_free(result->tasks);
+    free(result);
 
     return (ret);
 }
