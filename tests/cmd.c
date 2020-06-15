@@ -8,6 +8,18 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+static void cat(void) {
+    char buf[257];
+    while (1) {
+        int count = read(0, buf, 256);
+        if (count < 1) {
+            break;
+        }
+        buf[count] = 0;
+        printf("%s", buf);
+    }
+}
+
 int main(int argc, char *argv[]) {
     int retval = 0;
 
@@ -15,10 +27,12 @@ int main(int argc, char *argv[]) {
         printf("%s", 
             "stdout: echo '1' to the stdout with no linefeed.\n"
             "stderr: echo '2' to the stderr with no linefeed.\n"
+            "cat:    cat the stdin to the stdout (does not take arguments)\n"
             "{}:     wrap the stdin with {}\n"
             "incr:   read the first intter from the stdin, add 1, and print to stdout.\n" 
             "comma:  read the rest of the arguments and print to the stdout comma separated.\n"
-            "false:  set the return value to 1 (0 is the default).\n"
+            "true:   set the return value to 0 (the default).\n"
+            "false:  set the return value to 1.\n"
             "return: set the return value to the next argument\n");
         return retval;
     } 
@@ -28,17 +42,11 @@ int main(int argc, char *argv[]) {
             printf("1");
         } else if (!strcmp("stderr", argv[argi])) {
             fprintf(stderr, "2");
+        } else if (!strcmp("cat", argv[argi])) {
+            cat();
         } else if (!strcmp("{}", argv[argi])) {
             printf("{");
-            char buf[257];
-            while (1) {
-                int count = read(0, buf, 256);
-                if (count < 1) {
-                    break;
-                }
-                buf[count] = 0;
-                printf("%s", buf);
-            }
+            cat();
             printf("}");
         } else if (!strcmp("incr", argv[argi])) {
             int i;

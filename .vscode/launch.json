@@ -10,11 +10,11 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/tests/.libs/test-runner",
-      "args": ["1"],
+      "args": ["17"],
       "environment": [
         {"name": "DYLD_LIBRARY_PATH", "value": "${workspaceFolder}/src/.libs:${env:DYLD_LIBRARY_PATH}"}],
       "stopAtEntry": false,
-      "cwd": "${workspaceFolder}",
+      "cwd": "${workspaceFolder}/tests/",
       "externalConsole": false,
       "MIMode": "lldb"
     },

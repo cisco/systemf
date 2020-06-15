@@ -1,7 +1,7 @@
 [
     {
         "description": "Test simple command",
-        "command": [ "tests/cmd stdout stderr return 20" ],
+        "command": [ "./cmd stdout stderr return 20" ],
         "stdout": ["==", "1"],
         "stderr": ["==", "2"],
         "return_code": ["==", 20]
@@ -61,57 +61,64 @@
     },
     {
         "description": "Bad Redirects - (multiple stdin)",
-        "command": [ "/bin/cat </dev/null </tmp" ],
+        "command": [ "./cmd true </dev/null </tmp" ],
         "stdout": null,
         "stderr": ["contains", "ERROR: There should only be one stdin per command."],
         "return_code": ["==", -1]
     },
     {
         "description": "Bad Redirects - (multiple stderr)",
-        "command": [ "/bin/cat 2>&1 2>/dev/null" ],
+        "command": [ "./cmd true 2>&1 2>/dev/null" ],
         "stdout": null,
         "stderr": ["contains", "ERROR: There should only be one stderr per command."],
         "return_code": ["==", -1]
     },
     {
         "description": "Bad Redirects - (multiple stderr 2)",
-        "command": [ "/bin/cat 2>/dev/null 2>/tmp" ],
+        "command": [ "./cmd true 2>/dev/null 2>/tmp" ],
         "stdout": null,
         "stderr": ["contains", "ERROR: There should only be one stderr per command."],
         "return_code": ["==", -1]
     },
     {
         "description": "Bad Redirects - (stderr + stdout append + stdout)",
-        "command": [ "/bin/cat &>>/dev/null >/tmp" ],
+        "command": [ "./cmd true &>>/dev/null >/tmp" ],
         "stdout": null,
         "stderr": ["contains", "ERROR: There should only be one stdout per command."],
         "return_code": ["==", -1]
     },
     {
         "description": "Bad Redirects - (stderr + 2 stdout",
-        "command": [ "/bin/cat &>/dev/null >/tmp" ],
+        "command": [ "./cmd true &>/dev/null >/tmp" ],
         "stdout": null,
         "stderr": ["contains", "ERROR: There should only be one stdout per command."],
         "return_code": ["==", -1]
     },
     {
         "description": "Bad Redirects - (stdout append + stdout)",
-        "command": [ "/bin/cat >>/dev/null >/tmp" ],
+        "command": [ "./cmd >>/dev/null >/tmp" ],
         "stdout": null,
         "stderr": ["contains", "ERROR: There should only be one stdout per command."],
         "return_code": ["==", -1]
     },
     {
-        "description": "stdin from file",
-        "command": [ "/bin/cat < AUTHORS" ],
-        "stdout": ["contains", "Eklund"],
+        "description": "redirect '<'",
+        "command": [ "./cmd cat < README.md" ],
+        "stdout": ["contains", "JSON"],
         "stderr": null,
         "return_code": ["==", 0]
     },
     {
-        "description": "stdout into stdin",
-        "command": [ "/bin/echo hello | /usr/bin/tr h y" ],
-        "stdout": ["contains", "yello"],
+        "description": "redirect '<'",
+        "command": [ "./cmd cat < README.md" ],
+        "stdout": ["contains", "JSON"],
+        "stderr": null,
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "pipe '|'",
+        "command": [ "./cmd stdout | ./cmd incr | ./cmd incr" ],
+        "stdout": ["==", "3"],
         "stderr": null,
         "return_code": ["==", 0]
     }

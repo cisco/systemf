@@ -2,14 +2,13 @@
 import json
 import os
 import sys
+import shutil
 from subprocess import run, PIPE
 
 from multiprocessing import Process, SimpleQueue
 
 def get_tests() -> list:
-    current_dir = os.path.dirname(sys.argv[0])
-    TEST_JSON = os.path.join(current_dir, 'test.json')
-    with open(TEST_JSON, 'r') as json_file:
+    with open('test.json', 'r') as json_file:
         try:
             return json.load(json_file)
         except Exception as e:
@@ -17,13 +16,8 @@ def get_tests() -> list:
             sys.exit(-1)
 
 def run_command(index):
-    # Hack to run the test runner from the source root.
-    cwd = os.getcwd()
-    if cwd.endswith("tests"):
-        os.chdir("..")
-    result = run(['tests/test-runner', str(index + 1)], stdout=PIPE, stderr=PIPE)
-    os.chdir(cwd)
-    return result
+    # Run these from the location of this file.
+    return run(['./test-runner', str(index + 1)], stdout=PIPE, stderr=PIPE)
 
 def fixup_compare_value(compare_value):
     """Convert systemf() int return value to process return value
@@ -57,6 +51,12 @@ def do_comparison(operator, real_value, compare_value):
         return real_value < compare_value
     elif operator == 'contains':
         return compare_value in real_value
+
+# Run this from within the tests directory
+os.chdir(os.path.dirname(sys.argv[0]))
+if os.path.isdir('tmp'):
+    shutil.rmtree('tmp')
+os.mkdir('tmp')
 
 # Pull in the JSON test data
 # See readme for test data json specification

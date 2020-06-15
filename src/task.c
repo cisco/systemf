@@ -205,10 +205,12 @@ void _sf1_task_free(_sf1_task *task)
  */
 static int populate_task_files(_sf1_task *task, _sf1_task_files *files) {
     int pipefd[2];
+    int prev_out_rd_pipe = files->out_rd_pipe;
     _sf1_redirect *redirect;
     files->in = 0;
     files->out = 1;
     files->err = 2;
+    files->out_rd_pipe = -1;
 
     for (redirect = task->redirects; redirect; redirect = redirect->next) {
         if (redirect->stream == _SF1_STDIN)  {
@@ -219,7 +221,7 @@ static int populate_task_files(_sf1_task *task, _sf1_task_files *files) {
                     return -1;
                 }
             } else { // _SF1_PIPE
-                files->in = files->out_rd_pipe;
+                files->in = prev_out_rd_pipe;
             }
         } else if (redirect->stream == _SF1_STDOUT) {
             if (redirect->target == _SF1_FILE) {
@@ -350,6 +352,7 @@ int _sf1_tasks_run(_sf1_task *tasks) {
         retval = WEXITSTATUS(stat);
 
         if (WIFSIGNALED(stat)) {
+            fprintf(stderr, "waipid exited with signal %s\n", strsignal(WTERMSIG(stat)));
             return -1;
         }
 

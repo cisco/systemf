@@ -25,3 +25,4 @@ tests/test.trs
 tests/test-runner
 tests/test-runner.c
 tests/cmd
+tests/tmp/
