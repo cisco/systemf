@@ -1,7 +1,7 @@
-![C/C++ CI](https://github.com/yonhan3/systemf/workflows/C/C++%20CI/badge.svg) 
-| Please Note: Systemf() is alpha code. |
+[![C/C++ CI](https://github.com/yonhan3/systemf/workflows/C/C++%20CI/badge.svg)](https://github.com/yonhan3/systemf/actions)
+| Please Note: Systemf() is 0.9 Beta    |
 | ------------------------------------- |
-| Systemf() is at alpha version and should not yet be used in production.  It has been open source by Cisco in alpha state to allow collaborative development by the open-source community. |
+| Systemf() is at the maturity level that it can be tested by interested parties.  See [Future Work](#Future Work) below for more information as to what the MVP for version 1.0 would be. |
 
 # systemf
 Prepared statement support for the system command.
@@ -141,30 +141,140 @@ The following is copied from http://man7.org/linux/man-pages/man3/system.3.html 
 *  If all spawned child processes succeed, then the return value is the
     termination status of the last spawned child process.
 
-## Executable Paths (Still being designed)
-
-Systemf by default only allows absolute paths and a very limited PATH parsing.
-
-Allow absolute paths to any binary to run.
-
-For relative path specifications, must be in a folder in global safe paths
-* Programmer can add to safe paths at compile or run time
-* Safe paths will default to /bin /sbin /usr/sbin /usr/bin etc
-
-## File Sandboxing (Still being designed)
-
-By default, if a file is specified, it must be located in the realpath of the current directory.  We are designing how
-this can be expanded and expect alternate paths to be able to be specified in the format string, but that is still being
-designed.
-
 ## Why is There a "1" in the Systemf1 Name?
 
 The driving force behind developing `systemf` was to have a more secure system.  It seems that as a tool becomes more popular, it gets more security scrutiny.  The developers of `systemf` expect that they will have missed something fundamental that will require a non-backward compatible change to the code.  When that day comes, they will have to choose between breaking code and creating new functions.
 
 By making the systemf versioned in its name, it is more obvious the version that is being run and gives for a more graceful transition.  Perhaps one day, when the implementation is considered rock-solid, the final version can drop the numbering system altogether.  (Any bets how long it will take to detect a new fatal security vulnerability in the design after that step is taken?)
 
-## Future Considerations
-* Currently ignoring environment variables / environment altogether - may need to revisit
+## Future Work
+
+### Required for version 1.0
+The following must happen before the 1.0 release.  If not implemented before the 1.0 release, there would be the threat that some capabilities would not be backward compatible.
+
+| Title | Description |
+| ----- | ----------- |
+| [File Sandboxing](#file-sandboxing) |  A limited sandboxing of file access. |
+
+### Features that will likely be added after verison 1.0.
+
+| Title | Description |
+| ----- | ----------- |
+| [PATH Support](#path-support) | Currently all executables must include a path.  This will add limited path searching and updating. |
+| [Capture Support](#capture-support) | Functions that allow for capturing the standard output and standard error to strings. |
+| [STDIN String & File Support](#stdin-string-and-file-support) | Functions that allow for a string or buffers to be suppled for the standard input. |
+| [Error Message Redirection](#error-message-redirection) | Redirect stderr messages from `systemf` itself. |
+
+### Features not currently planned.
+
+These features require more discussion and some highly needed use cases to be added.
+
+| Title | Description |
+| ----- | ----------- |
+| [Background Support](#no-plan-for-background-support) | Running commands in the background. |
+| [variables](#no-plan-for-variable-support) | Variable expansion like $HOME or ~ may not be supported. |
+| [variable cleaning](#no-plan-for-variable-cleaning) | Other than PATH, no other environment variables will be reset (like IFS). | 
+
+### File Sandboxing
+**Still being developed.**
+
+By default, if a file is specified, it must be located in the realpath of the current directory.  We are designing how
+this can be expanded and expect alternate paths to be able to be specified in the format string, but that is still being
+designed.
+
+### PATH Support
+**Still being developed.**
+
+`Systemf` protects against [CWE-426: Untrusted Search Path](https://cwe.mitre.org/data/definitions/426.html) by ignoring the PATH environment variable and trusting a limit path.  For systems that supply it, `confstr(_CS_PATH, ...)` will be used.  For other systems, the `./configure` will need to determine this.
+
+Each executable will have the ability to augment this path for that executable with the command `systemf1_update_path(path, location)` where `path` is a colon separated list of directories and location can be one of `SYSTEMF1_PATH_PREPEND`, `SYSTEMF1_PATH_APPEND`, and `SYSTEMF1_PATH_REPLACE`.  
+Systemf by default only allows absolute paths and a very limited PATH parsing.
+
+### Capture Support
+**Still being developed.**
+
+`Systemf` will support capturing the standard output to strings.  These strings may either be supplied or allocated.  There are two base commands for this:
+
+```
+systemf1_capture_rtn systemf1_capture(
+    char *stdout_buf, 
+    size_t max_stdout_buf_len, 
+    char *stderr_buf, 
+    size_t max_stderr_buf_len, 
+    fmt, 
+    ...);
+    
+systemf1_capture_rtn *systemf1_capture_a(
+    size_t max_stdout_buf_len, 
+    size_t max_stderr_buf_len, 
+    fmt, 
+    ...);
+```
+
+`systemf1_capture_rtn` contains information about the captured results.  For the former, it will be passed back by value and the latter, it will be allocated and returned.  A single `free()` of the latter will be required because the captured data will be opaquely appended to the structure.  The structure will contain the following fields:
+
+| Field | Description |
+| ----- | ----------- |
+| stdout | A buffer pointer containing the standard output.  `out_buf[out_buf_len] will always contain the nul terminator. |
+| stdout_len | The number of characters written to out_buf excluding the nul terminator.  This will never be greater than max_out_buf_len - 1 |
+| stdout_total | The number of total bytes received from the stdout if `max_stdout_buf_len` were infinite. |
+| stderr  | Similar to `stdout` but for stderr |
+| stderr_len | Similar to `stdout_len` but for `stderr` |
+| stderr_total | Similar to `stdout_total` but for `stderr` |
+| retval | The same return value as `systemf1()` would normally return. |
+
+There are some corner cases for `systemf1_capture()`.
+* If `stdout_buf` is NULL, `max_stdout_buf_len` will be ignored.  The returned stdout will be NULL and `stdout_len` will be zero, but `stdout_total` will be accurate.
+* If `max_stdout_buf_len` is 0, the code will act as if `stdout_buf` were NULL.
+* The same corner cases exist for `stderr_buf` and `max_stderr_buf_len`.
+
+There are some corner cases for `systemf1_capture_a()`.
+* A `max_stdout_buf_len` of 0 considered to be equivalent to a length of 1.  A one byte buffer will be allocated and returned filled with a nul value.  Infinite buffer size is not supported.
+* The same corner cases exist for `max_stderr_buf_len`.
+
+### Stdin String and File Support
+
+Varients of the systemf1 suite will take either a string, a buffer, or a FILE pointer and use that as the standard input.  These variants will take one of the above as their first argument and in the case of the buffer, a length argument.
+This will create a wide varienty of new functions:
+
+```
+systemf1_sin(char *string, ...);
+systemf1_bin(char *buf, buflen,...);
+systemf1_fin(FILE *file, ...);
+
+systemf1_sin_capture(char *string, ...);
+systemf1_bin_capture(char *buf, buflen, ...);
+systemf1_fin_capture1(FILE *file, ...);
+
+systemf1_sin_capture_a(char *string, ...);
+systemf1_bin_capture_a(char *buf, buflen, ...);
+systemf1_fin_capture_a(FILE *file, ...);
+```
+
+### Error Message Redirection
+
+`systemf` will print error messages to the standard error in some situations.  These include invalid format strings, sandboxing violations, commands not found, and file globbing problems. Global setting command `systemf1_log_to(FILE *file)` will be added.  It will return the current log.  Supplying `file=NULL` completely disables logging.  This does not affect the normal stderr and stdout processing of the commands themselves.
+
+### No Plan for Background Support
+
+The standard shell contains facilities to run commands in the background with the
+`&` parameter.  The main reason this is not currently planned is that a much better understanding of how the shell handles the processing in needed.  This support is likely to be the most requested of all the current "No Plan" items.
+
+### No Plan for Variable Support
+
+`Systemf` does not support variable expansion in the format string.  Thus, 
+`systemf1("/bin/echo $HOME")` will cause a parse error because `$` is not supported
+in the format string.  There were two reasons not to support this.  The first was
+that it simple added complexity to the system when the developers were uncertain
+how needed such a capability was.  The second was that if such a capability is
+added, all security ramification should be considered and discussed first.
+
+For now, there is no variable support.  In the future, there may be.
+
+
+### No Plan for Variable Cleaning
+
+The SEI CERT C Coding Standard includes [ENV03-C Sanitize the environment when invoking external programs](https://wiki.sei.cmu.edu/confluence/display/c/ENV03-C.+Sanitize+the+environment+when+invoking+external+programs) and its examples include such items as resetting environment variables such as the PATH.  Because it is such a common vulnerability, `Systemf` does sanitize the PATH.  But because the library isn't able to guess every variation of needs of environment variables, it does not sanitize other variables.
 
 ## Building
 
