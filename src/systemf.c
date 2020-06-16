@@ -7,7 +7,7 @@
 #include "task.h"
 
 int _sf1_yyerror(_SF1_YYLTYPE *locp, yyscan_t scanner, _sf1_parse_args *result, const char *msg) {
-  printf("ERROR: %d:%d:%s\n", locp->first_line, locp->first_column, msg);
+  fprintf(stderr, "ERROR: %d:%d:%s\n", locp->first_line, locp->first_column, msg);
   return 1;
 }
 
@@ -21,9 +21,15 @@ int systemf1(const char *fmt, ...)
     va_start(argp, fmt);
     result->argpp = &argp;
 
-    if (_sf1_yylex_init(&scanner)) exit(1);
+    if (_sf1_yylex_init(&scanner)) {
+        fprintf(stderr, "systemf: Unexpected failure in yylex_init().");
+        return -1;
+    } 
     YY_BUFFER_STATE buf = _sf1_yy_scan_string(fmt, scanner);
-    if (_sf1_yyparse(scanner, result)) exit(1);
+    if (_sf1_yyparse(scanner, result)) {
+        free(result);
+        return -1;
+    }
     va_end(argp);
     _sf1_yy_delete_buffer(buf, scanner);
     _sf1_yylex_destroy(scanner);

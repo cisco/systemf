@@ -14,10 +14,10 @@
         "return_code": ["!=", 0]
     },
     {
-        "description": "Test '/bin/ls %s', '-l'",
-        "command": [ "/bin/ls %s", "-l" ],
-        "stdout": ["contains", "total "],
-        "stderr": null,
+        "description": "%s",
+        "command": [ "./cmd %s", "stdout" ],
+        "stdout": ["==", "1"],
+        "stderr": ["==", ""],
         "return_code": ["==", 0]
     },
     {
@@ -28,33 +28,29 @@
         "return_code": ["==", 0]
     },
     {
-        "description": "Test format string glob /etc/passw*",
-        "fixme": "remove the /bin to be compatible with more systems.",
-        "command": [ "/bin/echo /etc/passw*" ],
-        "stdout": ["contains", "/etc/passwd"],
-        "stderr": null,
+        "description": "fmt glob '*'",
+        "command": [ "./cmd comma REA*ME.md" ],
+        "stdout": ["==", "README.md"],
+        "stderr": ["==", ""],
         "return_code": ["==", 0]
     },
     {
-        "description": "Test format string glob /etc/passw?",
-        "fixme": "remove the /bin to be compatible with more systems.",
-        "command": [ "/bin/echo /etc/passw?" ],
-        "stdout": ["contains", "/etc/passwd"],
-        "stderr": null,
+        "description": "fmt glob '?'",
+        "command": [ "./cmd comma REA?ME.md" ],
+        "stdout": ["==", "README.md"],
+        "stderr": ["==", ""],
         "return_code": ["==", 0]
     },
     {
-        "description": "Test glob param '%*p', '/etc/passw?'",
-        "fixme": "remove the /bin to be compatible with more systems.",
-        "command": [ "/bin/echo %*p", "/etc/passw?" ],
-        "stdout": ["contains", "/etc/passwd"],
-        "stderr": null,
+        "description": "param '%*p'",
+        "command": [ "./cmd comma %*p", "REA?ME.md" ],
+        "stdout": ["==", "README.md"],
+        "stderr": ["==", ""],
         "return_code": ["==", 0]
     },
     {
-        "description": "Test failed glob param '%*p', '/etc/passw?thisdoesnnotexist'",
-        "fixme": "remove the /bin to be compatible with more systems.",
-        "command": [ "/bin/echo %*p", "/etc/passw?thisdoesnnotexist" ],
+        "description": "param '%*p' with no match",
+        "command": [ "./cmd comma %*p", "/etc/passw?thisdoesnnotexist" ],
         "stdout": ["==", ""],
         "stderr": ["==", "systemf: no matches found: /etc/passw?thisdoesnnotexist\n"],
         "return_code": ["==", -1]
@@ -102,16 +98,23 @@
         "return_code": ["==", -1]
     },
     {
-        "description": "redirect '<'",
-        "command": [ "./cmd cat < README.md" ],
-        "stdout": ["contains", "JSON"],
-        "stderr": null,
-        "return_code": ["==", 0]
+        "description": "'$' is illegal in fmt",
+        "command": [ "./cmd comma $HOME" ],
+        "stdout": ["==", ""],
+        "stderr": ["contains", "ERROR: 1:13:syntax error"],
+        "return_code": ["==", -1]
     },
-     {
+    {
         "description": "pipe '|'",
         "command": [ "./cmd stdout | ./cmd incr | ./cmd incr" ],
         "stdout": ["==", "3"],
+        "stderr": null,
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "redirect '<'",
+        "command": [ "./cmd cat < README.md" ],
+        "stdout": ["contains", "JSON"],
         "stderr": null,
         "return_code": ["==", 0]
     },
@@ -158,7 +161,7 @@
         "return_code": ["==", 0]
     },
     {
-        "description": "redirect '&>`*file*'",
+        "description": "redirect '&>'",
         "command": [ "./cmd stderr stdout stdout &> tmp/#.txt && ./cmd incr < tmp/#.txt" ],
         "stdout": ["==", "212"],
         "stderr": ["==", ""],
