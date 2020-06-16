@@ -108,13 +108,12 @@ static int {test_name}() {{
 def generate_test_func(index: int, test: dict) -> str:
     command = test['command']
     test_name = str2func(index, test['description'])
-    test_args = [f'"{command[0]}"']
+    test_args = []
 
-    for arg in command[1:]:
-        if arg == '#':
-            # Replace the argument with the string equivalent of index.
-            test_args.append(f'"{index}"')
-        elif type(arg) is str:
+    for arg in command:
+        if type(arg) is str:
+            # Replace ['#'] arguments with the string representation of this test number.
+            arg = "".join([str(index) if i == '#' else i for i in arg])
             test_args.append(f'"{cstr_escape(arg)}"')
         elif type(arg) is int:
             test_args.append(f'{arg}')

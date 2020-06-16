@@ -83,8 +83,6 @@ for i in range(len(tests)):
     test_stdout = test['stdout']
     # Either 'null' or ['operator', 'value']
     test_stderr = test['stderr']
-    # Replace ['#'] arguments with the string representation of this test number.
-    command = [str(i) if arg == ['#'] else arg for arg in command]
 
     returned = run_command(i)
     return_code = returned.returncode

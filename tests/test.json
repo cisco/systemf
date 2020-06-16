@@ -120,6 +120,20 @@
         "command": [ "./cmd stdout | ./cmd incr | ./cmd incr" ],
         "stdout": ["==", "3"],
         "stderr": null,
+        "return_code": ["==", 0],
+        "todo1": "| `>>`*file*   | Append the stdout into the specified *file*. (1)(3) |",
+        "todo2": "| `2>`*file*   | Redirect the stderr into the specified *file*. (1)(2) |",
+        "todo3": "| `2>>`*file*  | Append the stderr into the specified *file*. (1)(3) |",
+        "todo4": "| `>&2`        | Redirect the stdout into the stderr. (4) |",
+        "todo5": "| `2>&1`       | Redirect stderr into stdout. (4) |",
+        "todo6": "| `&>`*file*   | Redirect stderr and stdout into the specified *file*. (1)(2) |",
+        "todo7": "| `&>>`*file*  | Append stderr and stdout into the specified *file*. (1)(2) |"
+    },
+    {
+        "description": "redirect '>>'",
+        "command": [ "./cmd stdout >> tmp/#.txt && ./cmd stdout >> tmp/#.txt && ./cmd incr < tmp/#.txt" ],
+        "stdout": ["==", "12"],
+        "stderr": ["==", ""],
         "return_code": ["==", 0]
     }
 ]

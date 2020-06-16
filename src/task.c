@@ -211,6 +211,7 @@ static int populate_task_files(_sf1_task *task, _sf1_task_files *files) {
     files->out = 1;
     files->err = 2;
     files->out_rd_pipe = -1;
+    int rwrwrw = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
 
     for (redirect = task->redirects; redirect; redirect = redirect->next) {
         if (redirect->stream == _SF1_STDIN)  {
@@ -225,7 +226,7 @@ static int populate_task_files(_sf1_task *task, _sf1_task_files *files) {
             }
         } else if (redirect->stream == _SF1_STDOUT) {
             if (redirect->target == _SF1_FILE) {
-                files->out = open(redirect->text, O_WRONLY | redirect->append ? O_APPEND : 0);
+                files->out = open(redirect->text, O_WRONLY | O_CREAT | (redirect->append ? O_APPEND : O_TRUNC), rwrwrw);
                 if (files->out < 0) {
                     fprintf(stderr, "systemf: %s: %s\n", strerror(errno), redirect->text);
                     return -1;
@@ -242,7 +243,7 @@ static int populate_task_files(_sf1_task *task, _sf1_task_files *files) {
             }
         } else { // _SF1_STDERR
             if (redirect->target == _SF1_FILE) {
-                files->err = open(redirect->text, O_WRONLY | redirect->append ? O_APPEND : 0);
+                files->err = open(redirect->text, O_WRONLY | O_CREAT | (redirect->append ? O_APPEND : O_TRUNC), rwrwrw);
                 if (files->err < 0) {
                     fprintf(stderr, "systemf: %s: %s\n\n", strerror(errno), redirect->text);
                     return -1;
@@ -343,6 +344,10 @@ int _sf1_tasks_run(_sf1_task *tasks) {
         if (files.err > 2) {
             close(files.err);
         }
+
+        // FIXME: If this is a pipe, we may need to launch the next process immediately.
+        // Otherwise, we may have pipes filling up and blocking waiting for something
+        // to empty the pipe.
 
         if (waitpid(pid, &stat, 0) != pid) {
             // FIXME: Make sure this is the right return value and better recover from this.
