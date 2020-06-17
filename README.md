@@ -1,7 +1,7 @@
 [![C/C++ CI](https://github.com/yonhan3/systemf/workflows/C/C++%20CI/badge.svg)](https://github.com/yonhan3/systemf/actions)
 | Please Note: Systemf() is 0.9 Beta    |
 | ------------------------------------- |
-| Systemf() is at the maturity level that it can be tested by interested parties.  See [Future Work](#Future Work) below for more information as to what the MVP for version 1.0 would be. |
+| Systemf() is at the maturity level that it can be tested by interested parties.  See [Future Work](#future-work) below for more information as to what the MVP for version 1.0 would be. |
 
 # systemf
 Prepared statement support for the system command.
@@ -40,13 +40,14 @@ int example_func(char *user_input) {
 ```
 
 But that isn't the reason systemf() was created (but it is a great advantage).  
-There is a big security advantage.  user_input is sent as a single argument and
-there is no /bin/sh involved.  So if they did something like, 
-`user_input = "goodbye ; rm -rf /"`, the first example would try to execute the 
-'rm -rf /' while the second would just send the whole string as a single argument 
-to /bin/mymagicfunc.
+There is a big security advantage.  With `systemf()`, 
+user_input is sent as a single argument and since `systemf()` has its own limit
+parsing capabilities, `/bin/sh` is not involved at all.  So if they did something 
+like, `user_input = "goodbye ; rm -rf /"`, the first example would try to execute 
+the `rm -rf /` while the second would just send the whole string as a single 
+argument to /bin/mymagicfunc.
 
-This doesn't solve everything.  If /bin/mymagicfunc had an injection issue, it might still cause the code to be run, but you can't prevent everything.
+This doesn't solve everything.  If `/bin/mymagicfunc` had an injection issue, it might still cause the code to be run, but you can't prevent everything.
 
 ## Quict Tour of Through Examples
 
@@ -69,7 +70,7 @@ Now take the following call to `systemf1()` into account:
 
 `systemf1("/bin/echo %s", "this line has spaces");`
 
-`systemf1()` only breaks lines into parameters by spaces and glob expansion. So in the above case, the arguments to execv will be: ["/bin/echo", "this line has spaces"] and it would **not** break the %s into spaces.
+`systemf1()` only breaks lines into parameters by spaces and glob expansion. So in the above case, the arguments to execv will be: `["/bin/echo", "this line has spaces"]` and it would **not** break the %s into spaces.
 
 **Example 3: File Globbing**
 
@@ -85,14 +86,14 @@ There are a caveats to the above.  If the glob pattern matches nothing, the
 processing will stop, an error message will be printed, and `-1` will be returned.
 
 Also, note that `systemf1()` supports file path sandboxing.  That is a more advanced
-subject than this introducton.  For more information see [File Sandboxing](#file-sandboxing-still-being-designed) below.
+subject than this introduction.  For more information see [File Sandboxing](#file-sandboxing-still-being-designed) below.
 
 
 
 
 ## Format String and Argument Parsing
 
-The `fmt` argument to systemf1() specifies the how the code will be called and 
+The `fmt` argument to `systemf1()` specifies the how the code will be called and 
 allows a convenient way to bring in parameterized user input.  Think of it as 
 limited shell with most of what you would need when calling out to system, but 
 protections from the common mistakes when calling system.  The below table
@@ -174,13 +175,65 @@ These features require more discussion and some highly needed use cases to be ad
 | [Background Support](#no-plan-for-background-support) | Running commands in the background. |
 | [variables](#no-plan-for-variable-support) | Variable expansion like $HOME or ~ may not be supported. |
 | [variable cleaning](#no-plan-for-variable-cleaning) | Other than PATH, no other environment variables will be reset (like IFS). | 
+| [chroot equivalence](#no-plan-for-chroot-jail-equivalence-for-filename-sandboxing) | No plan for chroot jail equivalence for filename sandboxing
 
 ### File Sandboxing
 **Still being developed.**
 
-By default, if a file is specified, it must be located in the realpath of the current directory.  We are designing how
-this can be expanded and expect alternate paths to be able to be specified in the format string, but that is still being
-designed.
+`systemf` has a non-obtrisive file sandboxing system.  Before each process is executed, all arguments for that command are run through the following steps.
+
+1. Determine which arguments are definite file references with untrusted data.
+2. Determine the trusted path of that argument.
+3. Verify that the final paths are contained in the trusted path.
+
+#### 1. Determine which arguments are file references with untrusted data.
+
+Systemf looks at each argument before the commands is launched and determines
+if they are candidates for sandboxing.  An argument is a candidate if it contains any of the following:
+
+1. Wildcards in the format string. (`[]`, `*`, `?`)
+2. Any `%p` parameter. (`%p`, `%!p`, `%*p`)
+
+The target must also include untrusted data.  That can be any of `%d`, `%s`, `%p`, `%*p`.  `%!p`, on the other hand, is always trusted.
+
+#### 2. Determine the trusted path of that argument.
+
+If an argument is deemed a file reference, it is next scanned up for the longest
+trusted path not includeing wildcards.  A path is trusted if it is a part of the
+`fmt` string, or if it is a %!p.  This is best shown through examples.
+
+| # | Command | Trusted Path |
+| - | ------- | ------------ |
+| 1 | `systemf1("cmd ./a/b/c*/%s", "untrusted");` | `./a/b/` |
+| 2 | `systemf1("cmd ./a/b/c%s/*", "untrusted");` | `./a/b/` |
+| 3 | `systemf1("cmd %p/x/y", "untrusted");` | `./` |
+| 4 | `systemf1("cmd %!p/x/y", "trusted");` | *NA* |
+| 5 | `systemf1("cmd %s/x/y/%!p", "untrusted", "trusted");` | `./` |
+| 6 | `systemf1("cmd %s/x/y", "untrusted");` | *NA* |
+| 7 | `systemf1("./a/%s %s/x/y", "untrusted");` | `./a/` |
+
+1. Since the path at `/c*` contains a wildcard it is not included in the trusted path.
+2. Since `/c%s` contains untrusted data, it is not included in the path.
+3. Since `%p` is untrusted and at the very beginning, the current directory is assumed.
+4. Since `%!p` is trusted, this contains no untrusted data and is not sandboxed.
+5. Even though there is a `%!p` at the end, the untrusted `%s` at the beginning forces a trusted path to the current directory.
+6. Since there are no wildcards or `%p` variants, this is not considered a path even if it probably is.
+7. This demonstrates sandboxing also happens on the command itself.  The command must live in a subdirectory of `a`.
+
+#### 3. Verify that the final paths are contained in the trusted path.
+
+The final step is to verify that all generated paths are contained in the trusted path.  This is done by collapsing all `..` patterns in the paths and verfying that
+the trusted path and the beginning of each path matches.
+
+Consider the following code:
+```
+systemf1("mkdir -p a/b/c/%p", "../../b/c/f");
+```
+the underlying `systemf` code will have to decide if `a/b/c/../../b/c/f` exists in the trusted path, `a/b/c/`.  I collapses the latter to `a/b/c/f` and determines that it matches the trusted path.
+
+There were some consideration of preventing symbolic links from causing an escape of the sandbox, but ultimately the confusion added by such a change was greater than the security benefilts.  See [No Plan for Chroot Jail Equivalence for Filename Sandboxing](#no-plan-for-chroot-jail-equivalence-for-filename-sandboxing) for more details.
+
+
 
 ### PATH Support
 **Still being developed.**
@@ -275,6 +328,25 @@ For now, there is no variable support.  In the future, there may be.
 ### No Plan for Variable Cleaning
 
 The SEI CERT C Coding Standard includes [ENV03-C Sanitize the environment when invoking external programs](https://wiki.sei.cmu.edu/confluence/display/c/ENV03-C.+Sanitize+the+environment+when+invoking+external+programs) and its examples include such items as resetting environment variables such as the PATH.  Because it is such a common vulnerability, `Systemf` does sanitize the PATH.  But because the library isn't able to guess every variation of needs of environment variables, it does not sanitize other variables.
+
+### No Plan for Chroot Jail Equivalence for Filename Sandboxing
+
+Filename sandboxing is a feature in `systemf` that prevents user input from escaping outside of the current file path.  It works well for the most basic operations, but it lacks the protections that a chroot jail might have.  As an example, consider a chroot located in `/jail/`.  Unless mounted within the jail, the path `/somewhere-else/` is not accessable.
+
+If someone instead simply launched code with `systemf` in it from `/newpath/` and
+in this contrived example, there was a `/newpath/escape/` which was a symbolic link
+to `/somewhere-else/` (`cd /newpath; ln -s /somewhere-else/ escape`) a call to 
+`systemf1("./%p", "escape/bin/bam");`, the symbolic link would be followed and
+the executable in `/somewhere-else/bin/bam` could be run.
+
+In the chroot jail case, the symbolic link couldn't be followed because it would be considered to point to the external path: `/newpath/somewhere-else` that does not
+exist.
+
+It was considered that to get around this with filename sandboxing, the realpaths of
+the trusted path and the full path could be compared.  It was decided that this 
+would add too much complexity, be hard to explain, confuse the users, and prevent real needs to follow symbolic links.   For these reasons, this approach for such
+a corner case was abandoned.
+
 
 ## Building
 
