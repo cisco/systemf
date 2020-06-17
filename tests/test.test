@@ -30,16 +30,16 @@ def fixup_compare_value(compare_value):
         return 256 + compare_value
     else:
         return compare_value
-
+    
 # Run a comparison operation on return_code, stdout, or stderr
-def do_comparison(operator, real_value, compare_value):
+def do_comparison(i, operator, real_value, compare_value):
     # Everything we get from systemf() will be bytes
 
     if type(compare_value) is int:
         compare_value = fixup_compare_value(compare_value)
 
     if type(compare_value) is str:
-        compare_value = str.encode(compare_value)
+        compare_value = str.encode(compare_value.replace("#", str(i+1)))
 
     if operator == '==':
         return real_value == compare_value
@@ -75,6 +75,11 @@ for i in range(len(tests)):
     print()
     print(f'# Running test {i+1} - {description}')
 
+    setup = test.get('setup')
+    if setup:
+        # Oh the irony of calling system here.
+        os.system(setup.replace("#", str(i+1)))
+
     # Command to run (array)
     command = test['command']
     # Either 'null' or ['operator', 'value']
@@ -91,13 +96,13 @@ for i in range(len(tests)):
 
     result = 'ok'
 
-    if test_return_code != None and not do_comparison(test_return_code[0], return_code, test_return_code[1]):
+    if test_return_code != None and not do_comparison(i, test_return_code[0], return_code, test_return_code[1]):
         print(f'# Failed: {{"return_code": {json.dumps(test_return_code)}}}')
         result = 'not ok'
-    if test_stdout != None and not do_comparison(test_stdout[0], stdout, test_stdout[1]):
+    if test_stdout != None and not do_comparison(i, test_stdout[0], stdout, test_stdout[1]):
         print(f'# Failed: {{"stdout": {json.dumps(test_stdout)}}}')
         result = 'not ok'
-    if test_stderr != None and not do_comparison(test_stderr[0], stderr, test_stderr[1]):
+    if test_stderr != None and not do_comparison(i, test_stderr[0], stderr, test_stderr[1]):
         print(f'# Failed: {{"stderr": {json.dumps(test_stderr)}}}')
         result = 'not ok'
 

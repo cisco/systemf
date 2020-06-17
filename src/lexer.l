@@ -57,8 +57,8 @@ static _sf1_syllable *syl_d (_sf1_parse_args *results) {
 
 %%
 
-[[:alnum:]/_.-]+           { yylval->SYLLABLE = syl(results, yytext, SYL_IS_TRUSTED); return SYLLABLE; }
-\\[*\[\]?]                { yylval->SYLLABLE = syl(results, yytext, SYL_IS_FILE|SYL_IS_GLOB|SYL_IS_TRUSTED); return SYLLABLE; }
+[[:alnum:]/_.-]+          { yylval->SYLLABLE = syl(results, yytext, SYL_IS_TRUSTED); return SYLLABLE; }
+\[[[:alnum:]/_.-]+\]    { yylval->SYLLABLE = syl(results, yytext, SYL_IS_FILE|SYL_IS_GLOB|SYL_IS_TRUSTED); return SYLLABLE; }
 [\*\?]                    { yylval->SYLLABLE = syl(results, yytext, SYL_IS_FILE|SYL_IS_GLOB|SYL_IS_TRUSTED); return SYLLABLE; }
 %s                        { yylval->SYLLABLE = syl_s(results); return SYLLABLE; }
 %p                        { yylval->SYLLABLE = syl_file(results); return SYLLABLE; }

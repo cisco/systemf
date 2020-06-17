@@ -14,7 +14,7 @@
 #define VA_ARGS(...) , ##__VA_ARGS__
 #define DBG(fmt, ...) if (DEBUG) { printf("%s:%-3d:%24s: " fmt "\n", __FILE__, __LINE__, __FUNCTION__ VA_ARGS(__VA_ARGS__)); }
 
-static void merge_and_free_syllables (_sf1_syllable *syl, char **text_pp, char **path_pp, int *is_glob_p) {
+static void merge_and_free_syllables (_sf1_syllable *syl, char **text_pp, char **trusted_path_pp, int *is_glob_p) {
     int is_glob = 0;
     int is_file = 0;
     int is_trusted = 1;
@@ -22,11 +22,20 @@ static void merge_and_free_syllables (_sf1_syllable *syl, char **text_pp, char *
     size_t slen = 0;
     size_t sandbox_len = 0;
     size_t sandbox_candidate = 0;
-    size_t sandbox_index;
+    size_t sandbox_index = 0;
     int doing_sandbox_detection = 1;
     const char glob_chars[] = "?*[]"; // Globs supported by glob()
-    char *text, *cursor, *path;
+    char *text, *cursor, *trusted_path;
 
+    /*
+     * First, walk all the syllables.  Determine the following of the merged argument:
+     * is_glob: Glob processing should be run because one syllable is a glob.
+     * is_file: Filename sandboxing candidate was detected.
+     * is_trusted: No syllables are not trusted. (%s, %p, %*p, %i)
+     * escapes: Number of globlike characters that need escaping if is_glob is detected.
+     * slen: String length of all syllables concatenated (not including escapes)
+     * sandbox_len: Longest span of trusted bytes ending with '/'
+     */
     DBG("begin")
     for (_sf1_syllable *s = syl; s != NULL; s = s->next)
     {
@@ -66,7 +75,7 @@ static void merge_and_free_syllables (_sf1_syllable *syl, char **text_pp, char *
             if (syl_is_trusted && !syl_is_glob) {
                 int i;
                 char *cursor = s->text;
-                // search for directory separators adding spans inclding them as we go
+                // search for directory separators adding spans including them as we go
                 for (i = strcspn(cursor, "/"); *cursor; cursor += i + 1) {
                     if (*cursor) {
                         sandbox_len += sandbox_candidate + i + 1;
@@ -76,7 +85,7 @@ static void merge_and_free_syllables (_sf1_syllable *syl, char **text_pp, char *
                         break;
                     }
                 }
-             } else {
+            } else {
                 doing_sandbox_detection = 0;
             }
         }
@@ -90,30 +99,34 @@ static void merge_and_free_syllables (_sf1_syllable *syl, char **text_pp, char *
         slen += escapes;
     }
 
+    // Allocate memory for the trusted path.
     if (is_file && !is_trusted) {
         if (sandbox_len) {
-            path = malloc(sandbox_len + 1);
-            sandbox_index = 0;
-            path[sandbox_len] = 0;
+            trusted_path = malloc(sandbox_len + 1);
+            trusted_path[sandbox_len] = 0;
         } else {
-            path = strdup("./");
-            sandbox_index = sandbox_len;
+            trusted_path = strdup("");
         }
         // FIXME: handle NULL path
     } else {
-        sandbox_index = sandbox_len;
-        path = NULL;
+        sandbox_len = 0;
+        trusted_path = NULL;
     }
     text = malloc(slen + 1);
     cursor = text;
 
+    /*
+     * Now walk the syllables.
+     * * Filling in the sandbox_path if needed.
+     * * Filling in text (with escaped glob patterns when needed).
+     */
     for (_sf1_syllable *s = syl; s != NULL;)
     {
         int syl_escape_glob = s->flags & SYL_ESCAPE_GLOB;
         _sf1_syllable *save_next;
 
-        for (int i = 0; sandbox_index < sandbox_len; i+=1, sandbox_index +=1) {
-            path[sandbox_index] = s->text[i];
+        for (int i = 0; (sandbox_index < sandbox_len) && s->text[i]; i+=1, sandbox_index +=1) {
+            trusted_path[sandbox_index] = s->text[i];
         }
 
         if (is_glob && syl_escape_glob) {
@@ -143,9 +156,9 @@ static void merge_and_free_syllables (_sf1_syllable *syl, char **text_pp, char *
     assert(cursor == text + slen);
 
     *text_pp = text;
-    *path_pp = path;
+    *trusted_path_pp = trusted_path;
     *is_glob_p = is_glob;
-    DBG("end: path=%s", path)
+    DBG("end: trusted_path=%s", trusted_path)
     return;
 }
 
@@ -168,7 +181,7 @@ _sf1_redirect *_sf1_create_redirect(_sf1_stream stream, _sf1_stream target, int 
     if (file_syllables) {
         int is_glob;
 
-        merge_and_free_syllables(file_syllables, &redirect->text, &redirect->path, &is_glob);
+        merge_and_free_syllables(file_syllables, &redirect->text, &redirect->trusted_path, &is_glob);
         // FIXME: This needs to be cleanly handled similar to a syntax error.
         // Currently we don't support globs in file targets.
         assert(!is_glob);
@@ -194,7 +207,7 @@ void _sf1_create_redirect_pipe (_sf1_task *left, _sf1_task *right) {
 _sf1_task *_sf1_create_cmd (_sf1_syllable *syllables, _sf1_redirect *redirects) {
     int is_glob;
     char *text;
-    char *path;
+    char *trusted_path;
     _sf1_syllable *next;
     _sf1_task *task;
 
@@ -202,8 +215,8 @@ _sf1_task *_sf1_create_cmd (_sf1_syllable *syllables, _sf1_redirect *redirects) 
 
     while (syllables) {
         next = syllables->next_word;
-        merge_and_free_syllables(syllables, &text, &path, &is_glob);
-        _sf1_task_add_arg(task, text, path, is_glob);
+        merge_and_free_syllables(syllables, &text, &trusted_path, &is_glob);
+        _sf1_task_add_arg(task, text, trusted_path, is_glob);
         syllables = next;
     }
 

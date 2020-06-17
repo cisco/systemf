@@ -32,7 +32,7 @@ _sf1_task *_sf1_task_create() {
  * redirects - A linked list of _sf1_redirects where:
  *   each redirect is malloced
  *   filename - Is NULL or the destination malloced filename (if appropriate)
- *   path - Is the malloced verification path for filename where NULL is current directory.
+ *   trusted_path - Is the malloced verification path for filename where NULL is current directory.
  *   append - Specifies if the redirect shoud append to the file.
  *
  * Note that all malloced memory passed in will be freed with _sf1_task_free().
@@ -56,12 +56,12 @@ void _sf1_task_set_run_if (_sf1_task *task, _sf1_run_if run_if) {
  *
  * task - Destination Task
  * text - The text of the argument.  Must be malloced.
- * path - If path verification is to be done this is the pre-realpath path.  Either NULL or malloced.
+ * trusted_path - If path verification is to be done this is the pre-realpath path.  Either NULL or malloced.
  * is_glob - This is a glob expression that glob expansion will be needed for.
  *
  * Note that all malloced memory passed in will be freed with _sf1_task_free()
  */
-_sf1_task_arg *_sf1_task_add_arg (_sf1_task *task, char *text, char *path, int is_glob)
+_sf1_task_arg *_sf1_task_add_arg (_sf1_task *task, char *text, char *trusted_path, int is_glob)
 {
     _sf1_task_arg *arg;
 
@@ -71,7 +71,7 @@ _sf1_task_arg *_sf1_task_add_arg (_sf1_task *task, char *text, char *path, int i
     }
 
     arg->text = text;
-    arg->path = path;
+    arg->trusted_path = trusted_path;
     arg->is_glob = is_glob;
 
     // Find the last item and append pp
@@ -138,32 +138,30 @@ static int redirects_are_sane(_sf1_task *tasks)
 }
 
 /*
- * Extracts all the globs from the task arguments for every task.
- * tasks - The task list.
+ * Extracts all the globs from the task arguments.
+ * task - The task.
  * returns:
  *   0 on success
  *   GLOB_NOSPACE for running out of memory,
  *   GLOB_ABORTED for a read error, and
  *   GLOB_NOMATCH for when the number of matches doesn't match the specified allowed match count.
  */
-static int extract_globs(_sf1_task *tasks)
+static int extract_glob(_sf1_task *task)
 {
-    for (_sf1_task *t = tasks; t != NULL; t = t->next) {
-        for (_sf1_task_arg *a = t->args; a != NULL; a = a->next) {
-            if (a->is_glob) {
-                int ret = glob(a->text, 0, NULL, &a->glob);
-                // FIXME: do a bounds check.
-                switch (ret) {
-                case GLOB_NOSPACE:
-                    fprintf(stderr, "systemf: glob out of memory extracting: %s\n", a->text);
-                    return ENOMEM;
-                case GLOB_ABORTED:
-                    fprintf(stderr, "systemf: glob aborted during extraction: %s\n", a->text);
-                    return EBADF;
-                case GLOB_NOMATCH:
-                    fprintf(stderr, "systemf: no matches found: %s\n", a->text);
-                    return EINVAL;
-                }
+    for (_sf1_task_arg *a = task->args; a != NULL; a = a->next) {
+        if (a->is_glob) {
+            int ret = glob(a->text, 0, NULL, &a->glob);
+            // FIXME: do a bounds check.
+            switch (ret) {
+            case GLOB_NOSPACE:
+                fprintf(stderr, "systemf: glob out of memory extracting: %s\n", a->text);
+                return ENOMEM;
+            case GLOB_ABORTED:
+                fprintf(stderr, "systemf: glob aborted during extraction: %s\n", a->text);
+                return EBADF;
+            case GLOB_NOMATCH:
+                fprintf(stderr, "systemf: no matches found: %s\n", a->text);
+                return EINVAL;
             }
         }
     }
@@ -178,7 +176,7 @@ void _sf1_task_free(_sf1_task *task)
         for (_sf1_task_arg *a = task->args; a != NULL; a = anext) {
             globfree(&a->glob);
             free(a->text);
-            free(a->path);
+            free(a->trusted_path);
             anext = a->next;
             free(a);
         }
@@ -186,7 +184,7 @@ void _sf1_task_free(_sf1_task *task)
         _sf1_redirect *rnext;
         for (_sf1_redirect *r = task->redirects; r != NULL; r = rnext) {
             free(r->text);
-            free(r->path);
+            free(r->trusted_path);
             rnext = r->next;
             free(r);
         }
@@ -256,6 +254,13 @@ static int populate_task_files(_sf1_task *task, _sf1_task_files *files) {
     return 0;
 }
 
+static int file_sandbox_check(const char *trusted_path, const char *path) {
+    if (!trusted_path) {
+        return 0;
+    }
+    return 0;
+}
+
 int _sf1_tasks_run(_sf1_task *tasks) {
     pid_t pid;
     int stat;
@@ -270,22 +275,37 @@ int _sf1_tasks_run(_sf1_task *tasks) {
         return -1;
     }
 
-    ret = extract_globs(tasks);
-    if (ret) {
-        errno = ret;
-        return -1;
-    }
-
-    // We don't support tasks reuse, so argv MUST be null coming into this.
+     // We don't support tasks reuse, so argv MUST be null coming into this.
     assert(tasks->argv == NULL);
 
     for (_sf1_task *task = tasks; task; task = task->next) {
-        // Count the arguments.
+        ret = extract_glob(task);
+        if (ret) {
+            errno = ret;
+            return -1;
+        }
+
+        // File Sandbox each argument
         for (arg = task->args; arg != NULL; arg = arg->next) {
             if (arg->is_glob) {
                 argc += arg->glob.gl_pathc;
             } else {
                 argc += 1;
+            }
+        }
+
+        // Count the arguments.
+        for (arg = task->args; arg != NULL; arg = arg->next) {
+            if (arg->is_glob) {
+                for (int i = 0, ret = 0; (i < arg->glob.gl_pathc) && !ret; i++) {
+                    ret = file_sandbox_check(arg->trusted_path, arg->glob.gl_pathv[i]);
+                }
+            } else {
+                ret = file_sandbox_check(arg->trusted_path, arg->text);
+            }
+            if (ret) {
+                errno = ret;
+                return -1;
             }
         }
 

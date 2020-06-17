@@ -173,5 +173,53 @@
         "stdout": ["==", "2122"],
         "stderr": ["==", ""],
         "return_code": ["==", 0]
+    },
+    {
+        "description": "globs fmt *",
+        "setup": "cd tmp; mkdir #; touch #/aa #/ab #/ac",
+        "command": [ "./cmd comma tmp/#/a*"],
+        "stdout": ["==", "tmp/#/aa,tmp/#/ab,tmp/#/ac"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "globs fmt [abc]",
+        "setup": "cd tmp; mkdir #; touch #/aa #/ab #/ac",
+        "command": [ "./cmd comma tmp/#/a[abc]"],
+        "stdout": ["==", "tmp/#/aa,tmp/#/ab,tmp/#/ac"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "globs fmt ?",
+        "setup": "cd tmp; mkdir #; touch #/aa #/ab #/ac",
+        "command": [ "./cmd comma tmp/#/a?"],
+        "stdout": ["==", "tmp/#/aa,tmp/#/ab,tmp/#/ac"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "globs %*p, *",
+        "setup": "cd tmp; mkdir #; touch #/aa #/ab #/ac",
+        "command": [ "./cmd comma tmp/#/%*p", "a*" ],
+        "stdout": ["==", "tmp/#/aa,tmp/#/ab,tmp/#/ac"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "filename sandbox escape # TODO",
+        "setup": "mkdir -p tmp/#/x; mkdir -p tmp/#/y",
+        "command": [ "./cmd comma tmp/x/%*p", "../y" ],
+        "stdout": ["==", ""],
+        "stderr": ["==", "something"],
+        "return_code": ["==", -1]
+    },
+    {
+        "description": "filename sandbox unescape",
+        "setup": "mkdir -p tmp/#/x",
+        "command": [ "./cmd comma tmp/#/x/%*p", "../../../tmp/#/x" ],
+        "stdout": ["==", "tmp/#/x/../../../tmp/#/x"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
     }
 ]

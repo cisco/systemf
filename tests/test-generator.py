@@ -113,7 +113,7 @@ def generate_test_func(index: int, test: dict) -> str:
     for arg in command:
         if type(arg) is str:
             # Replace ['#'] arguments with the string representation of this test number.
-            arg = "".join([str(index) if i == '#' else i for i in arg])
+            arg = arg.replace("#", str(index+1))
             test_args.append(f'"{cstr_escape(arg)}"')
         elif type(arg) is int:
             test_args.append(f'{arg}')

@@ -180,7 +180,7 @@ These features require more discussion and some highly needed use cases to be ad
 ### File Sandboxing
 **Still being developed.**
 
-`systemf` has a non-obtrisive filename sandboxing system.  Before each process is executed, all arguments for that command are run through the following steps.
+`systemf` has a non-obtrusive filename sandboxing system.  Before each process is executed, all arguments for that command are run through the following steps.
 
 1. Determine which arguments are definite file references with untrusted data.
 2. Determine the trusted path of that argument.

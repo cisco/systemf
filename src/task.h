@@ -22,7 +22,7 @@ typedef struct _sf1_task_arg_ {
     struct _sf1_task_arg_ *next;
     int is_glob;
     char *text;
-    char *path;
+    char *trusted_path;
     glob_t glob;
 } _sf1_task_arg;
 
@@ -31,7 +31,7 @@ typedef struct _sf1_redirect_ {
     _sf1_stream stream; // May only be STDIN, STDOUT, or STDERR
     _sf1_stream target;
     char *text;
-    char *path;
+    char *trusted_path;
     int append;
 } _sf1_redirect;
 
@@ -52,7 +52,7 @@ typedef struct _sf1_task_files_ {
 
 extern _sf1_task *_sf1_task_create();
 extern int _sf1_tasks_run(_sf1_task *task);
-extern _sf1_task_arg *_sf1_task_add_arg(_sf1_task *task, char *text, char *path, int is_glob);
+extern _sf1_task_arg *_sf1_task_add_arg(_sf1_task *task, char *text, char *trusted_path, int is_glob);
 extern void _sf1_task_add_redirects(_sf1_task *task, _sf1_redirect *redirect);
 extern void _sf1_task_set_run_if (_sf1_task *task, _sf1_run_if run_if);
 extern void _sf1_task_free(_sf1_task *task);
