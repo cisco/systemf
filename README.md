@@ -85,8 +85,8 @@ The first two will find every `c` file in the current directory and pass those a
 There are a caveats to the above.  If the glob pattern matches nothing, the
 processing will stop, an error message will be printed, and `-1` will be returned.
 
-Also, note that `systemf1()` supports file path sandboxing.  That is a more advanced
-subject than this introduction.  For more information see [File Sandboxing](#file-sandboxing-still-being-designed) below.
+Also, note that `systemf1()` supports filename sandboxing.  That is a more advanced
+subject than this introduction.  For more information see [Filename Sandboxing](#filename-sandboxing) below.
 
 
 
@@ -105,9 +105,9 @@ summarizes which characters are allowed in the format string and their meanings.
 | *space tab*  | *Spaces* and *tabs* are interpreted as parameter separators. |
 | `%s`         | Replace this with the string in the next available argument. (5) |
 | `%d`         | Replace this with the integer in the next available argument. (5) |
-| `%p`         | Like `%s`, but also [file sandboxed](#file-sandboxing-still-being-designed) |
+| `%p`         | Like `%s`, but also [filename sandboxed](#filename-sandboxing) |
 | `%*p`        | Interpret the supplied parameter as a file glob. |
-| `%!p`        | Like `%s`, but a trusted parameter for [file sandboxed](#file-sandboxing-still-being-designed) |
+| `%!p`        | Like `%s`, but a trusted parameter for [filename sandboxing](#filename-sandboxing) |
 | `;`          | Command separator run if previous command exits cleanly. |
 | `|`          | Command separator like `;` but also pipes stdout from prev into stdin |
 | `&&`         | Command separator run if previous command exits cleanly with zero status. |
@@ -155,7 +155,7 @@ The following must happen before the 1.0 release.  If not implemented before the
 
 | Title | Description |
 | ----- | ----------- |
-| [File Sandboxing](#file-sandboxing) |  A limited sandboxing of file access. |
+| [Filename Sandboxing](#filename-sandboxing) |  A limited sandboxing of file access. |
 
 ### Features that will likely be added after verison 1.0.
 
@@ -180,7 +180,7 @@ These features require more discussion and some highly needed use cases to be ad
 ### File Sandboxing
 **Still being developed.**
 
-`systemf` has a non-obtrisive file sandboxing system.  Before each process is executed, all arguments for that command are run through the following steps.
+`systemf` has a non-obtrisive filename sandboxing system.  Before each process is executed, all arguments for that command are run through the following steps.
 
 1. Determine which arguments are definite file references with untrusted data.
 2. Determine the trusted path of that argument.
@@ -189,7 +189,7 @@ These features require more discussion and some highly needed use cases to be ad
 #### 1. Determine which arguments are file references with untrusted data.
 
 Systemf looks at each argument before the commands is launched and determines
-if they are candidates for sandboxing.  An argument is a candidate if it contains any of the following:
+if they are candidates for filename sandboxing.  An argument is a candidate if it contains any of the following:
 
 1. Wildcards in the format string. (`[]`, `*`, `?`)
 2. Any `%p` parameter. (`%p`, `%!p`, `%*p`)
@@ -286,6 +286,7 @@ There are some corner cases for `systemf1_capture_a()`.
 * The same corner cases exist for `max_stderr_buf_len`.
 
 ### Stdin String and File Support
+**Still being developed.**
 
 Varients of the systemf1 suite will take either a string, a buffer, or a FILE pointer and use that as the standard input.  These variants will take one of the above as their first argument and in the case of the buffer, a length argument.
 This will create a wide varienty of new functions:
@@ -305,6 +306,7 @@ systemf1_fin_capture_a(FILE *file, ...);
 ```
 
 ### Error Message Redirection
+**Still being developed.**
 
 `systemf` will print error messages to the standard error in some situations.  These include invalid format strings, sandboxing violations, commands not found, and file globbing problems. Global setting command `systemf1_log_to(FILE *file)` will be added.  It will return the current log.  Supplying `file=NULL` completely disables logging.  This does not affect the normal stderr and stdout processing of the commands themselves.
 
@@ -323,7 +325,6 @@ how needed such a capability was.  The second was that if such a capability is
 added, all security ramification should be considered and discussed first.
 
 For now, there is no variable support.  In the future, there may be.
-
 
 ### No Plan for Variable Cleaning
 
