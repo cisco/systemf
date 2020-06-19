@@ -23,5 +23,5 @@ tests/test.log
 tests/test.trs
 test-runner
 test-runner.c
-cmd
+./cmd
 tests/tmp/

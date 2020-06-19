@@ -4,8 +4,12 @@ cd /systemf
 
 export SHOULD_NOT_FORK=true
 export SHOULD_NOT_CAPTURE_STDOUT_STDERR=true
+export LD_LIBRARY_PATH=/systemf/.libs/
 
-GDBSERVER_TARGET=${GDBSERVER_TARGET:-python3 tests/test.test}
+GDBSERVER_TARGET=${GDBSERVER_TARGET:-../.libs/test-runner}
 GDBSERVER_PORT=${GDBSERVER_PORT:-2345}
 
-gdbserver :$GDBSERVER_PORT $GDBSERVER_TARGET
+cd tests
+while true ; do
+    gdbserver :$GDBSERVER_PORT $GDBSERVER_TARGET
+done

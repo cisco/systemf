@@ -18,25 +18,18 @@
       "externalConsole": false,
       "MIMode": "lldb"
     },
-
-    {
-      "name": "Python: Current File",
-      "type": "python",
-      "request": "launch",
-      "program": "${file}",
-      "console": "integratedTerminal"
-    },
     {
       "name": "Docker gdb",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceRoot}/tests/.libs/test-runner",
+      "program": ".libs/test-runner",
       "miDebuggerServerAddress": "localhost:2345",
-      "args": ["1"],
+      "debugServerArgs": "30",
+      "args": ["30"],
       "stopAtEntry": false,
       "cwd": "${workspaceRoot}",
       "environment": [],
-      "externalConsole": true,
+      "externalConsole": false,
       "linux": {
         "MIMode": "gdb"
       },
