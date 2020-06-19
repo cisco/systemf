@@ -165,7 +165,7 @@ def main() -> int:
     tests = get_tests()
     kwargs = generate_kwargs(tests)
 
-    with open("test-runner.c", "w") as t:
+    with open("tests/test-runner.c", "w") as t:
         t.write(template.format(**kwargs))
     return 0
 

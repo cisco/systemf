@@ -22,7 +22,7 @@ stamp-h1
 test-suite.log
 tests/test.log
 tests/test.trs
-tests/test-runner
-tests/test-runner.c
-tests/cmd
+test-runner
+test-runner.c
+cmd
 tests/tmp/
