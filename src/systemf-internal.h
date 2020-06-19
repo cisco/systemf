@@ -35,4 +35,6 @@ extern _sf1_redirect *_sf1_create_redirect(_sf1_stream stream, _sf1_stream targe
 extern _sf1_task *_sf1_create_cmd(_sf1_syllable *syllables, _sf1_redirect *redirects);
 extern void _sf1_create_redirect_pipe (_sf1_task *left, _sf1_task *right);
 
+extern int _sf1_file_sandbox_check(char *trusted_path, char *path);
+
 #endif /* __systemf_internal_h__ */

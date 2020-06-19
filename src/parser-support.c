@@ -76,13 +76,15 @@ static void merge_and_free_syllables (_sf1_syllable *syl, char **text_pp, char *
                 int i;
                 char *cursor = s->text;
                 // search for directory separators adding spans including them as we go
-                for (i = strcspn(cursor, "/"); *cursor; cursor += i + 1) {
-                    if (*cursor) {
-                        sandbox_len += sandbox_candidate + i + 1;
+                for (cursor = s->text; *cursor; cursor += i) {
+                    i = strcspn(cursor, "/");
+
+                    if (cursor[i]) {
+                        i += 1;
+                        sandbox_len += sandbox_candidate + i;
                         sandbox_candidate = 0;
                     } else {
                         sandbox_candidate += i;
-                        break;
                     }
                 }
             } else {

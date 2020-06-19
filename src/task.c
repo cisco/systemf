@@ -1,4 +1,5 @@
 #include "task.h"
+#include "systemf-internal.h"
 #include <stdlib.h>
 #include <unistd.h>
 #include <glob.h>
@@ -254,13 +255,6 @@ static int populate_task_files(_sf1_task *task, _sf1_task_files *files) {
     return 0;
 }
 
-static int file_sandbox_check(const char *trusted_path, const char *path) {
-    if (!trusted_path) {
-        return 0;
-    }
-    return 0;
-}
-
 int _sf1_tasks_run(_sf1_task *tasks) {
     pid_t pid;
     int stat;
@@ -285,7 +279,7 @@ int _sf1_tasks_run(_sf1_task *tasks) {
             return -1;
         }
 
-        // File Sandbox each argument
+        // Count the arguments.
         for (arg = task->args; arg != NULL; arg = arg->next) {
             if (arg->is_glob) {
                 argc += arg->glob.gl_pathc;
@@ -294,18 +288,21 @@ int _sf1_tasks_run(_sf1_task *tasks) {
             }
         }
 
-        // Count the arguments.
+        // File Sandbox each argument
         for (arg = task->args; arg != NULL; arg = arg->next) {
-            if (arg->is_glob) {
-                for (int i = 0, ret = 0; (i < arg->glob.gl_pathc) && !ret; i++) {
-                    ret = file_sandbox_check(arg->trusted_path, arg->glob.gl_pathv[i]);
+            if (arg->trusted_path) {
+                if (arg->is_glob) {
+                    int i;
+                    for (i = 0, ret = 0; (i < arg->glob.gl_pathc) && !ret; i++) {
+                        ret = _sf1_file_sandbox_check(arg->trusted_path, arg->glob.gl_pathv[i]);
+                    }
+                } else {
+                    ret = _sf1_file_sandbox_check(arg->trusted_path, arg->text);
                 }
-            } else {
-                ret = file_sandbox_check(arg->trusted_path, arg->text);
-            }
-            if (ret) {
-                errno = ret;
-                return -1;
+                if (ret) {
+                    errno = ret;
+                    return -1;
+                }
             }
         }
 

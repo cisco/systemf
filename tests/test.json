@@ -207,11 +207,11 @@
         "return_code": ["==", 0]
     },
     {
-        "description": "filename sandbox escape # TODO",
+        "description": "filename sandbox escape",
         "setup": "mkdir -p tmp/#/x; mkdir -p tmp/#/y",
-        "command": [ "./cmd comma tmp/x/%*p", "../y" ],
+        "command": [ "./cmd comma tmp/#/x/%*p", "../y" ],
         "stdout": ["==", ""],
-        "stderr": ["==", "something"],
+        "stderr": ["contains", "systemf: Permission denied: sandboxing tmp/30/x/../y"],
         "return_code": ["==", -1]
     },
     {

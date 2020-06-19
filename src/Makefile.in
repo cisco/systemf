@@ -135,6 +135,7 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 libsystemf_la_LIBADD =
 am_libsystemf_la_OBJECTS = libsystemf_la-close.lo \
 	libsystemf_la-derived-lexer.lo libsystemf_la-derived-parser.lo \
+	libsystemf_la-file-sandbox-check.lo \
 	libsystemf_la-parser-support.lo libsystemf_la-systemf.lo \
 	libsystemf_la-systemf_debug.lo libsystemf_la-task.lo
 libsystemf_la_OBJECTS = $(am_libsystemf_la_OBJECTS)
@@ -163,6 +164,7 @@ am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/libsystemf_la-close.Plo \
 	./$(DEPDIR)/libsystemf_la-derived-lexer.Plo \
 	./$(DEPDIR)/libsystemf_la-derived-parser.Plo \
+	./$(DEPDIR)/libsystemf_la-file-sandbox-check.Plo \
 	./$(DEPDIR)/libsystemf_la-parser-support.Plo \
 	./$(DEPDIR)/libsystemf_la-systemf.Plo \
 	./$(DEPDIR)/libsystemf_la-systemf_debug.Plo \
@@ -344,7 +346,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 lib_LTLIBRARIES = libsystemf.la
-libsystemf_la_SOURCES := close.c derived-lexer.c derived-parser.c parser-support.c systemf.c systemf_debug.c task.c
+libsystemf_la_SOURCES := close.c derived-lexer.c derived-parser.c file-sandbox-check.c parser-support.c systemf.c systemf_debug.c task.c
 nodist_include_HEADERS := derived-lexer.h derived-parser.h
 libsystemf_la_LDFLAGS = -avoid-version -shared
 libsystemf_la_CFLAGS := -D_FORTIFY_SOURCE=2 -Wall -Werror
@@ -429,6 +431,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libsystemf_la-close.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libsystemf_la-derived-lexer.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libsystemf_la-derived-parser.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libsystemf_la-file-sandbox-check.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libsystemf_la-parser-support.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libsystemf_la-systemf.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libsystemf_la-systemf_debug.Plo@am__quote@ # am--include-marker
@@ -484,6 +487,13 @@ libsystemf_la-derived-parser.lo: derived-parser.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='derived-parser.c' object='libsystemf_la-derived-parser.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libsystemf_la_CFLAGS) $(CFLAGS) -c -o libsystemf_la-derived-parser.lo `test -f 'derived-parser.c' || echo '$(srcdir)/'`derived-parser.c
+
+libsystemf_la-file-sandbox-check.lo: file-sandbox-check.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libsystemf_la_CFLAGS) $(CFLAGS) -MT libsystemf_la-file-sandbox-check.lo -MD -MP -MF $(DEPDIR)/libsystemf_la-file-sandbox-check.Tpo -c -o libsystemf_la-file-sandbox-check.lo `test -f 'file-sandbox-check.c' || echo '$(srcdir)/'`file-sandbox-check.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libsystemf_la-file-sandbox-check.Tpo $(DEPDIR)/libsystemf_la-file-sandbox-check.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='file-sandbox-check.c' object='libsystemf_la-file-sandbox-check.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libsystemf_la_CFLAGS) $(CFLAGS) -c -o libsystemf_la-file-sandbox-check.lo `test -f 'file-sandbox-check.c' || echo '$(srcdir)/'`file-sandbox-check.c
 
 libsystemf_la-parser-support.lo: parser-support.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libsystemf_la_CFLAGS) $(CFLAGS) -MT libsystemf_la-parser-support.lo -MD -MP -MF $(DEPDIR)/libsystemf_la-parser-support.Tpo -c -o libsystemf_la-parser-support.lo `test -f 'parser-support.c' || echo '$(srcdir)/'`parser-support.c
@@ -671,6 +681,7 @@ distclean: distclean-am
 		-rm -f ./$(DEPDIR)/libsystemf_la-close.Plo
 	-rm -f ./$(DEPDIR)/libsystemf_la-derived-lexer.Plo
 	-rm -f ./$(DEPDIR)/libsystemf_la-derived-parser.Plo
+	-rm -f ./$(DEPDIR)/libsystemf_la-file-sandbox-check.Plo
 	-rm -f ./$(DEPDIR)/libsystemf_la-parser-support.Plo
 	-rm -f ./$(DEPDIR)/libsystemf_la-systemf.Plo
 	-rm -f ./$(DEPDIR)/libsystemf_la-systemf_debug.Plo
@@ -723,6 +734,7 @@ maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/libsystemf_la-close.Plo
 	-rm -f ./$(DEPDIR)/libsystemf_la-derived-lexer.Plo
 	-rm -f ./$(DEPDIR)/libsystemf_la-derived-parser.Plo
+	-rm -f ./$(DEPDIR)/libsystemf_la-file-sandbox-check.Plo
 	-rm -f ./$(DEPDIR)/libsystemf_la-parser-support.Plo
 	-rm -f ./$(DEPDIR)/libsystemf_la-systemf.Plo
 	-rm -f ./$(DEPDIR)/libsystemf_la-systemf_debug.Plo

@@ -1,0 +1,11 @@
+#!/bin/sh
+# For some reason even if you tell vscode to build in a subdir
+# the problem solver searches for the files in the top dir.
+# so if make outputs: "fu.c:3:17: error" the code looks for it
+# at the top level and not in src.
+#
+# This hack sticks src/ in front of everything.
+# Other than better understanding vscode, the other fix will be
+# to change the build to build at the top level or somehow tell
+# CC to output absolute paths.  Maybe later.
+make 2>&1 | sed -e 's,^,src/,' >&2
