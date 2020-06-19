@@ -49,9 +49,10 @@ int main(int argc, char *argv[]) {
             cat();
             printf("}");
         } else if (!strcmp("incr", argv[argi])) {
-            int i;
-            fscanf(stdin, "%d", &i);
-            i = i + 1;
+            int i = 0;
+            if (scanf("%d", &i)) {
+                i = i + 1;
+            }
             printf("%d", i);
         } else if (!strcmp("comma", argv[argi])) {
             char *delim="";
