@@ -120,7 +120,6 @@ fi
 
 AC_CONFIG_FILES([
  Makefile
- src/Makefile
  tests/Makefile
 ])
 AC_REQUIRE_AUX_FILE([tap-driver.sh])

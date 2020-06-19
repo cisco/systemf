@@ -3,30 +3,6 @@
 	"tasks": [
 		{
 			"type": "shell",
-			"label": "Make library",
-			"command": "./vscode-make-hack",
-			"args": [
-				""
-			],
-			"options": {
-				"cwd": "${workspaceFolder}/src",
-				"environment": [
-					{
-						"name": "CFLAGS",
-						"value": "-gO0"
-					}
-				]
-			},
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
-			"problemMatcher": [
-				"$gcc"
-			]
-		},
-		{
-			"type": "shell",
 			"label": "Make check",
 			"command": "/usr/bin/make",
 			"args": [

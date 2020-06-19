@@ -1,8 +1,30 @@
-SUBDIRS = src tests
+SUBDIRS = tests
 
 AM_CFLAGS = # CFLAGS applicable to all executables (products)
 AM_CPPFLAGS = -I$(top_srcdir)/src # so that tests also find header files
 AM_YFLAGS = -d
+
+lib_LTLIBRARIES = libsystemf.la
+libsystemf_la_SOURCES := \
+    src/close.c \
+    src/derived-lexer.c \
+    src/derived-parser.c \
+    src/file-sandbox-check.c \
+    src/parser-support.c \
+    src/systemf.c \
+    src/systemf_debug.c \
+    src/task.c
+nodist_include_HEADERS := src/derived-lexer.h src/derived-parser.h
+libsystemf_la_LDFLAGS = -avoid-version -shared
+libsystemf_la_CFLAGS := -D_FORTIFY_SOURCE=2 -Wall -Werror
+
+src/derived-lexer.c src/derived-lexer.h: src/lexer.l
+	flex --version | grep flex || (echo Flex is required ; false)
+	flex lexer.l
+
+src/derived-parser.c src/derived-parser.h: src/parser.y
+	bison --version | grep 'bison.* 3' || (echo Bison 3 is required ; false)
+	bison -v parser.y
 
 
 # Tests

@@ -111,7 +111,7 @@ am__v_lt_0 = --silent
 am__v_lt_1 = 
 am_test_runner_OBJECTS = test_runner-test-runner.$(OBJEXT)
 test_runner_OBJECTS = $(am_test_runner_OBJECTS)
-test_runner_DEPENDENCIES = ../src/libsystemf.la
+test_runner_DEPENDENCIES = ../libsystemf.la
 test_runner_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(test_runner_CFLAGS) \
 	$(CFLAGS) $(test_runner_LDFLAGS) $(LDFLAGS) -o $@
@@ -506,7 +506,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 test_runner_SOURCES = test-runner.c
-test_runner_LDADD = ../src/libsystemf.la
+test_runner_LDADD = ../libsystemf.la
 test_runner_CFLAGS = $(AM_CFLAGS) $(CODE_COVERAGE_CFLAGS)
 test_runner_LDFLAGS = $(CODE_COVERAGE_LDFLAGS)
 cmd_SOURCES = cmd.c
