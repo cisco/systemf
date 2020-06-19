@@ -18,11 +18,11 @@ libsystemf_la_CFLAGS := -D_FORTIFY_SOURCE=2 -Wall -Werror
 
 src/derived-lexer.c src/derived-lexer.h: src/lexer.l
 	flex --version | grep flex || (echo Flex is required ; false)
-	flex lexer.l
+	cd src && flex lexer.l
 
 src/derived-parser.c src/derived-parser.h: src/parser.y
 	bison --version | grep 'bison.* 3' || (echo Bison 3 is required ; false)
-	bison -v parser.y
+	cd src && bison -v parser.y
 
 
 # Anything ending in .test should be a runnable script that produces TAP output
