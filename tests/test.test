@@ -17,7 +17,7 @@ def get_tests() -> list:
 
 def run_command(index):
     # Run these from the location of this file.
-    return run(['./test-runner', str(index + 1)], stdout=PIPE, stderr=PIPE)
+    return run(['../test-runner', str(index + 1)], stdout=PIPE, stderr=PIPE)
 
 def fixup_compare_value(compare_value):
     """Convert systemf() int return value to process return value
