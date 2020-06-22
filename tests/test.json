@@ -21,6 +21,20 @@
         "return_code": ["==", 0]
     },
     {
+        "description": "%d",
+        "command": [ "./cmd comma %d %d %d%d", 1, 2, 3, 4 ],
+        "stdout": ["==", "1,2,34"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "\\n is not allowed",
+        "command": [ "./cmd true\\n./cmd true" ],
+        "stdout": ["==", ""],
+        "stderr": ["contains", "ERROR: 1:11:syntax error"],
+        "return_code": ["==", -1]
+    },
+    {
         "description": "Test 'ls' without absolute path (Check PATH functionality) # TODO",
         "command": [ "ls" ],
         "stdout": null,
@@ -42,9 +56,40 @@
         "return_code": ["==", 0]
     },
     {
+        "description": "param '%p'",
+        "command": [ "./cmd comma %p", "bubba" ],
+        "stdout": ["==", "bubba"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
         "description": "param '%*p'",
-        "command": [ "./cmd comma %*p", "REA?ME.md" ],
-        "stdout": ["==", "README.md"],
+        "setup": "cd tmp; mkdir #; touch #/'XYZOOc{3,4}'",
+        "command": [ "./cmd comma tmp/#/%*p", "?Y*[abcd]{3,4}" ],
+        "stdout": ["==", "tmp/#/XYZOOc{3,4}"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "param '%p' doesn't match",
+        "setup": "cd tmp; mkdir #; touch #/'XYZOOc{3,4}'",
+        "command": [ "./cmd comma tmp/#/%p", "?Y*[abcd]{3,4}" ],
+        "stdout": ["==", "tmp/#/?Y*[abcd]{3,4}"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "param '%p' glob escape success",
+        "setup": "cd tmp; mkdir #; touch #/'XY*?[abcd]{3,4}'",
+        "command": [ "./cmd comma tmp/#/?%p", "Y*?[abcd]{3,4}" ],
+        "stdout": ["==", "tmp/#/XY*?[abcd]{3,4}"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "param '%!p'",
+        "command": [ "./cmd comma %!p", "../bubba" ],
+        "stdout": ["==", "../bubba"],
         "stderr": ["==", ""],
         "return_code": ["==", 0]
     },
@@ -211,7 +256,7 @@
         "setup": "mkdir -p tmp/#/x; mkdir -p tmp/#/y",
         "command": [ "./cmd comma tmp/#/x/%*p", "../y" ],
         "stdout": ["==", ""],
-        "stderr": ["contains", "systemf: Permission denied: sandboxing tmp/30/x/../y"],
+        "stderr": ["contains", "systemf: Permission denied: sandboxing tmp/#/x/../y"],
         "return_code": ["==", -1]
     },
     {

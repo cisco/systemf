@@ -2,6 +2,7 @@
 #include "systemf-internal.h"
 #include <errno.h>
 #include <unistd.h>
+#include <assert.h>
 
 /*
  * Closes all other files but stdin, stdout, and stderr.
@@ -18,10 +19,8 @@ void _sf1_close_upper_fd() {
     struct rlimit rlim;
     int prev_errno;
 
-    if (getrlimit(RLIMIT_NOFILE, &rlim)) {
-        // FIXME: Should we raise an exception here?
-        return;
-    }
+    // if getrlimit ever fails, we need to figure out why and then properly handle it.
+    assert(!getrlimit(RLIMIT_NOFILE, &rlim));
 
     prev_errno = errno;
     for (int i = 3; i < rlim.rlim_cur; i++) {
