@@ -129,61 +129,12 @@ summarizes which characters are allowed in the format string and their meanings.
 - (4) `systemf1()` currently has no support of swapping the stdout and stderr.
 - (5) Currently, no formatting specifiers are supported (like `%5d` or `%-10s`)
 
-## Return Values
-
-The base systemf1() will have the same return values as the system() function.
-
-The following is copied from http://man7.org/linux/man-pages/man3/system.3.html :
-
-*  If any child process could not be created, or its status could not
-    be retrieved, the return value is -1 and errno is set to indicate
-    the error.
-
-*  If all spawned child processes succeed, then the return value is the
-    termination status of the last spawned child process.
-
-## Why is There a "1" in the Systemf1 Name?
-
-The driving force behind developing `systemf` was to have a more secure system.  It seems that as a tool becomes more popular, it gets more security scrutiny.  The developers of `systemf` expect that they will have missed something fundamental that will require a non-backward compatible change to the code.  When that day comes, they will have to choose between breaking code and creating new functions.
-
-By making the systemf versioned in its name, it is more obvious the version that is being run and gives for a more graceful transition.  Perhaps one day, when the implementation is considered rock-solid, the final version can drop the numbering system altogether.  (Any bets how long it will take to detect a new fatal security vulnerability in the design after that step is taken?)
-
-## Future Work
-
-### Required for version 1.0
-The following must happen before the 1.0 release.  If not implemented before the 1.0 release, there would be the threat that some capabilities would not be backward compatible.
-
-| Title | Description |
-| ----- | ----------- |
-| [Filename Sandboxing](#filename-sandboxing) |  A limited sandboxing of file access. |
-
-### Features that will likely be added after verison 1.0.
-
-| Title | Description |
-| ----- | ----------- |
-| [PATH Support](#path-support) | Currently all executables must include a path.  This will add limited path searching and updating. |
-| [Capture Support](#capture-support) | Functions that allow for capturing the standard output and standard error to strings. |
-| [STDIN String & File Support](#stdin-string-and-file-support) | Functions that allow for a string or buffers to be suppled for the standard input. |
-| [Error Message Redirection](#error-message-redirection) | Redirect stderr messages from `systemf` itself. |
-
-### Features not currently planned.
-
-These features require more discussion and some highly needed use cases to be added.
-
-| Title | Description |
-| ----- | ----------- |
-| [Background Support](#no-plan-for-background-support) | Running commands in the background. |
-| [variables](#no-plan-for-variable-support) | Variable expansion like $HOME or ~ may not be supported. |
-| [variable cleaning](#no-plan-for-variable-cleaning) | Other than PATH, no other environment variables will be reset (like IFS). | 
-| [chroot equivalence](#no-plan-for-chroot-jail-equivalence-for-filename-sandboxing) | No plan for chroot jail equivalence for filename sandboxing
-
 ### File Sandboxing
-**Still being developed.**
 
 `systemf` has a non-obtrusive filename sandboxing system.  Before each process is executed, all arguments for that command are run through the following steps.
 
-1. Determine which arguments are definite file references with untrusted data.
-2. Determine the trusted path of that argument.
+1. Determine which arguments are known file references with untrusted data.
+2. Determine the trusted part of that argument's path.
 3. Verify that the final paths are contained in the trusted path.
 
 #### 1. Determine which arguments are file references with untrusted data.
@@ -199,7 +150,7 @@ The target must also include untrusted data.  That can be any of `%d`, `%s`, `%p
 #### 2. Determine the trusted path of that argument.
 
 If an argument is deemed a file reference, it is next scanned up for the longest
-trusted path not includeing wildcards.  A path is trusted if it is a part of the
+trusted path not including wildcards.  A path is trusted if it is a part of the
 `fmt` string, or if it is a %!p.  This is best shown through examples.
 
 | # | Command | Trusted Path |
@@ -232,6 +183,48 @@ systemf1("mkdir -p a/b/c/%p", "../../b/c/f");
 the underlying `systemf` code will have to decide if `a/b/c/../../b/c/f` exists in the trusted path, `a/b/c/`.  I collapses the latter to `a/b/c/f` and determines that it matches the trusted path.
 
 There were some consideration of preventing symbolic links from causing an escape of the sandbox, but ultimately the confusion added by such a change was greater than the security benefilts.  See [No Plan for Chroot Jail Equivalence for Filename Sandboxing](#no-plan-for-chroot-jail-equivalence-for-filename-sandboxing) for more details.
+
+
+## Return Values
+
+The base systemf1() will have the same return values as the system() function.
+
+The following is copied from http://man7.org/linux/man-pages/man3/system.3.html :
+
+*  If any child process could not be created, or its status could not
+    be retrieved, the return value is -1 and errno is set to indicate
+    the error.
+
+*  If all spawned child processes succeed, then the return value is the
+    termination status of the last spawned child process.
+
+## Why is There a "1" in the Systemf1 Name?
+
+The driving force behind developing `systemf` was to have a more secure system.  It seems that as a tool becomes more popular, it gets more security scrutiny.  The developers of `systemf` expect that they will have missed something fundamental that will require a non-backward compatible change to the code.  When that day comes, they will have to choose between breaking code and creating new functions.
+
+By making the systemf versioned in its name, it is more obvious the version that is being run and gives for a more graceful transition.  Perhaps one day, when the implementation is considered rock-solid, the final version can drop the numbering system altogether.  (Any bets how long it will take to detect a new fatal security vulnerability in the design after that step is taken?)
+
+## Future Work
+
+Systemf will soon release version 1.0.  The below capabilities are being considered.
+
+| Title | Description |
+| ----- | ----------- |
+| [PATH Support](#path-support) | Currently all executables must include a path.  This will add limited path searching and updating. |
+| [Capture Support](#capture-support) | Functions that allow for capturing the standard output and standard error to strings. |
+| [STDIN String & File Support](#stdin-string-and-file-support) | Functions that allow for a string or buffers to be suppled for the standard input. |
+| [Error Message Redirection](#error-message-redirection) | Redirect stderr messages from `systemf` itself. |
+
+### Features not currently planned.
+
+These features require more discussion and some highly needed use cases to be added.
+
+| Title | Description |
+| ----- | ----------- |
+| [Background Support](#no-plan-for-background-support) | Running commands in the background. |
+| [variables](#no-plan-for-variable-support) | Variable expansion like $HOME or ~ may not be supported. |
+| [variable cleaning](#no-plan-for-variable-cleaning) | Other than PATH, no other environment variables will be reset (like IFS). | 
+| [chroot equivalence](#no-plan-for-chroot-jail-equivalence-for-filename-sandboxing) | No plan for chroot jail equivalence for filename sandboxing
 
 
 
