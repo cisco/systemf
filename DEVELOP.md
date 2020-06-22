@@ -1,4 +1,3 @@
-
 # Developer notes
 
 This uses gnu AutoTools to generate a configure and makefile.
@@ -15,15 +14,22 @@ autoreconf -i
 make checks
 ```
 
+**Note:** There is a configure option of --enable-code-coverage,
+but currently the `make check` complains, `ld: library not found for -lgcov`
+Instead, we are calculating code coverage using the docker build with
+[github actions](https://github.com/yonhan3/systemf/actions).
+
 ## Ubuntu Installation from Scratch
 
-On a fresh ubuntu install you'll likely want to do this:
+The easiest way to use ubuntu-like is to use the latest docker meklund/systemf-gh-action.
+
+If you want to build from scratch, use the files in Docker for guidence:
+
+For candidate RPMS, look at the Dockerfile:
 ```
-apt update
-apt install build-essential autotools-dev automake libtool
-autoreconf -f -i
-./configure && make
+grep apt-get docker/Dockerfile
 ```
+For building for development, either run `docker/systemf-build` or use it as guidence.
 
 ## Visual Studio and GDB in OSX Docker container
 

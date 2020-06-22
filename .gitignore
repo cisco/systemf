@@ -1,7 +1,6 @@
 *.o
 *.lo
 *.la
-*.m4
 build-aux/
 *~
 
@@ -25,3 +24,4 @@ test-runner
 test-runner.c
 cmd
 tests/tmp/
+
