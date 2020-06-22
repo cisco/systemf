@@ -1,8 +1,10 @@
 *.o
 *.lo
 *.la
+*.gcno
 build-aux/
 *~
+.DS_Store
 
 *.swp
 .libs/
@@ -24,4 +26,4 @@ test-runner
 test-runner.c
 cmd
 tests/tmp/
-
+systemf-coverage*

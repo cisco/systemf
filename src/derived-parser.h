@@ -1,4 +1,4 @@
-/* A Bison parser, made by GNU Bison 3.6.3.  */
+/* A Bison parser, made by GNU Bison 3.5.1.  */
 
 /* Bison interface for Yacc-like parsers in C
 
@@ -31,12 +31,11 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
-   especially those whose name start with YY_ or yy_.  They are
-   private implementation details that can be changed or removed.  */
+/* Undocumented macros, especially those whose name start with YY_,
+   are private implementation details.  Do not rely on them.  */
 
-#ifndef YY__SF1_YY_DERIVED_PARSER_H_INCLUDED
-# define YY__SF1_YY_DERIVED_PARSER_H_INCLUDED
+#ifndef YY__SF1_YY_SRC_DERIVED_PARSER_H_INCLUDED
+# define YY__SF1_YY_SRC_DERIVED_PARSER_H_INCLUDED
 /* Debug traces.  */
 #ifndef _SF1_YYDEBUG
 # if defined YYDEBUG
@@ -53,7 +52,7 @@
 extern int _sf1_yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 13 "parser.y"
+#line 13 "src/parser.y"
 
     #if 1 // This compiles in debug code enabled by _sf1_yydebug;
         #undef SYSTEMF1_YYDEBUG
@@ -64,50 +63,52 @@ extern int _sf1_yydebug;
     #include "systemf-internal.h"
 
 
-#line 68 "derived-parser.h"
+#line 67 "src/derived-parser.h"
 
-/* Token kinds.  */
+/* Token type.  */
 #ifndef _SF1_YYTOKENTYPE
 # define _SF1_YYTOKENTYPE
   enum _sf1_yytokentype
   {
-    _SF1_YYEMPTY = -2,
-    _SF1_YYEOF = 0,                /* "end of file"  */
-    _SF1_YYerror = 256,            /* error  */
-    _SF1_YYUNDEF = 257,            /* "invalid token"  */
-    SYLLABLE = 258,                /* SYLLABLE  */
-    SPACE = 259,                   /* SPACE  */
-    QUOTE = 260,                   /* QUOTE  */
-    LESSER = 261,                  /* LESSER  */
-    TWO_GREATER_AND_ONE = 262,     /* TWO_GREATER_AND_ONE  */
-    TWO_GREATER = 263,             /* TWO_GREATER  */
-    AND_GREATER = 264,             /* AND_GREATER  */
-    GREATER = 265,                 /* GREATER  */
-    TWO_GREATER_GREATER = 266,     /* TWO_GREATER_GREATER  */
-    AND_GREATER_GREATER = 267,     /* AND_GREATER_GREATER  */
-    GREATER_GREATER = 268,         /* GREATER_GREATER  */
-    GREATER_AND_TWO = 269,         /* GREATER_AND_TWO  */
-    AND_AND = 270,                 /* AND_AND  */
-    OR_OR = 271,                   /* OR_OR  */
-    SEMICOLON = 272,               /* SEMICOLON  */
-    OR = 273                       /* OR  */
+    SYLLABLE = 258,
+    SPACE = 259,
+    QUOTE = 260,
+    LESSER = 261,
+    TWO_GREATER_AND_ONE = 262,
+    TWO_GREATER = 263,
+    AND_GREATER = 264,
+    GREATER = 265,
+    TWO_GREATER_GREATER = 266,
+    AND_GREATER_GREATER = 267,
+    GREATER_GREATER = 268,
+    GREATER_AND_TWO = 269,
+    AND_AND = 270,
+    OR_OR = 271,
+    SEMICOLON = 272,
+    OR = 273
   };
-  typedef enum _sf1_yytokentype _sf1_yytoken_kind_t;
 #endif
 
 /* Value type.  */
 #if ! defined _SF1_YYSTYPE && ! defined _SF1_YYSTYPE_IS_DECLARED
 union _SF1_YYSTYPE
 {
-  _sf1_redirect * redirects;               /* redirects  */
-  _sf1_redirect * redirect;                /* redirect  */
-  _sf1_syllable * SYLLABLE;                /* SYLLABLE  */
-  _sf1_syllable * words;                   /* words  */
-  _sf1_syllable * syllables;               /* syllables  */
-  _sf1_task * cmds;                        /* cmds  */
-  _sf1_task * cmd;                         /* cmd  */
 
-#line 111 "derived-parser.h"
+  /* redirects  */
+  _sf1_redirect * redirects;
+  /* redirect  */
+  _sf1_redirect * redirect;
+  /* SYLLABLE  */
+  _sf1_syllable * SYLLABLE;
+  /* words  */
+  _sf1_syllable * words;
+  /* syllables  */
+  _sf1_syllable * syllables;
+  /* cmds  */
+  _sf1_task * cmds;
+  /* cmd  */
+  _sf1_task * cmd;
+#line 112 "src/derived-parser.h"
 
 };
 typedef union _SF1_YYSTYPE _SF1_YYSTYPE;
@@ -133,7 +134,7 @@ struct _SF1_YYLTYPE
 
 int _sf1_yyparse (yyscan_t scanner, _sf1_parse_args *results);
 /* "%code provides" blocks.  */
-#line 25 "parser.y"
+#line 25 "src/parser.y"
 
     #define YYSTYPE _SF1_YYSTYPE
     #define YYLTYPE _SF1_YYLTYPE
@@ -142,6 +143,6 @@ int _sf1_yyparse (yyscan_t scanner, _sf1_parse_args *results);
 
     int _sf1_yyerror(_SF1_YYLTYPE *locp, yyscan_t scanner, _sf1_parse_args *results, const char *msg);
 
-#line 146 "derived-parser.h"
+#line 147 "src/derived-parser.h"
 
-#endif /* !YY__SF1_YY_DERIVED_PARSER_H_INCLUDED  */
+#endif /* !YY__SF1_YY_SRC_DERIVED_PARSER_H_INCLUDED  */

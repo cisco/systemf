@@ -143,8 +143,7 @@ am_libsystemf_la_OBJECTS = src/libsystemf_la-close.lo \
 	src/libsystemf_la-derived-parser.lo \
 	src/libsystemf_la-file-sandbox-check.lo \
 	src/libsystemf_la-parser-support.lo \
-	src/libsystemf_la-systemf.lo \
-	src/libsystemf_la-systemf_debug.lo src/libsystemf_la-task.lo
+	src/libsystemf_la-systemf.lo src/libsystemf_la-task.lo
 libsystemf_la_OBJECTS = $(am_libsystemf_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -164,7 +163,7 @@ test_runner_OBJECTS = $(am_test_runner_OBJECTS)
 test_runner_DEPENDENCIES = libsystemf.la
 test_runner_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(test_runner_CFLAGS) \
-	$(CFLAGS) $(test_runner_LDFLAGS) $(LDFLAGS) -o $@
+	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -186,7 +185,6 @@ am__depfiles_remade = src/$(DEPDIR)/libsystemf_la-close.Plo \
 	src/$(DEPDIR)/libsystemf_la-file-sandbox-check.Plo \
 	src/$(DEPDIR)/libsystemf_la-parser-support.Plo \
 	src/$(DEPDIR)/libsystemf_la-systemf.Plo \
-	src/$(DEPDIR)/libsystemf_la-systemf_debug.Plo \
 	src/$(DEPDIR)/libsystemf_la-task.Plo \
 	tests/$(DEPDIR)/cmd-cmd.Po \
 	tests/$(DEPDIR)/test_runner-test-runner.Po
@@ -578,18 +576,17 @@ libsystemf_la_SOURCES := \
     src/file-sandbox-check.c \
     src/parser-support.c \
     src/systemf.c \
-    src/systemf_debug.c \
     src/task.c
 
 nodist_include_HEADERS := src/derived-lexer.h src/derived-parser.h
-libsystemf_la_LDFLAGS = -avoid-version -shared
-libsystemf_la_CFLAGS := -D_FORTIFY_SOURCE=2 -Wall -Werror
+libsystemf_la_LDFLAGS = -avoid-version -shared $(CODE_COVERAGE_LDFLAGS)
+libsystemf_la_CFLAGS := -D_FORTIFY_SOURCE=2 -Wall -Werror $(CODE_COVERAGE_CFLAGS)
 test_runner_SOURCES = tests/test-runner.c
 test_runner_LDADD = libsystemf.la
-test_runner_CFLAGS = $(AM_CFLAGS) $(CODE_COVERAGE_CFLAGS)
-test_runner_LDFLAGS = $(CODE_COVERAGE_LDFLAGS)
+test_runner_CFLAGS = $(AM_CFLAGS)
 cmd_SOURCES = tests/cmd.c
-cmd_CFLAGS = $(AM_CFLAGS) $(CODE_COVERAGE_CFLAGS)
+#cmd_CFLAGS = $(AM_CFLAGS) $(CODE_COVERAGE_CFLAGS)
+cmd_CFLAGS = $(AM_CFLAGS)
 cmd_LDFLAGS = $(CODE_COVERAGE_LDFLAGS)
 TESTS = tests/test.test
 TESTS_ENVIRONMENT = 
@@ -598,7 +595,11 @@ TEST_LOG_COMPILE = $(PYTHON)
 TEST_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) $(top_srcdir)/build-aux/tap-driver.sh
 
 # See all code_coverage_* options in the Makefile or m4/ax_code_coverage.m4
-CODE_COVERAGE_IGNORE_PATTERN = tests/* stdio2.h
+CODE_COVERAGE_OUTPUT_FILE = $(PACKAGE_NAME)-coverage.info
+CODE_COVERAGE_OUTPUT_DIRECTORY = $(PACKAGE_NAME)-coverage
+CODE_COVERAGE_IGNORE_PATTERN = $(abs_top_builddir)/tests/* \
+	$(abs_top_builddir)/src/derived* /usr/include/* \
+	/usr/include/*/bits/*
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -714,8 +715,6 @@ src/libsystemf_la-parser-support.lo: src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/libsystemf_la-systemf.lo: src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/libsystemf_la-systemf_debug.lo: src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
 src/libsystemf_la-task.lo: src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 
@@ -755,7 +754,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libsystemf_la-file-sandbox-check.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libsystemf_la-parser-support.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libsystemf_la-systemf.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libsystemf_la-systemf_debug.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libsystemf_la-task.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cmd-cmd.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/test_runner-test-runner.Po@am__quote@ # am--include-marker
@@ -831,13 +829,6 @@ src/libsystemf_la-systemf.lo: src/systemf.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/systemf.c' object='src/libsystemf_la-systemf.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libsystemf_la_CFLAGS) $(CFLAGS) -c -o src/libsystemf_la-systemf.lo `test -f 'src/systemf.c' || echo '$(srcdir)/'`src/systemf.c
-
-src/libsystemf_la-systemf_debug.lo: src/systemf_debug.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libsystemf_la_CFLAGS) $(CFLAGS) -MT src/libsystemf_la-systemf_debug.lo -MD -MP -MF src/$(DEPDIR)/libsystemf_la-systemf_debug.Tpo -c -o src/libsystemf_la-systemf_debug.lo `test -f 'src/systemf_debug.c' || echo '$(srcdir)/'`src/systemf_debug.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libsystemf_la-systemf_debug.Tpo src/$(DEPDIR)/libsystemf_la-systemf_debug.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/systemf_debug.c' object='src/libsystemf_la-systemf_debug.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libsystemf_la_CFLAGS) $(CFLAGS) -c -o src/libsystemf_la-systemf_debug.lo `test -f 'src/systemf_debug.c' || echo '$(srcdir)/'`src/systemf_debug.c
 
 src/libsystemf_la-task.lo: src/task.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libsystemf_la_CFLAGS) $(CFLAGS) -MT src/libsystemf_la-task.lo -MD -MP -MF src/$(DEPDIR)/libsystemf_la-task.Tpo -c -o src/libsystemf_la-task.lo `test -f 'src/task.c' || echo '$(srcdir)/'`src/task.c
@@ -1351,7 +1342,6 @@ distclean: distclean-am
 	-rm -f src/$(DEPDIR)/libsystemf_la-file-sandbox-check.Plo
 	-rm -f src/$(DEPDIR)/libsystemf_la-parser-support.Plo
 	-rm -f src/$(DEPDIR)/libsystemf_la-systemf.Plo
-	-rm -f src/$(DEPDIR)/libsystemf_la-systemf_debug.Plo
 	-rm -f src/$(DEPDIR)/libsystemf_la-task.Plo
 	-rm -f tests/$(DEPDIR)/cmd-cmd.Po
 	-rm -f tests/$(DEPDIR)/test_runner-test-runner.Po
@@ -1408,7 +1398,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/$(DEPDIR)/libsystemf_la-file-sandbox-check.Plo
 	-rm -f src/$(DEPDIR)/libsystemf_la-parser-support.Plo
 	-rm -f src/$(DEPDIR)/libsystemf_la-systemf.Plo
-	-rm -f src/$(DEPDIR)/libsystemf_la-systemf_debug.Plo
 	-rm -f src/$(DEPDIR)/libsystemf_la-task.Plo
 	-rm -f tests/$(DEPDIR)/cmd-cmd.Po
 	-rm -f tests/$(DEPDIR)/test_runner-test-runner.Po
@@ -1457,11 +1446,11 @@ uninstall-am: uninstall-libLTLIBRARIES uninstall-nodist_includeHEADERS
 
 src/derived-lexer.c src/derived-lexer.h: src/lexer.l
 	flex --version | grep flex || (echo Flex is required ; false)
-	cd src && flex lexer.l
+	flex src/lexer.l
 
 src/derived-parser.c src/derived-parser.h: src/parser.y
 	bison --version | grep 'bison.* 3' || (echo Bison 3 is required ; false)
-	cd src && bison -v parser.y
+	bison -v src/parser.y
 
 tests/test-runner.c: tests/test.json tests/test-generator.py
 	python3 ./tests/test-generator.py

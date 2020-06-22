@@ -16,5 +16,7 @@
         "unordered_map": "c",
         "cstring": "c",
         "locale": "c"
-    }
+    },
+    "lcov.path": "./systemf-0.9-coverage.info"
 }
+    

@@ -1,5 +1,5 @@
-%output  "derived-parser.c"
-%defines "derived-parser.h"
+%output  "src/derived-parser.c"
+%defines "src/derived-parser.h"
 %define api.pure full
 %define api.prefix {_sf1_yy}
 %define api.value.type union

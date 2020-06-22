@@ -2,9 +2,9 @@
 #define _sf1_yyHEADER_H 1
 #define _sf1_yyIN_HEADER 1
 
-#line 5 "derived-lexer.h"
+#line 6 "src/derived-lexer.h"
 
-#line 7 "derived-lexer.h"
+#line 8 "src/derived-lexer.h"
 
 #define  YY_INT_ALIGNED short int
 
@@ -712,9 +712,9 @@ extern int yylex \
 #undef yyTABLES_NAME
 #endif
 
-#line 84 "lexer.l"
+#line 84 "src/lexer.l"
 
 
-#line 718 "derived-lexer.h"
+#line 719 "src/derived-lexer.h"
 #undef _sf1_yyIN_HEADER
 #endif /* _sf1_yyHEADER_H */

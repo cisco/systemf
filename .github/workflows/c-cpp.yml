@@ -20,8 +20,8 @@ jobs:
       run: ./configure
     - name: make
       run: make
-    - name: make check
-      run: make check
+    - name: make check-code-coverage
+      run: make check-code-coverage
     - name: show test failure log
       if: ${{ failure() }}
       run: cat tests/test.log

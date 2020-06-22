@@ -1,4 +1,4 @@
-%option outfile="derived-lexer.c" header-file="derived-lexer.h"
+%option outfile="src/derived-lexer.c" header-file="src/derived-lexer.h"
 %option reentrant
 %option bison-bridge
 %option noyywrap nounput noinput

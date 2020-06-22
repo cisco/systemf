@@ -31,6 +31,23 @@ grep apt-get docker/Dockerfile
 ```
 For building for development, either run `docker/systemf-build` or use it as guidence.
 
+## Code Coverage
+
+Code coverage is only currently working in the ubuntu docker
+container.  OSX has issues.  To run code coverage:
+
+```
+./configure --enable-code-coverage
+make check-code-coverage
+```
+Alternatively:
+```
+(cd docker && COMMAND=/usr/bin/systemf-check docker-compose up)
+```
+The resulting html will be printed, but it will likely
+point to [here](systemf-coverage/index.html) 
+(this is not checked into git).
+
 ## Visual Studio and GDB in OSX Docker container
 
 ### OSX Installation

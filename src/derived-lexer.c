@@ -1,6 +1,6 @@
-#line 1 "derived-lexer.c"
+#line 2 "src/derived-lexer.c"
 
-#line 3 "derived-lexer.c"
+#line 4 "src/derived-lexer.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -675,9 +675,9 @@ static const flex_int16_t yy_chk[100] =
 #define yymore() yymore_used_but_not_detected
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
-#line 1 "lexer.l"
+#line 1 "src/lexer.l"
 #define YY_NO_INPUT 1
-#line 8 "lexer.l"
+#line 8 "src/lexer.l"
 #include <stdarg.h>
 #include "derived-parser.h"
 
@@ -725,8 +725,8 @@ static _sf1_syllable *syl_d (_sf1_parse_args *results) {
     return syl(results, text, 0);
 }
 
-#line 728 "derived-lexer.c"
-#line 729 "derived-lexer.c"
+#line 729 "src/derived-lexer.c"
+#line 730 "src/derived-lexer.c"
 
 #define INITIAL 0
 
@@ -998,10 +998,10 @@ YY_DECL
 		}
 
 	{
-#line 58 "lexer.l"
+#line 58 "src/lexer.l"
 
 
-#line 1004 "derived-lexer.c"
+#line 1005 "src/derived-lexer.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1060,126 +1060,126 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 60 "lexer.l"
+#line 60 "src/lexer.l"
 { yylval->SYLLABLE = syl(results, yytext, SYL_IS_TRUSTED); return SYLLABLE; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 61 "lexer.l"
+#line 61 "src/lexer.l"
 { yylval->SYLLABLE = syl(results, yytext, SYL_IS_FILE|SYL_IS_GLOB|SYL_IS_TRUSTED); return SYLLABLE; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 62 "lexer.l"
+#line 62 "src/lexer.l"
 { yylval->SYLLABLE = syl(results, yytext, SYL_IS_FILE|SYL_IS_GLOB|SYL_IS_TRUSTED); return SYLLABLE; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 63 "lexer.l"
+#line 63 "src/lexer.l"
 { yylval->SYLLABLE = syl_s(results); return SYLLABLE; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 64 "lexer.l"
+#line 64 "src/lexer.l"
 { yylval->SYLLABLE = syl_file(results); return SYLLABLE; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 65 "lexer.l"
+#line 65 "src/lexer.l"
 { yylval->SYLLABLE = syl_trusted_file(results); return SYLLABLE; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 66 "lexer.l"
+#line 66 "src/lexer.l"
 { yylval->SYLLABLE = syl_glob(results); return SYLLABLE; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 67 "lexer.l"
+#line 67 "src/lexer.l"
 { yylval->SYLLABLE = syl_d(results); return SYLLABLE; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 68 "lexer.l"
+#line 68 "src/lexer.l"
 { return SPACE;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 69 "lexer.l"
+#line 69 "src/lexer.l"
 { return LESSER; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 70 "lexer.l"
+#line 70 "src/lexer.l"
 { return TWO_GREATER_AND_ONE; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 71 "lexer.l"
+#line 71 "src/lexer.l"
 { return TWO_GREATER; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 72 "lexer.l"
+#line 72 "src/lexer.l"
 { return AND_GREATER; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 73 "lexer.l"
+#line 73 "src/lexer.l"
 { return GREATER; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 74 "lexer.l"
+#line 74 "src/lexer.l"
 { return GREATER_AND_TWO; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 75 "lexer.l"
+#line 75 "src/lexer.l"
 { return TWO_GREATER_GREATER; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 76 "lexer.l"
+#line 76 "src/lexer.l"
 { return AND_GREATER_GREATER; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 77 "lexer.l"
+#line 77 "src/lexer.l"
 { return GREATER_GREATER; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 78 "lexer.l"
+#line 78 "src/lexer.l"
 { return AND_AND; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 79 "lexer.l"
+#line 79 "src/lexer.l"
 { return OR; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 80 "lexer.l"
+#line 80 "src/lexer.l"
 { return OR_OR; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 81 "lexer.l"
+#line 81 "src/lexer.l"
 { return SEMICOLON; }
 	YY_BREAK
 case 23:
 /* rule 23 can match eol */
 YY_RULE_SETUP
-#line 82 "lexer.l"
+#line 82 "src/lexer.l"
 { return yytext[0]; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 84 "lexer.l"
+#line 84 "src/lexer.l"
 ECHO;
 	YY_BREAK
-#line 1182 "derived-lexer.c"
+#line 1183 "src/derived-lexer.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2322,7 +2322,7 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 84 "lexer.l"
+#line 84 "src/lexer.l"
 
 
 
