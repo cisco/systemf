@@ -17,11 +17,13 @@ jobs:
     - name: autoreconf
       run: autoreconf -i
     - name: configure
-      run: ./configure
+      run: ./configure --enable-code-coverage
     - name: make
       run: make
     - name: make check-code-coverage
       run: make check-code-coverage
+    - name: make print-code-coverage
+      run: make print-code-coverage
     - name: show test failure log
       if: ${{ failure() }}
       run: cat tests/test.log

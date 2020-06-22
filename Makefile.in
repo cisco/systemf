@@ -1458,6 +1458,10 @@ tests/test-runner.c: tests/test.json tests/test-generator.py
 @VALGRIND_CHECK_RULES@
 @CODE_COVERAGE_RULES@
 
+# Hack where there is much likely something better:
+print-code-coverage:
+	@ grep -A3 Lines systemf-coverage/index.html | sed -e's/.*".//' -e 's/<.*//' | fmt -w80 | sed -e's/ /_/' -e 's, ,/,' -e 's/ / = /' -e 's/_/ /'
+
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

@@ -67,4 +67,6 @@ CODE_COVERAGE_IGNORE_PATTERN += $(abs_top_builddir)/src/derived*
 CODE_COVERAGE_IGNORE_PATTERN += /usr/include/*
 CODE_COVERAGE_IGNORE_PATTERN += /usr/include/*/bits/*
 
-
+# Hack where there is much likely something better:
+print-code-coverage:
+	@ grep -A3 Lines systemf-coverage/index.html | sed -e's/.*".//' -e 's/<.*//' | fmt -w80 | sed -e's/ /_/' -e 's, ,/,' -e 's/ / = /' -e 's/_/ /'
