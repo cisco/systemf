@@ -1,0 +1,22 @@
+{
+    "editor.tabCompletion": "onlySnippets",
+    "editor.quickSuggestions": false,
+    "search.exclude": {
+        "src/derived-*": true
+    },
+    "files.exclude": {
+        "src/derived-*": true
+    },
+    "editor.renderLineHighlight": "gutter",
+    "files.associations": {
+        "__bit_reference": "c",
+        "algorithm": "c",
+        "bitset": "c",
+        "chrono": "c",
+        "unordered_map": "c",
+        "cstring": "c",
+        "locale": "c"
+    },
+    "lcov.path": "./systemf-0.9-coverage.info"
+}
+    

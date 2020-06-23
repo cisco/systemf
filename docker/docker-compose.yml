@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  systemf-test:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: meklund/systemf-gh-action
+    volumes:
+      - type: bind
+        source: ../
+        target: /systemf
+    environment:
+      - GDBSERVER_PORT=${GDBSERVER_PORT:-2345}
+      - GDBSERVER_TARGET=${GDBSERVER_TARGET:-../.libs/test-runner}
+      - LD_LIBRARY_PATH=/systemf/.libs/
+    cap_add:
+      - SYS_PTRACE 
+    security_opt: 
+      - seccomp=unconfined
+    ports:
+      - "${GDBSERVER_LOCAL_PORT:-2345}:${GDBSERVER_PORT:-2345}"
+    command: ["${COMMAND:-/usr/bin/systemf-gdbserv}"]

@@ -1,0 +1,270 @@
+[
+    {
+        "description": "Test simple command",
+        "command": [ "./cmd stdout stderr return 20" ],
+        "stdout": ["==", "1"],
+        "stderr": ["==", "2"],
+        "return_code": ["==", 20]
+    },
+    {
+        "description": "Test a non-existant binary",
+        "command": [ "binarydoesntexist" ],
+        "stdout": null,
+        "stderr": null,
+        "return_code": ["!=", 0]
+    },
+    {
+        "description": "%s",
+        "command": [ "./cmd %s", "stdout" ],
+        "stdout": ["==", "1"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "%d",
+        "command": [ "./cmd comma %d %d %d%d", 1, 2, 3, 4 ],
+        "stdout": ["==", "1,2,34"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "\\n is not allowed",
+        "command": [ "./cmd true\\n./cmd true" ],
+        "stdout": ["==", ""],
+        "stderr": ["contains", "ERROR: 1:11:syntax error"],
+        "return_code": ["==", -1]
+    },
+    {
+        "description": "Test 'ls' without absolute path (Check PATH functionality) # TODO",
+        "command": [ "ls" ],
+        "stdout": null,
+        "stderr": null,
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "fmt glob '*'",
+        "command": [ "./cmd comma REA*ME.md" ],
+        "stdout": ["==", "README.md"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "fmt glob '?'",
+        "command": [ "./cmd comma REA?ME.md" ],
+        "stdout": ["==", "README.md"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "param '%p'",
+        "command": [ "./cmd comma %p", "bubba" ],
+        "stdout": ["==", "bubba"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "param '%*p'",
+        "setup": "cd tmp; mkdir #; touch #/'XYZOOc{3,4}'",
+        "command": [ "./cmd comma tmp/#/%*p", "?Y*[abcd]{3,4}" ],
+        "stdout": ["==", "tmp/#/XYZOOc{3,4}"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "param '%p' doesn't match",
+        "setup": "cd tmp; mkdir #; touch #/'XYZOOc{3,4}'",
+        "command": [ "./cmd comma tmp/#/%p", "?Y*[abcd]{3,4}" ],
+        "stdout": ["==", "tmp/#/?Y*[abcd]{3,4}"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "param '%p' glob escape success",
+        "setup": "cd tmp; mkdir #; touch #/'XY*?[abcd]{3,4}'",
+        "command": [ "./cmd comma tmp/#/?%p", "Y*?[abcd]{3,4}" ],
+        "stdout": ["==", "tmp/#/XY*?[abcd]{3,4}"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "param '%!p'",
+        "command": [ "./cmd comma %!p", "../bubba" ],
+        "stdout": ["==", "../bubba"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "param '%*p' with no match",
+        "command": [ "./cmd comma %*p", "/etc/passw?thisdoesnnotexist" ],
+        "stdout": ["==", ""],
+        "stderr": ["==", "systemf: no matches found: /etc/passw?thisdoesnnotexist\n"],
+        "return_code": ["==", -1]
+    },
+    {
+        "description": "Bad Redirects - (multiple stdin)",
+        "command": [ "./cmd true </dev/null </tmp" ],
+        "stdout": null,
+        "stderr": ["contains", "ERROR: There should only be one stdin per command."],
+        "return_code": ["==", -1]
+    },
+    {
+        "description": "Bad Redirects - (multiple stderr)",
+        "command": [ "./cmd true 2>&1 2>/dev/null" ],
+        "stdout": null,
+        "stderr": ["contains", "ERROR: There should only be one stderr per command."],
+        "return_code": ["==", -1]
+    },
+    {
+        "description": "Bad Redirects - (multiple stderr 2)",
+        "command": [ "./cmd true 2>/dev/null 2>/tmp" ],
+        "stdout": null,
+        "stderr": ["contains", "ERROR: There should only be one stderr per command."],
+        "return_code": ["==", -1]
+    },
+    {
+        "description": "Bad Redirects - (stderr + stdout append + stdout)",
+        "command": [ "./cmd true &>>/dev/null >/tmp" ],
+        "stdout": null,
+        "stderr": ["contains", "ERROR: There should only be one stdout per command."],
+        "return_code": ["==", -1]
+    },
+    {
+        "description": "Bad Redirects - (stderr + 2 stdout",
+        "command": [ "./cmd true &>/dev/null >/tmp" ],
+        "stdout": null,
+        "stderr": ["contains", "ERROR: There should only be one stdout per command."],
+        "return_code": ["==", -1]
+    },
+    {
+        "description": "Bad Redirects - (stdout append + stdout)",
+        "command": [ "./cmd >>/dev/null >/tmp" ],
+        "stdout": null,
+        "stderr": ["contains", "ERROR: There should only be one stdout per command."],
+        "return_code": ["==", -1]
+    },
+    {
+        "description": "'$' is illegal in fmt",
+        "command": [ "./cmd comma $HOME" ],
+        "stdout": ["==", ""],
+        "stderr": ["contains", "ERROR: 1:13:syntax error"],
+        "return_code": ["==", -1]
+    },
+    {
+        "description": "pipe '|'",
+        "command": [ "./cmd stdout | ./cmd incr | ./cmd incr" ],
+        "stdout": ["==", "3"],
+        "stderr": null,
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "redirect '<'",
+        "command": [ "./cmd cat < README.md" ],
+        "stdout": ["contains", "JSON"],
+        "stderr": null,
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "redirect '>'",
+        "command": [ "./cmd stdout stderr > tmp/#.txt && ./cmd incr < tmp/#.txt" ],
+        "stdout": ["==", "2"],
+        "stderr": ["==", "2"],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "redirect '>>'",
+        "command": [ "./cmd stdout >> tmp/#.txt && ./cmd stdout >> tmp/#.txt && ./cmd incr < tmp/#.txt" ],
+        "stdout": ["==", "12"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "redirect '2>'",
+        "command": [ "./cmd stdout >> tmp/#.txt && ./cmd stdout >> tmp/#.txt && ./cmd incr < tmp/#.txt" ],
+        "stdout": ["==", "12"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "redirect '2>>'",
+        "command": [ "./cmd stdout stderr 2>> tmp/#.txt && ./cmd stdout stderr 2>> tmp/#.txt && ./cmd incr < tmp/#.txt" ],
+        "stdout": ["==", "1123"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "redirect '>&2'",
+        "command": [ "./cmd stderr stderr stdout >&2" ],
+        "stdout": ["==", ""],
+        "stderr": ["==", "221"],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "redirect '2>&1'",
+        "command": [ "./cmd stderr stdout stdout 2>&1" ],
+        "stdout": ["==", "211"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "redirect '&>'",
+        "command": [ "./cmd stderr stdout stdout &> tmp/#.txt && ./cmd incr < tmp/#.txt" ],
+        "stdout": ["==", "212"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "redirect '&>>`*file*'",
+        "command": [ "./cmd stderr stdout &>> tmp/#.txt && ./cmd stderr stdout &>> tmp/#.txt && ./cmd incr < tmp/#.txt" ],
+        "stdout": ["==", "2122"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "globs fmt *",
+        "setup": "cd tmp; mkdir #; touch #/aa #/ab #/ac",
+        "command": [ "./cmd comma tmp/#/a*"],
+        "stdout": ["==", "tmp/#/aa,tmp/#/ab,tmp/#/ac"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "globs fmt [abc]",
+        "setup": "cd tmp; mkdir #; touch #/aa #/ab #/ac",
+        "command": [ "./cmd comma tmp/#/a[abc]"],
+        "stdout": ["==", "tmp/#/aa,tmp/#/ab,tmp/#/ac"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "globs fmt ?",
+        "setup": "cd tmp; mkdir #; touch #/aa #/ab #/ac",
+        "command": [ "./cmd comma tmp/#/a?"],
+        "stdout": ["==", "tmp/#/aa,tmp/#/ab,tmp/#/ac"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "globs %*p, *",
+        "setup": "cd tmp; mkdir #; touch #/aa #/ab #/ac",
+        "command": [ "./cmd comma tmp/#/%*p", "a*" ],
+        "stdout": ["==", "tmp/#/aa,tmp/#/ab,tmp/#/ac"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "filename sandbox escape",
+        "setup": "mkdir -p tmp/#/x; mkdir -p tmp/#/y",
+        "command": [ "./cmd comma tmp/#/x/%*p", "../y" ],
+        "stdout": ["==", ""],
+        "stderr": ["contains", "systemf: Permission denied: sandboxing tmp/#/x/../y"],
+        "return_code": ["==", -1]
+    },
+    {
+        "description": "filename sandbox unescape",
+        "setup": "mkdir -p tmp/#/x",
+        "command": [ "./cmd comma tmp/#/x/%*p", "../../../tmp/#/x" ],
+        "stdout": ["==", "tmp/#/x/../../../tmp/#/x"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    }
+]

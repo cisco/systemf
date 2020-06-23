@@ -1,0 +1,4 @@
+#!/bin/sh
+cd /systemf
+/usr/bin/systemf-build
+make check-code-coverage

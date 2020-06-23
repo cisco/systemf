@@ -1,0 +1,16 @@
+-------------------------------------------------------------------------------
+systemf code by:
+    Mark Eklund <meklund at cisco.com>
+    James Spadaro <jaspadar at cisco.com>
+
+-------------------------------------------------------------------------------
+Automake Templates are based on https://github.com/ecerulm/autotools-template
+The Contents of that AUTHORS file were:
+
+GNU Coding Standards 6.3: Recording Contributors
+http://www.gnu.org/prep/maintain/html_node/Recording-Contributors.html
+
+First version of all files by Ruben Laguna <ruben.laguna at gmail.com>
+
+-------------------------------------------------------------------------------
+
