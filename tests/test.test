@@ -1,0 +1,120 @@
+#!/usr/bin/env python3
+import json
+import os
+import sys
+import shutil
+from subprocess import run, PIPE
+
+from multiprocessing import Process, SimpleQueue
+
+def get_tests() -> list:
+    with open('test.json', 'r') as json_file:
+        try:
+            return json.load(json_file)
+        except Exception as e:
+            eprint(f'# Error loading json: {str(e)}')
+            sys.exit(-1)
+
+def run_command(index):
+    # Run these from the location of this file.
+    return run(['../test-runner', str(index + 1)], stdout=PIPE, stderr=PIPE)
+
+def fixup_compare_value(compare_value):
+    """Convert systemf() int return value to process return value
+    
+    systemf() returns an int, but the harness can only return a uchar.
+    This converts the expected int to the uchar returned.  This may
+    be platform-specific and will be enhanced when differences are discovered.
+    """
+    if compare_value < 0:
+        return 256 + compare_value
+    else:
+        return compare_value
+    
+# Run a comparison operation on return_code, stdout, or stderr
+def do_comparison(i, operator, real_value, compare_value):
+    # Everything we get from systemf() will be bytes
+
+    if type(compare_value) is int:
+        compare_value = fixup_compare_value(compare_value)
+
+    if type(compare_value) is str:
+        compare_value = str.encode(compare_value.replace("#", str(i+1)))
+
+    if operator == '==':
+        return real_value == compare_value
+    elif operator == '!=':
+        return real_value != compare_value
+    elif operator == '>':
+        return real_value > compare_value
+    elif operator == '<':
+        return real_value < compare_value
+    elif operator == 'contains':
+        return compare_value in real_value
+
+# Run this from within the tests directory
+os.chdir(os.path.dirname(sys.argv[0]))
+if os.path.isdir('tmp'):
+    shutil.rmtree('tmp')
+os.mkdir('tmp')
+
+# Pull in the JSON test data
+# See readme for test data json specification
+tests = get_tests()
+
+# Tell the test framework how many tests we'll have
+print(f'1..{len(tests)}')
+
+# Go through each test
+for i in range(len(tests)):
+    test = tests[i]
+    # Test description
+    errlogs = ''
+    description = test['description']
+
+    print()
+    print(f'# Running test {i+1} - {description}')
+
+    setup = test.get('setup')
+    if setup:
+        # Oh the irony of calling system here.
+        os.system(setup.replace("#", str(i+1)))
+
+    # Command to run (array)
+    command = test['command']
+    # Either 'null' or ['operator', 'value']
+    test_return_code = test['return_code']
+    # Either 'null' or ['operator', 'value']
+    test_stdout = test['stdout']
+    # Either 'null' or ['operator', 'value']
+    test_stderr = test['stderr']
+
+    returned = run_command(i)
+    return_code = returned.returncode
+    stdout = returned.stdout
+    stderr = returned.stderr
+
+    result = 'ok'
+
+    if test_return_code != None and not do_comparison(i, test_return_code[0], return_code, test_return_code[1]):
+        print(f'# Failed: {{"return_code": {json.dumps(test_return_code)}}}')
+        result = 'not ok'
+    if test_stdout != None and not do_comparison(i, test_stdout[0], stdout, test_stdout[1]):
+        print(f'# Failed: {{"stdout": {json.dumps(test_stdout)}}}')
+        result = 'not ok'
+    if test_stderr != None and not do_comparison(i, test_stderr[0], stderr, test_stderr[1]):
+        print(f'# Failed: {{"stderr": {json.dumps(test_stderr)}}}')
+        result = 'not ok'
+
+    if result == 'not ok':
+        print('#')
+        print(f'# return_code = {return_code}')
+        for io in (("STDOUT", stdout), ("STDERR", stderr)):
+            print('#')
+            print(f'# {io[0]}:')
+            for line in io[1].decode(errors="replace").split("\n"):
+                print(f'# {line}')
+
+    print(f'{result} {i+1} - {description}')
+
+print('exit status: 1')

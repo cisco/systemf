@@ -1,0 +1,6 @@
+#!/bin/sh
+cd /systemf
+
+# autoreconf -i # Just use the current config file.
+./configure CFLAGS="-g -O0" --enable-code-coverage
+make

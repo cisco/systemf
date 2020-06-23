@@ -1,0 +1,19 @@
+Read GNU Coding Standards 6.7 
+http://www.gnu.org/prep/standards/html_node/NEWS-File.html#NEWS-File
+
+Example: http://git.savannah.gnu.org/cgit/make.git/tree/NEWS
+
+YourProject NEWS
+  History of user-visible changes
+  25 Jan 2015
+
+See the end of this file for copyrights and conditions.
+
+
+Version 1.0.0
+
+  * New features: XXXX
+    Description of the feature
+    
+
+

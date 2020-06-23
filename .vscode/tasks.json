@@ -1,0 +1,51 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "Make check",
+			"command": "/usr/bin/make",
+			"args": [
+				"check"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"environment": [
+					{
+						"name": "CFLAGS",
+						"value": "-gO0"
+					}
+				]
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [
+				"$gcc"
+			]
+		},
+		{
+			"type": "shell",
+			"label": "Docker check",
+			"command": "/usr/local/bin/docker-compose",
+			"args": [
+				"up",
+				"--build"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/docker",
+				"env": {
+					"COMMAND": "/usr/bin/systemf-check"
+				}
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [
+				"$gcc"
+			]
+		}
+	]
+}
