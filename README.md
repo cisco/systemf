@@ -214,6 +214,7 @@ Systemf will soon release version 1.0.  The below capabilities are being conside
 | [Capture Support](#capture-support) | Functions that allow for capturing the standard output and standard error to strings. |
 | [STDIN String & File Support](#stdin-string-and-file-support) | Functions that allow for a string or buffers to be suppled for the standard input. |
 | [Error Message Redirection](#error-message-redirection) | Redirect stderr messages from `systemf` itself. |
+| [parallel pipping][#parallel-pipping] | Run both sides of a `|` in parallel. |
 
 ### Features not currently planned.
 
@@ -302,6 +303,11 @@ systemf1_fin_capture_a(FILE *file, ...);
 **Still being developed.**
 
 `systemf` will print error messages to the standard error in some situations.  These include invalid format strings, sandboxing violations, commands not found, and file globbing problems. Global setting command `systemf1_log_to(FILE *file)` will be added.  It will return the current log.  Supplying `file=NULL` completely disables logging.  This does not affect the normal stderr and stdout processing of the commands themselves.
+
+### Parallel Pipping
+**Still being developed.**
+
+Currently, a command like `systemf1("fu | bar");` runs fu to completion and then takes to stdout pipe and hands it to bar.  This has the potential of blocking the entire system if the pipe gets full.  The solution is to not wait for `fu` to complete, but go ahead and launch `bar`.
 
 ### No Plan for Background Support
 
