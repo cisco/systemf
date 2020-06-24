@@ -14,7 +14,7 @@
 #define VA_ARGS(...) , ##__VA_ARGS__
 #define DBG(fmt, ...) if (DEBUG) { printf("%s:%-3d:%24s: " fmt "\n", __FILE__, __LINE__, __FUNCTION__ VA_ARGS(__VA_ARGS__)); }
 
-static void merge_and_free_syllables (_sf1_syllable *syl, char **text_pp, char **trusted_path_pp, int *is_glob_p) {
+void _sf1_merge_and_free_syllables (_sf1_syllable *syl, char **text_pp, char **trusted_path_pp, int *is_glob_p) {
     int is_glob = 0;
     int is_file = 0;
     int is_trusted = 1;
@@ -183,7 +183,7 @@ _sf1_redirect *_sf1_create_redirect(_sf1_stream stream, _sf1_stream target, int 
     if (file_syllables) {
         int is_glob;
 
-        merge_and_free_syllables(file_syllables, &redirect->text, &redirect->trusted_path, &is_glob);
+        _sf1_merge_and_free_syllables(file_syllables, &redirect->text, &redirect->trusted_path, &is_glob);
         // FIXME: This needs to be cleanly handled similar to a syntax error.
         // Currently we don't support globs in file targets.
         assert(!is_glob);
@@ -217,7 +217,7 @@ _sf1_task *_sf1_create_cmd (_sf1_syllable *syllables, _sf1_redirect *redirects) 
 
     while (syllables) {
         next = syllables->next_word;
-        merge_and_free_syllables(syllables, &text, &trusted_path, &is_glob);
+        _sf1_merge_and_free_syllables(syllables, &text, &trusted_path, &is_glob);
         _sf1_task_add_arg(task, text, trusted_path, is_glob);
         syllables = next;
     }

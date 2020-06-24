@@ -104,7 +104,7 @@ char *_sf1_stream_name(_sf1_stream stream) {
  * Walks all of the redirects and verifies that they are entered in a sane way.
  * Returns 0 if not and 1 if good.
  */
-static int redirects_are_sane(_sf1_task *tasks)
+int _sf1_redirects_are_sane(_sf1_task *tasks)
 {
     for (_sf1_task *t = tasks; t; t = t->next) {
         int in = 0;
@@ -147,7 +147,7 @@ static int redirects_are_sane(_sf1_task *tasks)
  *   GLOB_ABORTED for a read error, and
  *   GLOB_NOMATCH for when the number of matches doesn't match the specified allowed match count.
  */
-static int extract_glob(_sf1_task *task)
+int _sf1_extract_glob(_sf1_task *task)
 {
     for (_sf1_task_arg *a = task->args; a != NULL; a = a->next) {
         if (a->is_glob) {
@@ -202,7 +202,7 @@ void _sf1_task_free(_sf1_task *task)
  * 
  * Returns -1 on failure and 0 on success.
  */
-static int populate_task_files(_sf1_task *task, _sf1_task_files *files) {
+int _sf1_populate_task_files(_sf1_task *task, _sf1_task_files *files) {
     int pipefd[2];
     int prev_out_rd_pipe = files->out_rd_pipe;
     _sf1_redirect *redirect;
@@ -265,7 +265,7 @@ int _sf1_tasks_run(_sf1_task *tasks) {
     int retval;
     _sf1_task_files files = {.in=0, .out=1, .err=2, .out_rd_pipe=0};
 
-    if (!redirects_are_sane(tasks)) {
+    if (!_sf1_redirects_are_sane(tasks)) {
         return -1;
     }
 
@@ -273,7 +273,7 @@ int _sf1_tasks_run(_sf1_task *tasks) {
     assert(tasks->argv == NULL);
 
     for (_sf1_task *task = tasks; task; task = task->next) {
-        ret = extract_glob(task);
+        ret = _sf1_extract_glob(task);
         if (ret) {
             errno = ret;
             return -1;
@@ -322,7 +322,7 @@ int _sf1_tasks_run(_sf1_task *tasks) {
         *argv = NULL;
         DBG("_____________________ err exi exs sig tsig\n");
 
-        if (populate_task_files(task, &files)) {
+        if (_sf1_populate_task_files(task, &files)) {
             return -1;
         }
 
