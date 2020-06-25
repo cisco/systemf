@@ -4,7 +4,7 @@
 
 #include "derived-parser.h"
 #include "derived-lexer.h"
-#include "task.h"
+#include "systemf-internal.h"
 
 int _sf1_yyerror(_SF1_YYLTYPE *locp, yyscan_t scanner, _sf1_parse_args *result, const char *msg) {
   fprintf(stderr, "ERROR: %d:%d:%s\n", locp->first_line, locp->first_column, msg);

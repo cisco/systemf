@@ -27,3 +27,5 @@ test-runner.c
 cmd
 tests/tmp/
 systemf-coverage*
+
+systemf-*.tar.gz

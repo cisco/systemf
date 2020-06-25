@@ -1,5 +1,3 @@
-#include "task.h"
-#include "systemf-internal.h"
 #include <stdlib.h>
 #include <unistd.h>
 #include <glob.h>
@@ -12,6 +10,7 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include "systemf-internal.h"
 
 #define DEBUG 0
 #define VA_ARGS(...) , ##__VA_ARGS__

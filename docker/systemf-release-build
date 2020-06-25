@@ -1,0 +1,41 @@
+#!/bin/bash
+
+fail() {
+    echo ERROR: "$*" >&1
+    exit 1
+}
+
+cd /systemf
+
+test -z "$(git status -s | grep -v src/derived-)" || fail Checked out or untracked files found in \"git status -s\".
+version=$(cat configure.ac | tr '[]' ' ' | awk '/AC_INIT/ {print $4}')
+test -n "$version" || fail Empty version detected.
+git tag | grep "^V$version\$" >/dev/null && fail "$version" already exists in git.  If this is a rebuild then you may \"git tag -d V$version\".
+
+set -e -x
+rm -f src/derived-*
+autoreconf -if
+./configure
+make clean
+make
+make check
+set +e +x
+
+test -z "$(git status -s)" || fail Build created new code.  Audit, commit if good, and rerun release.
+
+set -e -x
+make dist
+cd ..
+tar xzf systemf/systemf-$version.tar.gz
+cd systemf-$version
+./configure
+make check
+make install
+set +e +x
+
+echo '#######'
+echo  SUCCESS
+echo '#######'
+
+echo Please do this when ready: git tag -a V$version -m "$version"
+

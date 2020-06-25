@@ -31,12 +31,36 @@
 			"command": "/usr/local/bin/docker-compose",
 			"args": [
 				"up",
-				"--build"
+				"--build",
+				"--force-recreate"
 			],
 			"options": {
 				"cwd": "${workspaceFolder}/docker",
 				"env": {
 					"COMMAND": "/usr/bin/systemf-check"
+				}
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [
+				"$gcc"
+			]
+		},
+		{
+			"type": "shell",
+			"label": "Docker gdbserver",
+			"command": "/usr/local/bin/docker-compose",
+			"args": [
+				"up",
+				"--build",
+				"--force-recreate"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/docker",
+				"env": {
+					"COMMAND": "/usr/bin/systemf-gdbserv"
 				}
 			},
 			"group": {

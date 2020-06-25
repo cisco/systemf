@@ -1,28 +1,39 @@
 AM_CFLAGS = # CFLAGS applicable to all executables (products)
 AM_CPPFLAGS = -I$(top_srcdir)/src # so that tests also find header files
 AM_YFLAGS = -d
+EXTRA_DIST := README.md \
+    tests/README.md \
+    tests/test.test \
+    tests/test.json \
+    tests/test-generator.py \
+    tests/cmd \
+    src/parser.y \
+    src/lexer.l
 
 lib_LTLIBRARIES = libsystemf.la
 libsystemf_la_SOURCES := \
     src/close.c \
     src/derived-lexer.c \
+    src/derived-lexer.h \
     src/derived-parser.c \
+    src/derived-parser.h \
     src/file-sandbox-check.c \
     src/parser-support.c \
     src/systemf.c \
-    src/task.c
-nodist_include_HEADERS := src/derived-lexer.h src/derived-parser.h
+    src/task.c \
+    src/systemf-internal.h
+
+include_HEADERS := src/systemf.h
 libsystemf_la_LDFLAGS = -avoid-version -shared $(CODE_COVERAGE_LDFLAGS)
 libsystemf_la_CFLAGS := -D_FORTIFY_SOURCE=2 -Wall -Werror $(CODE_COVERAGE_CFLAGS)
 
 src/derived-lexer.c src/derived-lexer.h: src/lexer.l
-	flex --version | grep flex || (echo Flex is required ; false)
+	$(LEX) --version | grep flex || (echo Flex is required ; false)
 	flex src/lexer.l
 
 src/derived-parser.c src/derived-parser.h: src/parser.y
-	bison --version | grep 'bison.* 3' || (echo Bison 3 is required ; false)
+	$(BISON) --version | grep 'bison.* 3' || (echo Bison 3 is required ; false)
 	bison -v src/parser.y
-
 
 # Anything ending in .test should be a runnable script that produces TAP output
 # Example Output, with 2 tests:
@@ -41,7 +52,6 @@ test_runner_LDADD = libsystemf.la
 test_runner_CFLAGS = $(AM_CFLAGS)
 
 cmd_SOURCES = tests/cmd.c
-#cmd_CFLAGS = $(AM_CFLAGS) $(CODE_COVERAGE_CFLAGS)
 cmd_CFLAGS = $(AM_CFLAGS)
 cmd_LDFLAGS = $(CODE_COVERAGE_LDFLAGS)
 

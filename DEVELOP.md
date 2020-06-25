@@ -60,6 +60,20 @@ brew install gdb
 
 > Special thanks to [Spencer Elliott](https://medium.com/@spe_) for his blog post on [Debugging C/C++ Programs Remotely Using Visual Studio Code and gdbserver](https://medium.com/@spe_/debugging-c-c-programs-remotely-using-visual-studio-code-and-gdbserver-559d3434fb78)
 
+## How to Create a Release
+
+Currently creating a release is a manual process.  Once a consistent
+process is created, a github action will be created.
+
+1. Update AC_INIT in configure.ac with the [semantic version](http://semver.org/).
+2. Start the docker container with latest code: 
+    ```
+    docker-compose -f docker/docker-compose.yml up --build -d
+    ```
+3. Run the script to do most of the work in the container: 
+    ```
+    docker-compose -f docker/docker-compose.yml exec systemf-test systemf-release-build
+    ```
 
 ## Appendix A - printf options
 
