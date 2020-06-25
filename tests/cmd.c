@@ -60,6 +60,8 @@ int main(int argc, char *argv[]) {
                 printf("%s%s", delim, argv[argi]);
                 delim = ",";
             }
+        } else if (!strcmp("true", argv[argi]))  {
+            retval = 0;
         } else if (!strcmp("false", argv[argi]))  {
             retval = 1;
         } else if (!strcmp("return", argv[argi]))  {

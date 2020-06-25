@@ -45,13 +45,6 @@ void _sf1_task_add_redirects (_sf1_task *task, _sf1_redirect *redirects)
 }
 
 /*
- * systermf1_task_set_run_if - Sets the condition that this task will run.
- */
-void _sf1_task_set_run_if (_sf1_task *task, _sf1_run_if run_if) {
-    task->run_if = run_if;
-}
-
-/*
  * _sf1_task_add_arg - Adds the specified argument to the task.
  *
  * task - Destination Task

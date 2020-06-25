@@ -88,7 +88,6 @@ extern _sf1_task *_sf1_task_create();
 extern int _sf1_tasks_run(_sf1_task *task);
 extern _sf1_task_arg *_sf1_task_add_arg(_sf1_task *task, char *text, char *trusted_path, int is_glob);
 extern void _sf1_task_add_redirects(_sf1_task *task, _sf1_redirect *redirect);
-extern void _sf1_task_set_run_if (_sf1_task *task, _sf1_run_if run_if);
 extern void _sf1_task_free(_sf1_task *task);
 extern char *_sf1_stream_name(_sf1_stream);
 extern void _sf1_close_upper_fd(void);

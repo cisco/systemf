@@ -266,5 +266,33 @@
         "stdout": ["==", "tmp/#/x/../../../tmp/#/x"],
         "stderr": ["==", ""],
         "return_code": ["==", 0]
+    },
+    {
+        "description": "true || not-run",
+        "command": [ "./cmd true || ./cmd stdout" ],
+        "stdout": ["==", ""],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
+    },
+    {
+        "description": "false || run",
+        "command": [ "./cmd false || ./cmd stderr return 3" ],
+        "stdout": ["==", ""],
+        "stderr": ["==", "2"],
+        "return_code": ["==", 3]
+    },
+    {
+        "description": "false && not-run",
+        "command": [ "./cmd false && ./cmd stdout" ],
+        "stdout": ["==", ""],
+        "stderr": ["==", ""],
+        "return_code": ["==", 1]
+    },
+    {
+        "description": "true && run",
+        "command": [ "./cmd true && ./cmd stderr return 3" ],
+        "stdout": ["==", ""],
+        "stderr": ["==", "2"],
+        "return_code": ["==", 3]
     }
 ]

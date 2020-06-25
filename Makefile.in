@@ -1450,8 +1450,6 @@ uninstall-am: uninstall-includeHEADERS uninstall-libLTLIBRARIES
 .PRECIOUS: Makefile
 
 
-# FIXME: Get automake to behave with the .y and .l and rename the sources
-
 src/derived-lexer.c src/derived-lexer.h: src/lexer.l
 	$(LEX) --version | grep flex || (echo Flex is required ; false)
 	flex src/lexer.l
