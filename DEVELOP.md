@@ -74,6 +74,26 @@ process is created, a github action will be created.
     ```
     docker-compose -f docker/docker-compose.yml exec systemf-test systemf-release-build
     ```
+4. Tag this release and push the tag.
+    For example:
+    ```
+    git tag -a V0.9.0 -m 0.9.0
+    git push --follow-tags
+    ```
+    *The last line output from step 3 gives the exact command to use.*
+5. You may have to get your branch merged from a fork into master.  Push your branch to cisco.
+    ```
+    git remote add cisco git@github.com:cisco/systemf.git
+    git push --follow-tags cisco
+    ```
+6. Create a [github release](https://github.com/cisco/systemf/releases/new)
+    1. Enter your tag version in `Tag Version`.
+    2. For `Release title` enter a title with a format of "Release 0.9.0".
+    3. For the description, give a bulleted list of all major changes.
+    4. Attach the systemf-$version.tar.gz
+    5. Click 'this is a pre-release' if it isn't yet ready for general consumption.
+    6. `Publish release`
+
 
 ## Appendix A - printf options
 
