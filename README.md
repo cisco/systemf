@@ -59,7 +59,7 @@ argument to /bin/mymagicfunc.
 
 This doesn't solve everything.  If `/bin/mymagicfunc` had an injection issue, it might still cause the code to be run, but you can't prevent everything.
 
-## Quict Tour of Through Examples
+## Quick Tour of Through Examples
 
 The easiest way to explain the basics how `systemf1()` works is through a few examples.
 
