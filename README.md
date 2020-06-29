@@ -11,7 +11,17 @@ Prepared statement support for the system command.
 
     #include <systemf.h>
 
-    int systemf(const char *fmt, ...);
+    int systemf1(const char *fmt, ...);
+
+## Features
+
+1. Calls directly to execv() instead of /bin/sh
+2. Uses a format string to break arguments into parameters.
+3. Uses printf like parameters to build the command.
+4. Support for limited shell capabilities like piping, redirecting, and running multiple commands in one call.
+5. File globbing support.
+6. File sandboxing.
+7. Output capture (still in development).
 
 ## Example, 
 
