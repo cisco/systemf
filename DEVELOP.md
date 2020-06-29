@@ -86,9 +86,9 @@ process is created, a github action will be created.
     git remote add cisco git@github.com:cisco/systemf.git
     git push --follow-tags cisco
     ```
-6. Create a to [github release](https://github.com/cisco/systemf/releases/new)
+6. Create a [github release](https://github.com/cisco/systemf/releases/new)
     1. Enter your tag version in `Tag Version`.
-    2. For `Releae title` simple enter in the format "Release 0.9.0".
+    2. For `Release title` enter a title with a format of "Release 0.9.0".
     3. For the description, give a bulleted list of all major changes.
     4. Attach the systemf-$version.tar.gz
     5. Click 'this is a pre-release' if it isn't yet ready for general consumption.
