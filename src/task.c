@@ -196,13 +196,14 @@ void _sf1_task_free(_sf1_task *task)
  */
 int _sf1_populate_task_files(_sf1_task *task, _sf1_task_files *files) {
     int pipefd[2];
-    int prev_out_rd_pipe = files->out_rd_pipe;
     _sf1_redirect *redirect;
+    int rwrwrw = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
+    int prev_out_rd_pipe = files->out_rd_pipe;
+
     files->in = 0;
     files->out = 1;
     files->err = 2;
-    files->out_rd_pipe = -1;
-    int rwrwrw = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
+    files->out_rd_pipe = 0;
 
     for (redirect = task->redirects; redirect; redirect = redirect->next) {
         if (redirect->stream == _SF1_STDIN)  {
@@ -247,6 +248,63 @@ int _sf1_populate_task_files(_sf1_task *task, _sf1_task_files *files) {
     return 0;
 }
 
+/*
+ * Check all of the arguments for this task that the files are properly sandboxed.
+ * On success, returns 0.  On failure sets the errno and returns -1;
+ */
+int _sf1_file_sandbox_check_args(_sf1_task *task) {
+    _sf1_task_arg *arg;
+    int ret;
+
+    for (arg = task->args; arg != NULL; arg = arg->next) {
+        if (arg->trusted_path) {
+            if (arg->is_glob) {
+                int i;
+                for (i = 0, ret = 0; (i < arg->glob.gl_pathc) && !ret; i++) {
+                    ret = _sf1_file_sandbox_check(arg->trusted_path, arg->glob.gl_pathv[i]);
+                }
+            } else {
+                ret = _sf1_file_sandbox_check(arg->trusted_path, arg->text);
+            }
+            if (ret) {
+                errno = ret;
+                return -1;
+            }
+        }
+    }
+    return 0;
+}
+
+
+/*
+ * Close the child in out and error if they aren't shared with the parent.
+ */
+void _sf1_close_child_files(_sf1_task_files *files) {
+    if (files->in > 2) {
+        close(files->in);
+        files->in = 0;
+    }
+    if (files->out > 2) {
+        close(files->out);
+        files->out = 1;
+    }
+    if (files->err > 2) {
+        close(files->err);
+        files->err = 2;
+    }
+}
+
+/*
+ * Close the child in out, error, and pipe.
+ */
+void _sf1_close_child_files_and_pipe(_sf1_task_files *files) {
+    if (files->out_rd_pipe) {
+        close(files->out_rd_pipe);
+        files->out_rd_pipe = 0;
+    }
+    _sf1_close_child_files(files);
+}
+
 int _sf1_tasks_run(_sf1_task *tasks) {
     pid_t pid;
     int stat;
@@ -280,22 +338,8 @@ int _sf1_tasks_run(_sf1_task *tasks) {
             }
         }
 
-        // File Sandbox each argument
-        for (arg = task->args; arg != NULL; arg = arg->next) {
-            if (arg->trusted_path) {
-                if (arg->is_glob) {
-                    int i;
-                    for (i = 0, ret = 0; (i < arg->glob.gl_pathc) && !ret; i++) {
-                        ret = _sf1_file_sandbox_check(arg->trusted_path, arg->glob.gl_pathv[i]);
-                    }
-                } else {
-                    ret = _sf1_file_sandbox_check(arg->trusted_path, arg->text);
-                }
-                if (ret) {
-                    errno = ret;
-                    return -1;
-                }
-            }
+        if (_sf1_file_sandbox_check_args(task)) {
+            return -1;
         }
 
         task->argv = malloc(argc * sizeof(char *));
@@ -343,16 +387,7 @@ int _sf1_tasks_run(_sf1_task *tasks) {
             kill(getpid(), SIGKILL);
         }
 
-        // Close the child in out and error if they aren't shared with the parent.
-        if (files.in > 2) {
-            close(files.in);
-        }
-        if (files.out > 2) {
-            close(files.out);
-        }
-        if (files.err > 2) {
-            close(files.err);
-        }
+        _sf1_close_child_files(&files);
 
         // FIXME: If this is a pipe, we may need to launch the next process immediately.
         // Otherwise, we may have pipes filling up and blocking waiting for something
@@ -385,7 +420,8 @@ int _sf1_tasks_run(_sf1_task *tasks) {
             }
         }
     }
-
+    // cleanup:
+    
     return retval;
 }
 
