@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <sys/wait.h>
 
 #include "systemf-internal.h"
 
@@ -13,7 +14,7 @@ pid_t _sf1_pid_chain_waitpids(_sf1_pid_chain_t *pid_chain, int *stat_loc, int op
     // Currently this is always used in a run-to-completion, so don't support all waitpid options
     assert(options == 0);
     assert(stat_loc != NULL);
-    pid_t pid;
+    pid_t pid = 0;
     
     for (int i = 0; i < pid_chain->size; i++) {
         pid = waitpid(pid_chain->pids[i], stat_loc, 0);
