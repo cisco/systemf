@@ -301,5 +301,12 @@
         "stdout": ["==", "2"],
         "stderr": ["==", ""],
         "return_code": ["==", 0]
+    },
+    {
+        "description": "multiple pipes run properly",
+        "command": [ "./cmd count | ./cmd incr | ./cmd incr | ./cmd incr" ],
+        "stdout": ["==", "4"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
     }
 ]

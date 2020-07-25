@@ -307,16 +307,17 @@ void _sf1_close_child_files_and_pipe(_sf1_task_files *files) {
 
 int _sf1_tasks_run(_sf1_task *tasks) {
     pid_t pid;
+    _sf1_pid_chain_t *pid_chain = NULL;
     int stat;
     char **argv;
     _sf1_task_arg *arg;
     size_t argc = 1; // 1 for terminating NULL
     int ret;
-    int retval;
+    int retval = -1;
     _sf1_task_files files = {.in=0, .out=1, .err=2, .out_rd_pipe=0};
 
     if (!_sf1_redirects_are_sane(tasks)) {
-        return -1;
+        goto exit_error;
     }
 
      // We don't support tasks reuse, so argv MUST be null coming into this.
@@ -326,7 +327,7 @@ int _sf1_tasks_run(_sf1_task *tasks) {
         ret = _sf1_extract_glob(task);
         if (ret) {
             errno = ret;
-            return -1;
+            goto exit_error;
         }
 
         // Count the arguments.
@@ -339,7 +340,7 @@ int _sf1_tasks_run(_sf1_task *tasks) {
         }
 
         if (_sf1_file_sandbox_check_args(task)) {
-            return -1;
+            goto exit_error;
         }
 
         task->argv = malloc(argc * sizeof(char *));
@@ -359,7 +360,7 @@ int _sf1_tasks_run(_sf1_task *tasks) {
         DBG("_____________________ err exi exs sig tsig\n");
 
         if (_sf1_populate_task_files(task, &files)) {
-            return -1;
+            goto exit_error;
         }
 
         // If we don't flush, both forks will send the buffered data and it will be seen twice.
@@ -386,41 +387,55 @@ int _sf1_tasks_run(_sf1_task *tasks) {
             // (file not found, file not executable) before forking.  Kill thyself.
             kill(getpid(), SIGKILL);
         }
-
         _sf1_close_child_files(&files);
 
-        // FIXME: If this is a pipe, we may need to launch the next process immediately.
-        // Otherwise, we may have pipes filling up and blocking waiting for something
-        // to empty the pipe.
-
-        if (waitpid(pid, &stat, 0) != pid) {
-            // FIXME: Make sure this is the right return value and better recover from this.
-            fprintf(stderr, "waitpid unexpectedly returned %s", strerror(errno));
-            return -1;
-        }
-        retval = WEXITSTATUS(stat);
-
-        if (WIFSIGNALED(stat)) {
-            fprintf(stderr, "waipid exited with signal %s\n", strsignal(WTERMSIG(stat)));
-            return -1;
+        pid_chain = _sf1_pid_chain_add(pid_chain, pid);
+        if (!pid_chain) {
+            fprintf(stderr, "systemf: pid_chain out of memory");
+            goto exit_error;
         }
 
-        DBG("waitpid returned with %3d %3d %3d %3d %3d\n", errno,
-            WIFEXITED(stat), WEXITSTATUS(stat), WIFSIGNALED(stat), WTERMSIG(stat));
-
-        if (WIFSIGNALED(stat) || (WIFEXITED(stat) && WEXITSTATUS(stat))) {
-            if (task->next && (task->next->run_if == _SF1_RUN_IF_PREV_SUCCEEDED)) {
-                DBG("exiting because previous failed");
-                break;
+        // Only wait for completion if this is not piped.  
+        // I.E. "cat | grep" should run the grep before waiting for the cat to complete.
+        if (files.out_rd_pipe == 0) {
+            if (_sf1_pid_chain_waitpids(pid_chain, &stat, 0) == 0) {
+                // FIXME: Make sure this is the right return value and better recover from this.
+                fprintf(stderr, "waitpid unexpectedly returned %s", strerror(errno));
+                goto exit_error;
             }
-        } else {
-            if (task->next && (task->next->run_if == _SF1_RUN_IF_PREV_FAILED)) {
-                DBG("exiting because previous succeeded");
-                break;
+            _sf1_pid_chain_clear(pid_chain);
+
+            retval = WEXITSTATUS(stat);
+
+            if (WIFSIGNALED(stat)) {
+                fprintf(stderr, "waipid exited with signal %s\n", strsignal(WTERMSIG(stat)));
+                goto exit_error;
+            }
+
+            DBG("waitpid returned with %3d %3d %3d %3d %3d\n", errno,
+                WIFEXITED(stat), WEXITSTATUS(stat), WIFSIGNALED(stat), WTERMSIG(stat));
+
+            if (WIFSIGNALED(stat) || (WIFEXITED(stat) && WEXITSTATUS(stat))) {
+                if (task->next && (task->next->run_if == _SF1_RUN_IF_PREV_SUCCEEDED)) {
+                    DBG("exiting because previous failed");
+                    break;
+                }
+            } else {
+                if (task->next && (task->next->run_if == _SF1_RUN_IF_PREV_FAILED)) {
+                    DBG("exiting because previous succeeded");
+                    break;
+                }
             }
         }
     }
-    // cleanup:
+    if (0) {
+        exit_error:
+        retval = -1;
+    }
+
+    // Clean up everything locally created.
+    _sf1_close_child_files(&files);
+    _sf1_pid_chain_free(pid_chain);
     
     return retval;
 }

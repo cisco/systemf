@@ -19,6 +19,7 @@ libsystemf_la_SOURCES := \
     src/derived-parser.h \
     src/file-sandbox-check.c \
     src/parser-support.c \
+    src/pid-chain.c \
     src/systemf.c \
     src/task.c \
     src/systemf-internal.h
