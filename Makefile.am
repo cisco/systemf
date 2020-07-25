@@ -28,7 +28,7 @@ include_HEADERS := src/systemf.h
 libsystemf_la_LDFLAGS = -avoid-version -shared $(CODE_COVERAGE_LDFLAGS)
 libsystemf_la_CFLAGS := -D_FORTIFY_SOURCE=2 -Wall -Werror $(CODE_COVERAGE_CFLAGS)
 
-src/derived-lexer.c src/derived-lexer.h: src/lexer.l
+src/derived-lexer.c src/derived-lexer.h: src/lexer.l src/derived-parser.c
 	$(LEX) --version | grep flex || (echo Flex is required ; false)
 	flex src/lexer.l
 

@@ -1465,7 +1465,7 @@ uninstall-am: uninstall-includeHEADERS uninstall-libLTLIBRARIES
 .PRECIOUS: Makefile
 
 
-src/derived-lexer.c src/derived-lexer.h: src/lexer.l
+src/derived-lexer.c src/derived-lexer.h: src/lexer.l src/derived-parser.c
 	$(LEX) --version | grep flex || (echo Flex is required ; false)
 	flex src/lexer.l
 
