@@ -216,11 +216,11 @@ By making the systemf versioned in its name, it is more obvious the version that
 
 ## Future Work
 
-Systemf will soon release version 1.0.  The below capabilities are being considered.
+Systemf is now a minimal viable product with the release of 1.0.  The following feature enhancement
+are planned for future minor version releases.
 
 | Title | Description |
 | ----- | ----------- |
-| [parallel piping](#parallel-piping) | Run both sides of a `\|` in parallel. |
 | [PATH Support](#path-support) | Currently all executables must include a path.  This will add limited path searching and updating. |
 | [Capture Support](#capture-support) | Functions that allow for capturing the standard output and standard error to strings. |
 | [STDIN String & File Support](#stdin-string-and-file-support) | Functions that allow for a string or buffers to be suppled for the standard input. |
@@ -288,11 +288,6 @@ There are some corner cases for `systemf1_capture()`.
 There are some corner cases for `systemf1_capture_a()`.
 * A `max_stdout_buf_len` of 0 considered to be equivalent to a length of 1.  A one byte buffer will be allocated and returned filled with a nul value.  Infinite buffer size is not supported.
 * The same corner cases exist for `max_stderr_buf_len`.
-
-### Parallel Piping
-**Still being developed.**
-
-Currently, a command like `systemf1("fu | bar");` runs fu to completion and then takes to stdout pipe and hands it to bar.  This has the potential of blocking the entire system if the pipe gets full.  The solution is to not wait for `fu` to complete, but go ahead and launch `bar`.
 
 ### Stdin String and File Support
 **Still being developed.**

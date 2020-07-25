@@ -7,7 +7,6 @@
 #include <assert.h>
 #include <signal.h>
 #include <sys/types.h>
-#include <sys/wait.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include "systemf-internal.h"
@@ -196,13 +195,14 @@ void _sf1_task_free(_sf1_task *task)
  */
 int _sf1_populate_task_files(_sf1_task *task, _sf1_task_files *files) {
     int pipefd[2];
-    int prev_out_rd_pipe = files->out_rd_pipe;
     _sf1_redirect *redirect;
+    int rwrwrw = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
+    int prev_out_rd_pipe = files->out_rd_pipe;
+
     files->in = 0;
     files->out = 1;
     files->err = 2;
-    files->out_rd_pipe = -1;
-    int rwrwrw = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
+    files->out_rd_pipe = 0;
 
     for (redirect = task->redirects; redirect; redirect = redirect->next) {
         if (redirect->stream == _SF1_STDIN)  {
@@ -247,18 +247,76 @@ int _sf1_populate_task_files(_sf1_task *task, _sf1_task_files *files) {
     return 0;
 }
 
+/*
+ * Check all of the arguments for this task that the files are properly sandboxed.
+ * On success, returns 0.  On failure sets the errno and returns -1;
+ */
+int _sf1_file_sandbox_check_args(_sf1_task *task) {
+    _sf1_task_arg *arg;
+    int ret;
+
+    for (arg = task->args; arg != NULL; arg = arg->next) {
+        if (arg->trusted_path) {
+            if (arg->is_glob) {
+                int i;
+                for (i = 0, ret = 0; (i < arg->glob.gl_pathc) && !ret; i++) {
+                    ret = _sf1_file_sandbox_check(arg->trusted_path, arg->glob.gl_pathv[i]);
+                }
+            } else {
+                ret = _sf1_file_sandbox_check(arg->trusted_path, arg->text);
+            }
+            if (ret) {
+                errno = ret;
+                return -1;
+            }
+        }
+    }
+    return 0;
+}
+
+
+/*
+ * Close the child in out and error if they aren't shared with the parent.
+ */
+void _sf1_close_child_files(_sf1_task_files *files) {
+    if (files->in > 2) {
+        close(files->in);
+        files->in = 0;
+    }
+    if (files->out > 2) {
+        close(files->out);
+        files->out = 1;
+    }
+    if (files->err > 2) {
+        close(files->err);
+        files->err = 2;
+    }
+}
+
+/*
+ * Close the child in out, error, and pipe.
+ */
+void _sf1_close_child_files_and_pipe(_sf1_task_files *files) {
+    if (files->out_rd_pipe) {
+        close(files->out_rd_pipe);
+        files->out_rd_pipe = 0;
+    }
+    _sf1_close_child_files(files);
+}
+
 int _sf1_tasks_run(_sf1_task *tasks) {
     pid_t pid;
+    _sf1_pid_chain_t *pid_chain = NULL;
     int stat;
     char **argv;
     _sf1_task_arg *arg;
     size_t argc = 1; // 1 for terminating NULL
     int ret;
-    int retval;
+    int retval = -1;
     _sf1_task_files files = {.in=0, .out=1, .err=2, .out_rd_pipe=0};
 
     if (!_sf1_redirects_are_sane(tasks)) {
-        return -1;
+        goto exit_error;
     }
 
      // We don't support tasks reuse, so argv MUST be null coming into this.
@@ -268,7 +326,7 @@ int _sf1_tasks_run(_sf1_task *tasks) {
         ret = _sf1_extract_glob(task);
         if (ret) {
             errno = ret;
-            return -1;
+            goto exit_error;
         }
 
         // Count the arguments.
@@ -280,22 +338,8 @@ int _sf1_tasks_run(_sf1_task *tasks) {
             }
         }
 
-        // File Sandbox each argument
-        for (arg = task->args; arg != NULL; arg = arg->next) {
-            if (arg->trusted_path) {
-                if (arg->is_glob) {
-                    int i;
-                    for (i = 0, ret = 0; (i < arg->glob.gl_pathc) && !ret; i++) {
-                        ret = _sf1_file_sandbox_check(arg->trusted_path, arg->glob.gl_pathv[i]);
-                    }
-                } else {
-                    ret = _sf1_file_sandbox_check(arg->trusted_path, arg->text);
-                }
-                if (ret) {
-                    errno = ret;
-                    return -1;
-                }
-            }
+        if (_sf1_file_sandbox_check_args(task)) {
+            goto exit_error;
         }
 
         task->argv = malloc(argc * sizeof(char *));
@@ -315,7 +359,7 @@ int _sf1_tasks_run(_sf1_task *tasks) {
         DBG("_____________________ err exi exs sig tsig\n");
 
         if (_sf1_populate_task_files(task, &files)) {
-            return -1;
+            goto exit_error;
         }
 
         // If we don't flush, both forks will send the buffered data and it will be seen twice.
@@ -342,50 +386,56 @@ int _sf1_tasks_run(_sf1_task *tasks) {
             // (file not found, file not executable) before forking.  Kill thyself.
             kill(getpid(), SIGKILL);
         }
+        _sf1_close_child_files(&files);
 
-        // Close the child in out and error if they aren't shared with the parent.
-        if (files.in > 2) {
-            close(files.in);
-        }
-        if (files.out > 2) {
-            close(files.out);
-        }
-        if (files.err > 2) {
-            close(files.err);
+        pid_chain = _sf1_pid_chain_add(pid_chain, pid);
+        if (!pid_chain) {
+            fprintf(stderr, "systemf: pid_chain out of memory");
+            goto exit_error;
         }
 
-        // FIXME: If this is a pipe, we may need to launch the next process immediately.
-        // Otherwise, we may have pipes filling up and blocking waiting for something
-        // to empty the pipe.
-
-        if (waitpid(pid, &stat, 0) != pid) {
-            // FIXME: Make sure this is the right return value and better recover from this.
-            fprintf(stderr, "waitpid unexpectedly returned %s", strerror(errno));
-            return -1;
-        }
-        retval = WEXITSTATUS(stat);
-
-        if (WIFSIGNALED(stat)) {
-            fprintf(stderr, "waipid exited with signal %s\n", strsignal(WTERMSIG(stat)));
-            return -1;
-        }
-
-        DBG("waitpid returned with %3d %3d %3d %3d %3d\n", errno,
-            WIFEXITED(stat), WEXITSTATUS(stat), WIFSIGNALED(stat), WTERMSIG(stat));
-
-        if (WIFSIGNALED(stat) || (WIFEXITED(stat) && WEXITSTATUS(stat))) {
-            if (task->next && (task->next->run_if == _SF1_RUN_IF_PREV_SUCCEEDED)) {
-                DBG("exiting because previous failed");
-                break;
+        // Only wait for completion if this is not piped.  
+        // I.E. "cat | grep" should run the grep before waiting for the cat to complete.
+        if (files.out_rd_pipe == 0) {
+            if (_sf1_pid_chain_waitpids(pid_chain, &stat, 0) == 0) {
+                // FIXME: Make sure this is the right return value and better recover from this.
+                fprintf(stderr, "waitpid unexpectedly returned %s", strerror(errno));
+                goto exit_error;
             }
-        } else {
-            if (task->next && (task->next->run_if == _SF1_RUN_IF_PREV_FAILED)) {
-                DBG("exiting because previous succeeded");
-                break;
+            _sf1_pid_chain_clear(pid_chain);
+
+            retval = WEXITSTATUS(stat);
+
+            if (WIFSIGNALED(stat)) {
+                fprintf(stderr, "waipid exited with signal %s\n", strsignal(WTERMSIG(stat)));
+                goto exit_error;
+            }
+
+            DBG("waitpid returned with %3d %3d %3d %3d %3d\n", errno,
+                WIFEXITED(stat), WEXITSTATUS(stat), WIFSIGNALED(stat), WTERMSIG(stat));
+
+            if (WIFSIGNALED(stat) || (WIFEXITED(stat) && WEXITSTATUS(stat))) {
+                if (task->next && (task->next->run_if == _SF1_RUN_IF_PREV_SUCCEEDED)) {
+                    DBG("exiting because previous failed");
+                    break;
+                }
+            } else {
+                if (task->next && (task->next->run_if == _SF1_RUN_IF_PREV_FAILED)) {
+                    DBG("exiting because previous succeeded");
+                    break;
+                }
             }
         }
     }
+    if (0) {
+        exit_error:
+        retval = -1;
+    }
 
+    // Clean up everything locally created.
+    _sf1_close_child_files(&files);
+    _sf1_pid_chain_free(pid_chain);
+    
     return retval;
 }
 

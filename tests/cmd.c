@@ -29,10 +29,11 @@ int main(int argc, char *argv[]) {
             "stderr: echo '2' to the stderr with no linefeed.\n"
             "cat:    cat the stdin to the stdout (does not take arguments)\n"
             "{}:     wrap the stdin with {}\n"
-            "incr:   read the first intter from the stdin, add 1, and print to stdout.\n" 
+            "incr:   read the first integer from the stdin, add 1, and print to stdout.\n" 
             "comma:  read the rest of the arguments and print to the stdout comma separated.\n"
             "true:   set the return value to 0 (the default).\n"
             "false:  set the return value to 1.\n"
+            "count:  countinuously count from 1 to infinity to stdout with a newline.\n"
             "return: set the return value to the next argument\n");
         return retval;
     } 
@@ -64,6 +65,10 @@ int main(int argc, char *argv[]) {
             retval = 0;
         } else if (!strcmp("false", argv[argi]))  {
             retval = 1;
+        } else if (!strcmp("count", argv[argi]))  {
+            for (int i=1; 1; i += 1) {
+                printf("%d\n", i);
+            }
         } else if (!strcmp("return", argv[argi]))  {
             argi++;
             if (argi < argc) {

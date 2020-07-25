@@ -9,10 +9,10 @@
       "name": "(lldb) test-runner",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/tests/.libs/test-runner",
+      "program": "${workspaceFolder}/.libs/test-runner",
       "args": ["30"],
       "environment": [
-        {"name": "DYLD_LIBRARY_PATH", "value": "${workspaceFolder}/src/.libs:${env:DYLD_LIBRARY_PATH}"}],
+        {"name": "DYLD_LIBRARY_PATH", "value": "${workspaceFolder}/.libs:${env:DYLD_LIBRARY_PATH}"}],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/tests/",
       "externalConsole": false,

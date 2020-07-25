@@ -71,6 +71,12 @@ typedef struct _sf1_syllable_ {
     char text[];
 } _sf1_syllable;
 
+typedef struct {
+    int size;
+    int capacity;
+    pid_t pids[];
+} _sf1_pid_chain_t;
+
 #ifndef YY_TYPEDEF_YY_SCANNER_T
     #define YY_TYPEDEF_YY_SCANNER_T
     typedef void* yyscan_t;
@@ -83,6 +89,10 @@ extern void _sf1_create_redirect_pipe (_sf1_task *left, _sf1_task *right);
 
 extern int _sf1_file_sandbox_check(char *trusted_path, char *path);
 
+extern pid_t _sf1_pid_chain_waitpids(_sf1_pid_chain_t *pid_chain, int *stat_loc, int options);
+extern _sf1_pid_chain_t *_sf1_pid_chain_add(_sf1_pid_chain_t *pid_chain, pid_t pid);
+extern void _sf1_pid_chain_free(_sf1_pid_chain_t *pid_chain);
+extern void _sf1_pid_chain_clear(_sf1_pid_chain_t *pid_chain);
 
 extern _sf1_task *_sf1_task_create();
 extern int _sf1_tasks_run(_sf1_task *task);

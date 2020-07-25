@@ -143,7 +143,8 @@ am_libsystemf_la_OBJECTS = src/libsystemf_la-close.lo \
 	src/libsystemf_la-derived-parser.lo \
 	src/libsystemf_la-file-sandbox-check.lo \
 	src/libsystemf_la-parser-support.lo \
-	src/libsystemf_la-systemf.lo src/libsystemf_la-task.lo
+	src/libsystemf_la-pid-chain.lo src/libsystemf_la-systemf.lo \
+	src/libsystemf_la-task.lo
 libsystemf_la_OBJECTS = $(am_libsystemf_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -184,6 +185,7 @@ am__depfiles_remade = src/$(DEPDIR)/libsystemf_la-close.Plo \
 	src/$(DEPDIR)/libsystemf_la-derived-parser.Plo \
 	src/$(DEPDIR)/libsystemf_la-file-sandbox-check.Plo \
 	src/$(DEPDIR)/libsystemf_la-parser-support.Plo \
+	src/$(DEPDIR)/libsystemf_la-pid-chain.Plo \
 	src/$(DEPDIR)/libsystemf_la-systemf.Plo \
 	src/$(DEPDIR)/libsystemf_la-task.Plo \
 	tests/$(DEPDIR)/cmd-cmd.Po \
@@ -587,6 +589,7 @@ libsystemf_la_SOURCES := \
     src/derived-parser.h \
     src/file-sandbox-check.c \
     src/parser-support.c \
+    src/pid-chain.c \
     src/systemf.c \
     src/task.c \
     src/systemf-internal.h
@@ -725,6 +728,8 @@ src/libsystemf_la-file-sandbox-check.lo: src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/libsystemf_la-parser-support.lo: src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
+src/libsystemf_la-pid-chain.lo: src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 src/libsystemf_la-systemf.lo: src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/libsystemf_la-task.lo: src/$(am__dirstamp) \
@@ -765,6 +770,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libsystemf_la-derived-parser.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libsystemf_la-file-sandbox-check.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libsystemf_la-parser-support.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libsystemf_la-pid-chain.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libsystemf_la-systemf.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libsystemf_la-task.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/cmd-cmd.Po@am__quote@ # am--include-marker
@@ -834,6 +840,13 @@ src/libsystemf_la-parser-support.lo: src/parser-support.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/parser-support.c' object='src/libsystemf_la-parser-support.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libsystemf_la_CFLAGS) $(CFLAGS) -c -o src/libsystemf_la-parser-support.lo `test -f 'src/parser-support.c' || echo '$(srcdir)/'`src/parser-support.c
+
+src/libsystemf_la-pid-chain.lo: src/pid-chain.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libsystemf_la_CFLAGS) $(CFLAGS) -MT src/libsystemf_la-pid-chain.lo -MD -MP -MF src/$(DEPDIR)/libsystemf_la-pid-chain.Tpo -c -o src/libsystemf_la-pid-chain.lo `test -f 'src/pid-chain.c' || echo '$(srcdir)/'`src/pid-chain.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libsystemf_la-pid-chain.Tpo src/$(DEPDIR)/libsystemf_la-pid-chain.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/pid-chain.c' object='src/libsystemf_la-pid-chain.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libsystemf_la_CFLAGS) $(CFLAGS) -c -o src/libsystemf_la-pid-chain.lo `test -f 'src/pid-chain.c' || echo '$(srcdir)/'`src/pid-chain.c
 
 src/libsystemf_la-systemf.lo: src/systemf.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libsystemf_la_CFLAGS) $(CFLAGS) -MT src/libsystemf_la-systemf.lo -MD -MP -MF src/$(DEPDIR)/libsystemf_la-systemf.Tpo -c -o src/libsystemf_la-systemf.lo `test -f 'src/systemf.c' || echo '$(srcdir)/'`src/systemf.c
@@ -1347,6 +1360,7 @@ distclean: distclean-am
 	-rm -f src/$(DEPDIR)/libsystemf_la-derived-parser.Plo
 	-rm -f src/$(DEPDIR)/libsystemf_la-file-sandbox-check.Plo
 	-rm -f src/$(DEPDIR)/libsystemf_la-parser-support.Plo
+	-rm -f src/$(DEPDIR)/libsystemf_la-pid-chain.Plo
 	-rm -f src/$(DEPDIR)/libsystemf_la-systemf.Plo
 	-rm -f src/$(DEPDIR)/libsystemf_la-task.Plo
 	-rm -f tests/$(DEPDIR)/cmd-cmd.Po
@@ -1403,6 +1417,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/$(DEPDIR)/libsystemf_la-derived-parser.Plo
 	-rm -f src/$(DEPDIR)/libsystemf_la-file-sandbox-check.Plo
 	-rm -f src/$(DEPDIR)/libsystemf_la-parser-support.Plo
+	-rm -f src/$(DEPDIR)/libsystemf_la-pid-chain.Plo
 	-rm -f src/$(DEPDIR)/libsystemf_la-systemf.Plo
 	-rm -f src/$(DEPDIR)/libsystemf_la-task.Plo
 	-rm -f tests/$(DEPDIR)/cmd-cmd.Po
@@ -1450,7 +1465,7 @@ uninstall-am: uninstall-includeHEADERS uninstall-libLTLIBRARIES
 .PRECIOUS: Makefile
 
 
-src/derived-lexer.c src/derived-lexer.h: src/lexer.l
+src/derived-lexer.c src/derived-lexer.h: src/lexer.l src/derived-parser.c
 	$(LEX) --version | grep flex || (echo Flex is required ; false)
 	flex src/lexer.l
 
