@@ -294,5 +294,12 @@
         "stdout": ["==", ""],
         "stderr": ["==", "2"],
         "return_code": ["==", 3]
+    },
+    {
+        "description": "pipe to subcommand exits when cmd closes",
+        "command": [ "./cmd count | ./cmd incr" ],
+        "stdout": ["==", "2"],
+        "stderr": ["==", ""],
+        "return_code": ["==", 0]
     }
 ]
